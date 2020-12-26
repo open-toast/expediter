@@ -1,0 +1,30 @@
+[versions]
+kotlin = "1.8.22"
+serialization = "1.5.1"
+asm = "9.3"
+
+nexus = "1.3.0"
+ktlint = "0.50.0"
+spotless = "6.20.0"
+
+# test
+junit = "5.8.2"
+strikt = "0.34.0"
+
+[libraries]
+# main
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+# plugins
+nexus-publish =  { module = "io.github.gradle-nexus:publish-plugin", version.ref = "nexus" }
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version = "1.2.0" }
+
+# test
+junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
+
+[plugins]
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.0" }
