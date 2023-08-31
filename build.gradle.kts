@@ -1,8 +1,5 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
+plugins {
+    `nexus-staging-conventions`
 }
 
 group = "com.toasttab.expediter"
