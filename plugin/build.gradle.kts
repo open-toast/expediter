@@ -28,6 +28,7 @@ gradlePlugin {
             implementationClass = "com.toasttab.expediter.gradle.ExpediterPlugin"
             description = ProjectInfo.description
             displayName = ProjectInfo.name
+            tags = listOf("abi", "compatibility")
         }
     }
 }
