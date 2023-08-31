@@ -45,5 +45,5 @@ object Remote {
 object ProjectInfo {
     const val name = "Expediter"
     const val url = "https://github.com/open-toast/expediter"
-    const val description = ""
+    const val description = "Check ABI compatibility at build time"
 }
