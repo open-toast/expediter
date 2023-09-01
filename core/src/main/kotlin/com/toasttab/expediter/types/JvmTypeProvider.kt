@@ -62,15 +62,24 @@ class JvmTypeProvider private constructor(
             val paths = mutableMapOf<String, String>()
 
             for (entry in ctSym.entries()) {
-                // the name of each entry is `$versions$name.sig`
-                // where `versions` is the string with all supported versions, e.g. 89A for java 8-10
-                // and name is the regular, `/`-separated JVM name
+                // the name of each entry is `$versions/$module/$name.sig`
+                // where `versions` is the string with all supported versions, e.g. 89A for java 8-10,
+                // `module` is the name of the java module, e.g. java.base, and is optional,
+                // and `name` is the regular, `/`-separated JVM name
                 if (entry.name.endsWith(".sig")) {
-                    val separatorIdx = entry.name.indexOf('/')
+                    var separatorIdx = entry.name.indexOf('/')
 
                     val encodedVersion = entry.name.substring(0, separatorIdx)
 
                     if (encodedVersion.contains(jvmVersion)) {
+                        val nextSeparatorIdx = entry.name.indexOf('/', startIndex = separatorIdx + 1)
+
+                        if (nextSeparatorIdx >= 0 && entry.name.substring(separatorIdx + 1, nextSeparatorIdx)
+                                .contains('.')
+                        ) {
+                            separatorIdx = nextSeparatorIdx
+                        }
+
                         paths[entry.name.substring(separatorIdx + 1, entry.name.length - 4)] = entry.name
                     }
                 }
