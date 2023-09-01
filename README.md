@@ -51,7 +51,6 @@ plugins {
 ### Application classes
 
 By default, the application classes are the classes from the main source set and the runtime dependencies of the project.
-The platform classes are the classes provided by the current JDK.
 
 You can customize this behavior, e.g. change the Gradle configuration that describes the dependencies.
 
@@ -64,6 +63,21 @@ expediter {
 ```
 
 For example, in an Android project, you may want to use the `productionReleaseRuntime` configuration.
+
+### JVM platform APIs
+
+By default, the platform APIs are defined by the JVM running the build. You can configure a specific version of the
+JVM instead. Then only the APIs provided by that specific version of the JVM will be included. 
+
+```
+expediter {
+    platform {
+        jvmVersion = 11
+    }
+}
+```
+
+Setting an explicit `jvmVersion` is recommended unless checking Android compatibility or using custom signatures, see below.
 
 ### Animal Sniffer and Android support
 

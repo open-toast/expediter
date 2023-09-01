@@ -30,7 +30,7 @@ import java.io.File
 @ExtendWith(TestProjectExtension::class)
 class ExpediterPluginIntegrationTest {
     @Test
-    fun `animal sniffer`(project: TestProject) {
+    fun `android compat`(project: TestProject) {
         GradleRunner.create()
             .withProjectDir(project.dir)
             .withArguments("check")
@@ -47,6 +47,31 @@ class ExpediterPluginIntegrationTest {
                     MemberSymbolicReference.MethodSymbolicReference(
                         "computeIfAbsent",
                         "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `jvm compat`(project: TestProject) {
+        GradleRunner.create()
+            .withProjectDir(project.dir)
+            .withArguments("check")
+            .withPluginClasspath()
+            .buildAndFail()
+
+        val report = IssueReport.fromJson(File(project.dir, "build/expediter.json").readText())
+
+        expectThat(report.issues).containsExactlyInAnyOrder(
+            Issue.MissingMember(
+                "test/Caller",
+                MemberAccess.MethodAccess(
+                    "java/lang/String",
+                    MemberSymbolicReference.MethodSymbolicReference(
+                        "isBlank",
+                        "()Z"
                     ),
                     MethodAccessType.VIRTUAL
                 )

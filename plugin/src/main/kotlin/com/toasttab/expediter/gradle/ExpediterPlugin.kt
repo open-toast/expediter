@@ -42,7 +42,7 @@ class ExpediterPlugin : Plugin<Project> {
                 applicationClasspath.from(project.sourceSet(sourceSet).java.classesDirectory)
             }
 
-            platformClassloader = extension.platform.platformClassloader
+            jvmVersion = extension.platform.jvmVersion
 
             val animalSnifferConfigurations = extension.platform.animalSnifferConfigurations.toMutableList()
 
@@ -53,6 +53,10 @@ class ExpediterPlugin : Plugin<Project> {
                     "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.5.1@signature"
                 )
                 animalSnifferConfigurations.add(config.name)
+            }
+
+            if (extension.platform.jvmVersion != null && extension.platform.androidSdk != null) {
+                logger.warn("Both jvmVersion and androidSdk are set.")
             }
 
             for (conf in animalSnifferConfigurations) {
