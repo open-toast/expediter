@@ -22,7 +22,7 @@ import kotlin.io.path.pathString
 class JvmTypeProvider private constructor(
     private val ctSym: JarFile,
     private val paths: Map<String, String>
-): PlatformTypeProvider {
+) : PlatformTypeProvider {
     override fun lookupPlatformType(name: String): TypeDescriptor? {
         return paths[name]?.let { path ->
             val entry = ctSym.getJarEntry(path)

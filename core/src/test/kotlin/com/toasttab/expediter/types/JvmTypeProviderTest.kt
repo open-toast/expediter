@@ -50,7 +50,6 @@ class JvmTypeProviderTest {
                 }
             }.isNotNull()
         }
-
     }
 
     @Test
