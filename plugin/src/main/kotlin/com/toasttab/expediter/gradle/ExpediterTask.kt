@@ -21,6 +21,7 @@ import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.sniffer.AnimalSnifferParser
 import com.toasttab.expediter.types.InMemoryPlatformTypeProvider
+import com.toasttab.expediter.types.JvmTypeProvider
 import com.toasttab.expediter.types.PlatformClassloaderTypeProvider
 import com.toasttab.expediter.types.PlatformTypeProvider
 import com.toasttab.expediter.types.PlatformTypeProviderChain
@@ -51,7 +52,8 @@ abstract class ExpediterTask : DefaultTask() {
     lateinit var ignore: Ignore
 
     @Input
-    var platformClassloader: Boolean = true
+    @Optional
+    var jvmVersion: Int? = null
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -69,14 +71,20 @@ abstract class ExpediterTask : DefaultTask() {
     fun execute() {
         val providers = mutableListOf<PlatformTypeProvider>()
 
-        if (platformClassloader) {
-            providers.add(PlatformClassloaderTypeProvider)
+        jvmVersion?.let {
+            providers.add(JvmTypeProvider.forTarget(it))
         }
 
         for (signaturesFile in animalSnifferSignatures) {
             signaturesFile.inputStream().buffered().use {
                 providers.add(InMemoryPlatformTypeProvider(AnimalSnifferParser.parse(it)))
             }
+        }
+
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty) {
+            logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
+
+            providers.add(PlatformClassloaderTypeProvider)
         }
 
         val ignores = ignoreFile?.let {

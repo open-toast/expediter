@@ -13,15 +13,11 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.gradle
+package test;
 
-class PlatformClassSelector(
-    var platformClassloader: Boolean,
-    val animalSnifferConfigurations: MutableList<String> = mutableListOf(),
-    var androidSdk: Int? = null,
-    var jvmVersion: Int? = null
-) {
-    fun animalSnifferConfiguration(configuration: String) {
-        animalSnifferConfigurations.add(configuration)
+public class Caller {
+    void f() {
+        String s = "";
+        s.isBlank();
     }
 }
