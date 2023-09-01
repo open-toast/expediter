@@ -25,12 +25,10 @@ abstract class ExpediterExtension {
     var ignoreFile: Any? = null
 
     var failOnIssues: Boolean = false
-
     fun application(configure: ApplicationClassSelector.() -> Unit) {
         application = ApplicationClassSelector()
         application.configure()
     }
-
     fun platform(configure: PlatformClassSelector.() -> Unit) {
         platform = PlatformClassSelector(false)
         platform.configure()

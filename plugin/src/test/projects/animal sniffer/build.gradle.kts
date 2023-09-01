@@ -15,13 +15,6 @@ expediter {
     }
 
     platform {
-        platformClassloader = false
-        animalSnifferConfiguration("sniffer")
+        androidSdk = 19
     }
-}
-
-configurations.create("sniffer")
-
-dependencies {
-    add("sniffer", "com.toasttab.android:gummy-bears-api-19:0.5.1@signature")
 }

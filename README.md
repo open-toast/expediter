@@ -48,6 +48,8 @@ plugins {
 }
 ```
 
+### Application classes
+
 By default, the application classes are the classes from the main source set and the runtime dependencies of the project.
 The platform classes are the classes provided by the current JDK.
 
@@ -61,8 +63,23 @@ expediter {
 }
 ```
 
-Or use AnimalSniffer signatures instead of the current JVM to describe platform APIs, e.g. to check compatibility
-with a specific Android SDK.
+For example, in an Android project, you may want to use the `productionReleaseRuntime` configuration.
+
+### Animal Sniffer and Android support
+
+You can use AnimalSniffer signatures instead of, or in addition to, the current JVM to describe platform APIs. This is useful, for example, when checking compatibility with a specific Android SDK.
+
+For Android compatibility, you may use a shorthand, which will set up the [Gummy Bears](https://github.com/open-toast/gummy-bears)-powered Android signatures.
+
+```kotlin
+expediter {
+    platform {
+        androidSdk = 21
+    }
+}
+```
+
+Alternatively, configure the AnimalSniffer signatures explicitly.
 
 ```kotlin
 expediter {
@@ -74,9 +91,11 @@ expediter {
 configurations.create("animalSniffer")
 
 dependencies {
-    add("animalSniffer", "com.toasttab.android:gummy-bears-api-19:0.5.1@signature")
+    add("animalSniffer", "com.toasttab.android:gummy-bears-api-21:0.5.1@signature")
 }
 ```
+
+### Run the task
 
 Now you can run
 

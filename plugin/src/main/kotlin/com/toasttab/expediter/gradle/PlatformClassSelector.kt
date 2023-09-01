@@ -17,7 +17,8 @@ package com.toasttab.expediter.gradle
 
 class PlatformClassSelector(
     var platformClassloader: Boolean,
-    val animalSnifferConfigurations: MutableList<String> = mutableListOf()
+    val animalSnifferConfigurations: MutableList<String> = mutableListOf(),
+    var androidSdk: Int? = null
 ) {
     fun animalSnifferConfiguration(configuration: String) {
         animalSnifferConfigurations.add(configuration)

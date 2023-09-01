@@ -44,7 +44,18 @@ class ExpediterPlugin : Plugin<Project> {
 
             platformClassloader = extension.platform.platformClassloader
 
-            for (conf in extension.platform.animalSnifferConfigurations) {
+            val animalSnifferConfigurations = extension.platform.animalSnifferConfigurations.toMutableList()
+
+            if (extension.platform.androidSdk != null) {
+                val config = project.configurations.create("_expediter_animal_sniffer_")
+                project.dependencies.add(
+                    config.name,
+                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.5.1@signature"
+                )
+                animalSnifferConfigurations.add(config.name)
+            }
+
+            for (conf in animalSnifferConfigurations) {
                 animalSnifferSignatures.from(project.configurations.getByName(conf))
             }
 
