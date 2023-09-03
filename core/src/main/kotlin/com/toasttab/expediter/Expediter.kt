@@ -18,7 +18,6 @@ package com.toasttab.expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.types.AccessDeclaration
-import com.toasttab.expediter.types.AccessProtection
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberDescriptor

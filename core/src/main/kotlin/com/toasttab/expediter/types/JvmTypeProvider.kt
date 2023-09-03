@@ -1,10 +1,3 @@
-package com.toasttab.expediter.types
-
-import com.toasttab.expediter.TypeParsers
-import java.nio.file.Paths
-import java.util.jar.JarFile
-import kotlin.io.path.pathString
-
 /*
  * Copyright (c) 2023 Toast Inc.
  *
@@ -19,6 +12,14 @@ import kotlin.io.path.pathString
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.toasttab.expediter.types
+
+import com.toasttab.expediter.TypeParsers
+import java.nio.file.Paths
+import java.util.jar.JarFile
+import kotlin.io.path.pathString
+
 class JvmTypeProvider private constructor(
     private val ctSym: JarFile,
     private val paths: Map<String, String>
