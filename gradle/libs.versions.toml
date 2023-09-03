@@ -1,15 +1,15 @@
 [versions]
-kotlin = "1.8.22"
-serialization = "1.5.1"
-asm = "9.3"
+kotlin = "1.9.10"
+serialization = "1.6.0"
+asm = "9.5"
 
 nexus = "1.3.0"
 ktlint = "0.50.0"
-spotless = "6.20.0"
+spotless = "6.21.0"
 
 # test
-junit = "5.8.2"
-strikt = "0.34.0"
+junit = "5.10.0"
+strikt = "0.34.1"
 
 [libraries]
 # main
