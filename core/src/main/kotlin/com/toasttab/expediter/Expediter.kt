@@ -70,7 +70,7 @@ fun <M : MemberType> findIssue(type: TypeDescriptor, access: MemberAccess<M>, ch
                 Issue.AccessStaticMemberNonStatically(type.name, access)
             } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
                 Issue.AccessInstanceMemberStatically(type.name, access)
-            } else if (!allowedAccess(type, member.owner, member.member)) {
+            } else if (!AccessCheck.allowedAccess(type, member.owner, member.member)) {
                 Issue.AccessInaccessibleMember(type.name, access)
             } else {
                 null
@@ -82,13 +82,6 @@ private class MemberWithType<M : MemberType> (
     val member: MemberDescriptor<M>,
     val owner: TypeDescriptor
 )
-
-fun <M : MemberType> allowedAccess(caller: TypeDescriptor, owner: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
-    return when (member.protection) {
-        AccessProtection.PRIVATE -> caller.name == owner.name
-        else -> true // TODO: add other checks
-    }
-}
 
 private fun <M : MemberType> TypeHierarchy.CompleteTypeHierarchy.findMember(ref: MemberSymbolicReference<M>): MemberWithType<M>? {
     for (cls in classes) {
