@@ -45,6 +45,11 @@ class TestProjectExtension : ParameterResolver, BeforeEachCallback {
 
             File("${System.getProperty("test-projects")}/$name").copyRecursively(target = tempProjectDir)
 
+            // pipe the jacoco javaagent arguments into the new JVM that testkit launches
+            System.getProperty("testkit-javaagent")?.let {
+                File(tempProjectDir, "gradle.properties").appendText("\norg.gradle.jvmargs=-javaagent:$it")
+            }
+
             TestProject(tempProjectDir)
         }
 

@@ -15,6 +15,14 @@ dependencies {
 tasks {
     test {
         systemProperty("test-projects", layout.projectDirectory.dir("src/test/projects").asFile.path)
+
+        // pipe the jacoco javaagent arguments into the new JVM that testkit launches
+        // see TestProjectExtension and Gradle's JacocoPlugin class
+        val jacoco = project.zipTree(configurations.getByName("jacocoAgent").asPath).filter {
+            it.name == "jacocoagent.jar"
+        }.singleFile
+        val destfile = layout.buildDirectory.file("jacoco/test.exec").get()
+        systemProperty("testkit-javaagent", "$jacoco=destfile=$destfile")
     }
 }
 
