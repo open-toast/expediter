@@ -20,4 +20,4 @@ jobs:
         distribution: corretto
         java-version: 17
     - name: Build
-      run: ./gradlew check codeCoverageReport --stacktrace --no-daemon
+      run: ./gradlew check testCodeCoverageReport --stacktrace --no-daemon
