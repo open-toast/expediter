@@ -42,7 +42,7 @@ class ExpediterIntegrationTest {
 
         expectThat(p).containsExactlyInAnyOrder(
             Issue.MissingMember(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
                     "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "(Ljava/lang/String;)V"),
@@ -51,7 +51,7 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.AccessInstanceMemberStatically(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
                     "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "()V"),
@@ -60,7 +60,7 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
                     "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "(I)V"),
@@ -68,8 +68,17 @@ class ExpediterIntegrationTest {
                 )
             ),
 
+            Issue.AccessInaccessibleMember(
+                "com/toasttab/expediter/test/caller/Caller",
+                MemberAccess.MethodAccess(
+                    "com/toasttab/expediter/test/Bar",
+                    MethodSymbolicReference("bar", "(J)V"),
+                    MethodAccessType.VIRTUAL
+                )
+            ),
+
             Issue.MissingMember(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("a", "Ljava/lang/String;"),
@@ -78,7 +87,7 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.AccessInstanceMemberStatically(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("x", "I"),
@@ -87,7 +96,7 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.AccessStaticMemberNonStatically(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("y", "I"),
@@ -96,7 +105,7 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("z", "I"),
@@ -104,14 +113,23 @@ class ExpediterIntegrationTest {
                 )
             ),
 
+            Issue.AccessInaccessibleMember(
+                "com/toasttab/expediter/test/caller/Caller",
+                MemberAccess.FieldAccess(
+                    "com/toasttab/expediter/test/Bar",
+                    MemberSymbolicReference.FieldSymbolicReference("j", "I"),
+                    FieldAccessType.INSTANCE
+                )
+            ),
+
             Issue.MissingSuperType(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 "com/toasttab/expediter/test/Foo",
                 setOf("com/toasttab/expediter/test/BaseFoo")
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/Caller",
+                "com/toasttab/expediter/test/caller/Caller",
                 "com/toasttab/expediter/test/BaseFoo"
             ),
 

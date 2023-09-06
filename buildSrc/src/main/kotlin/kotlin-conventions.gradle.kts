@@ -8,7 +8,9 @@ repositories {
 
 plugins {
     kotlin("jvm")
-     id("com.diffplug.spotless")
+    `jvm-test-suite`
+    jacoco
+    id("com.diffplug.spotless")
 }
 
 spotless {
@@ -29,4 +31,15 @@ tasks.withType<KotlinCompile> {
         languageVersion = "1.6"
         apiVersion = "1.6"
     }
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
+dependencies {
+    testImplementation(libs.junit)
+    testImplementation(libs.strikt.core)
 }

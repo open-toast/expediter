@@ -8,8 +8,6 @@ configurations.create("lib2") {
 
 tasks {
     test {
-        useJUnitPlatform()
-
         val files = configurations.getByName("lib2").files.map { it.path } + sourceSets.main.get().java.classesDirectory.get().asFile.path
 
         systemProperty("test-classpath", files.joinToString(separator = ":"))
@@ -23,7 +21,5 @@ dependencies {
 
     add("lib2", projects.tests.lib2)
 
-    testImplementation(libs.junit)
-    testImplementation(libs.strikt.core)
     testImplementation(projects.core)
 }

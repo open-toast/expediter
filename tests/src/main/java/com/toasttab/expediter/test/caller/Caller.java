@@ -13,12 +13,16 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.test;
+package com.toasttab.expediter.test.caller;
+
+import com.toasttab.expediter.test.Bar;
+import com.toasttab.expediter.test.BaseFoo;
+import com.toasttab.expediter.test.Baz;
+import com.toasttab.expediter.test.Foo;
 
 public class Caller {
     Foo foo;
     BaseFoo baseFoo;
-
     Bar bar;
 
     void missingMethod() {
@@ -37,8 +41,12 @@ public class Caller {
         baseFoo.base();
     }
 
-    void inaccessibleMethod() {
+    void privateMethod() {
         bar.bar(1);
+    }
+
+    void packagePrivateMethod() {
+        bar.bar(1L);
     }
 
     void missingField() {
@@ -53,8 +61,12 @@ public class Caller {
         new Baz().y = 1;
     }
 
-    void inaccessibleFIeld() {
+    void privateField() {
         new Baz().z = 1;
+    }
+
+    void packagePrivateField() {
+        bar.j = 1;
     }
 
     void fieldMovedFromSuper() {

@@ -9,14 +9,11 @@ dependencies {
     implementation(projects.core)
     implementation(projects.animalSnifferFormat)
 
-    testImplementation(libs.junit)
-    testImplementation(libs.strikt.core)
     testImplementation(gradleTestKit())
 }
 
 tasks {
     test {
-        useJUnitPlatform()
         systemProperty("test-projects", layout.projectDirectory.dir("src/test/projects").asFile.path)
     }
 }

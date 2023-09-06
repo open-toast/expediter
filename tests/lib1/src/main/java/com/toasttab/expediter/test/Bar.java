@@ -17,10 +17,13 @@ package com.toasttab.expediter.test;
 
 public class Bar {
     public int i;
+    public int j;
 
     public static void bar() { }
 
     public void bar(String x) { }
 
     public void bar(int x) { }
+
+    public void bar(long x) { }
 }
