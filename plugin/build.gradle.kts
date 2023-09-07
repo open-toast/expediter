@@ -21,8 +21,24 @@ tasks {
         val jacoco = project.zipTree(configurations.getByName("jacocoAgent").asPath).filter {
             it.name == "jacocoagent.jar"
         }.singleFile
-        val destfile = layout.buildDirectory.file("jacoco/test.exec").get()
+
+        val destfile = layout.buildDirectory.file("jacoco/testkit.exec").get()
+        // declare an additional jacoco output file so that the JUnit JVM and the TestKit JVM
+        // do not try to write to the same file
+        outputs.file(destfile).withPropertyName("testkit-jacoco")
+
         systemProperty("testkit-javaagent", "$jacoco=destfile=$destfile")
+
+        // add the TestKit jacoco file to outgoing artifacts so that it can be aggregated
+        configurations.getAt("coverageDataElementsForTest").outgoing.artifact(destfile) {
+            type = ArtifactTypeDefinition.BINARY_DATA_TYPE
+            builtBy("test")
+        }
+    }
+
+    jacocoTestReport {
+        // add the TestKit jacoco file to the local jacoco report
+        this.executionData.from(layout.buildDirectory.dir("jacoco").map { files("test.exec", "testkit.exec") })
     }
 }
 
