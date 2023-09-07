@@ -21,3 +21,10 @@ jobs:
         java-version: 17
     - name: Build
       run: ./gradlew check testCodeCoverageReport --stacktrace --no-daemon
+    - name: Test Report
+      uses: phoenix-actions/test-reporting@v8
+      if: success() || failure()
+      with:
+        name: JUnit
+        path: "**/build/test-results/**/TEST-*.xml"
+        reporter: java-junit
