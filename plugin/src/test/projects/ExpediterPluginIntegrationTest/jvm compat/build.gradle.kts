@@ -1,10 +1,12 @@
 plugins {
     java
     id("com.toasttab.expediter")
+    id("com.toasttab.testkit.coverage") version "0.0.2"
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 expediter {
@@ -15,6 +17,6 @@ expediter {
     }
 
     platform {
-        androidSdk = 19
+        jvmVersion = 8
     }
 }

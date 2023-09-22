@@ -5,6 +5,15 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
 }
 
 group = "com.toasttab.expediter"

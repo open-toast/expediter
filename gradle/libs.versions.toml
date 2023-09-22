@@ -7,9 +7,12 @@ nexus = "1.3.0"
 ktlint = "0.50.0"
 spotless = "6.21.0"
 
+jacoco = "0.8.10"
+
 # test
 junit = "5.10.0"
 strikt = "0.34.1"
+testkit-plugin = "0.0.2"
 
 [libraries]
 # main
@@ -21,10 +24,15 @@ kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version = "1.2.0" }
 
+jacoco-agent = { module = "org.jacoco:org.jacoco.agent", version.ref = "jacoco" }
+jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
+
 # test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
+testkit-extension = { module = "com.toasttab.gradle.testkit:junit5", version.ref = "testkit-plugin" }
 
 [plugins]
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.0" }
+testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
