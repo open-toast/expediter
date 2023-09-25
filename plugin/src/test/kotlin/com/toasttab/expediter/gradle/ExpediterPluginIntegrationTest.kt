@@ -20,24 +20,22 @@ import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
-import org.gradle.testkit.runner.GradleRunner
+import com.toasttab.gradle.testkit.TestKit
+import com.toasttab.gradle.testkit.TestProject
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
-import java.io.File
+import kotlin.io.path.readText
 
-@ExtendWith(TestProjectExtension::class)
+@TestKit
 class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
-        GradleRunner.create()
-            .withProjectDir(project.dir)
+        project.createRunner()
             .withArguments("check")
-            .withPluginClasspath()
             .buildAndFail()
 
-        val report = IssueReport.fromJson(File(project.dir, "build/expediter.json").readText())
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).containsExactlyInAnyOrder(
             Issue.MissingMember(
@@ -56,13 +54,11 @@ class ExpediterPluginIntegrationTest {
 
     @Test
     fun `jvm compat`(project: TestProject) {
-        GradleRunner.create()
-            .withProjectDir(project.dir)
+        project.createRunner()
             .withArguments("check")
-            .withPluginClasspath()
             .buildAndFail()
 
-        val report = IssueReport.fromJson(File(project.dir, "build/expediter.json").readText())
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).containsExactlyInAnyOrder(
             Issue.MissingMember(

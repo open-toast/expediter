@@ -10,6 +10,7 @@ spotless = "6.21.0"
 # test
 junit = "5.10.0"
 strikt = "0.34.1"
+testkit-plugin = "0.0.2"
 
 [libraries]
 # main
@@ -24,7 +25,9 @@ gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version 
 # test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
+testkit-junit5 = { module = "com.toasttab.gradle.testkit:junit5", version.ref = "testkit-plugin" }
 
 [plugins]
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.0" }
+testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
