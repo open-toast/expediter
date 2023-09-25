@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 plugins {
@@ -12,10 +11,6 @@ plugins {
     `jvm-test-suite`
     jacoco
     id("com.diffplug.spotless")
-}
-
-jacoco {
-    toolVersion = libs.versions.jacoco.get()
 }
 
 spotless {
