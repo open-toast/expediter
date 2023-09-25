@@ -15,6 +15,8 @@
 
 package com.toasttab.expediter.types
 
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+
 class InMemoryPlatformTypeProvider private constructor(
     private val types: Map<String, TypeDescriptor>
 ) : PlatformTypeProvider {

@@ -15,6 +15,8 @@
 
 package com.toasttab.expediter.types
 
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+
 interface PlatformTypeProvider {
     fun lookupPlatformType(name: String): TypeDescriptor?
 }

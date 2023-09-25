@@ -14,6 +14,9 @@
  */
 
 package com.toasttab.expediter.types
+
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+
 class TypeHierarchy(
     val type: TypeDescriptor,
     val superTypes: Set<OptionalType>

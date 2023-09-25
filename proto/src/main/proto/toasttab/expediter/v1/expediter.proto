@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package toasttab.expediter.v1;
+
+import "protokt/v1/protokt.proto";
+
+enum AccessDeclaration {
+  ACCESS_DECLARATION_UNKNOWN = 0;
+  ACCESS_DECLARATION_STATIC = 1;
+  ACCESS_DECLARATION_INSTANCE = 2;
+}
+
+enum AccessProtection {
+  ACCESS_PROTECTION_UNKNOWN = 0;
+  ACCESS_PROTECTION_PRIVATE = 1;
+  ACCESS_PROTECTION_PROTECTED = 2;
+  ACCESS_PROTECTION_PACKAGE_PRIVATE = 3;
+  ACCESS_PROTECTION_PUBLIC = 4;
+}
+
+enum TypeFlavor {
+  TYPE_FLAVOR_UNKNOWN = 0;
+  TYPE_FLAVOR_CLASS = 1;
+  TYPE_FLAVOR_INTERFACE = 2;
+}
+
+enum TypeExtensibility {
+  TYPE_EXTENSIBILITY_UNKNOWN = 0;
+  TYPE_EXTENSIBILITY_FINAL = 1;
+  TYPE_EXTENSIBILITY_NOT_FINAL = 2;
+}
+
+//enum MethodAccessType {
+//  METHOD_ACCESS_UNKNOWN = 0;
+//  METHOD_ACCESS_INTERFACE = 1;
+//  METHOD_ACCESS_VIRTUAL = 2;
+//  METHOD_ACCESS_SPECIAL = 3;
+//  METHOD_ACCESS_STATIC = 4;
+//}
+//
+//enum FieldAccessType {
+//  FIELD_ACCESS_UNKNOWN = 0;
+//  FIELD_ACCESS_INSTANCE = 1;
+//  FIELD_ACCESS_STATIC = 2;
+//}
+//
+//message MethodAccess {
+//  string owner = 1;
+//  SymbolicReference ref = 2;
+//  MethodAccessType type = 3;
+//}
+//
+//message FieldAccess {
+//  string owner = 1;
+//  SymbolicReference ref = 2;
+//  FieldAccessType type = 3;
+//}
+
+message MemberDescriptor {
+  SymbolicReference ref = 1 [(protokt.v1.property).non_null = true];
+  AccessProtection protection = 2;
+  AccessDeclaration declaration = 3;
+}
+
+message SymbolicReference {
+  string name = 1;
+  string signature = 2;
+}
+
+message TypeDescriptor {
+  string name = 1;
+
+  optional string super_name = 2;
+  repeated string interfaces = 3;
+
+  repeated MemberDescriptor fields = 4;
+  repeated MemberDescriptor methods = 5;
+
+  AccessProtection protection = 6;
+  TypeFlavor flavor = 7;
+  TypeExtensibility extensibility = 8;
+}
+
+message TypeDescriptors {
+  string description = 1;
+  repeated TypeDescriptor types = 2;
+}

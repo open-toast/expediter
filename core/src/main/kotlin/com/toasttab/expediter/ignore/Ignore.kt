@@ -16,7 +16,6 @@
 package com.toasttab.expediter.ignore
 
 import com.toasttab.expediter.issue.Issue
-import com.toasttab.expediter.types.MemberSymbolicReference
 import java.io.Serializable
 
 interface Ignore : Serializable {
@@ -48,7 +47,7 @@ interface Ignore : Serializable {
 
     object IsConstructor : Ignore {
         override fun ignore(issue: Issue) = issue is Issue.WithMemberAccess && issue.member.ref.run {
-            this is MemberSymbolicReference.MethodSymbolicReference && isConstructor()
+            isConstructor()
         }
     }
 

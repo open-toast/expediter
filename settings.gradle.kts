@@ -21,5 +21,6 @@ include(
     ":tests:lib1",
     ":tests:lib2",
     ":tests:base",
-    ":animal-sniffer-format"
+    ":animal-sniffer-format",
+    ":proto"
 )

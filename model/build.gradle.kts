@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     implementation(libs.serialization.json)
+    api(projects.proto)
 }

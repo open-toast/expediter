@@ -6,6 +6,7 @@ asm = "9.5"
 nexus = "1.3.0"
 ktlint = "0.50.0"
 spotless = "6.21.0"
+protokt = "1.0.0-alpha.10"
 
 # test
 junit = "5.10.0"
@@ -21,6 +22,7 @@ nexus-publish =  { module = "io.github.gradle-nexus:publish-plugin", version.ref
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version = "1.2.0" }
+protokt-extensions = { module = "com.toasttab.protokt:protokt-extensions", version.ref = "protokt" }
 
 # test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -31,3 +33,4 @@ testkit-junit5 = { module = "com.toasttab.gradle.testkit:junit5", version.ref = 
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.0" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
+protokt = { id = "com.toasttab.protokt", version.ref = "protokt" }

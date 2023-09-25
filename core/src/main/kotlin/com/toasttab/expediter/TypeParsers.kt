@@ -18,12 +18,8 @@ package com.toasttab.expediter
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
-import com.toasttab.expediter.types.TypeDescriptor
-import com.toasttab.expediter.types.TypeExtensibility
-import com.toasttab.expediter.types.TypeFlavor
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassReader.SKIP_DEBUG
 import org.objectweb.asm.ClassVisitor
@@ -31,6 +27,9 @@ import org.objectweb.asm.FieldVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Opcodes.ASM9
+import protokt.v1.toasttab.expediter.v1.MemberDescriptor
+import protokt.v1.toasttab.expediter.v1.SymbolicReference
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 import java.io.InputStream
 
 object TypeParsers {
@@ -77,7 +76,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                     MemberAccess.MethodAccess(
                         owner,
                         null,
-                        MemberSymbolicReference.MethodSymbolicReference(name, descriptor),
+                        MemberSymbolicReference(name, descriptor),
                         invokeType
                     )
                 )
@@ -94,7 +93,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                     MemberAccess.FieldAccess(
                         owner,
                         null,
-                        MemberSymbolicReference.FieldSymbolicReference(name, descriptor),
+                        MemberSymbolicReference(name, descriptor),
                         type
                     )
                 )
@@ -104,15 +103,16 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
 }
 
 private class TypeDescriptorParser : ClassVisitor(ASM9) {
-    private var name: String? = null
-    private var superName: String? = null
-    private val interfaces: MutableList<String> = arrayListOf()
-    private val members: MutableList<MemberDescriptor<*>> = mutableListOf()
-    private var access: Int = 0
-    private var typeFlavor: TypeFlavor = TypeFlavor.UNKNOWN
-    private var typeExtensibility: TypeExtensibility = TypeExtensibility.UNKNOWN
+    private val builder = TypeDescriptor.Builder()
+    private val methods = mutableListOf<MemberDescriptor>()
+    private val fields = mutableListOf<MemberDescriptor>()
 
-    fun get() = TypeDescriptor(name!!, superName, interfaces, members, AttributeParser.protection(access), typeFlavor, typeExtensibility)
+    fun get(): TypeDescriptor {
+        builder.methods = methods
+        builder.fields = fields
+
+        return builder.build()
+    }
 
     override fun visit(
         version: Int,
@@ -122,12 +122,12 @@ private class TypeDescriptorParser : ClassVisitor(ASM9) {
         superName: String?,
         interfaces: Array<out String>
     ) {
-        this.name = name
-        this.superName = superName
-        this.access = access
-        this.typeFlavor = AttributeParser.flavor(access)
-        this.typeExtensibility = AttributeParser.extensibility(access)
-        this.interfaces.addAll(interfaces)
+        builder.name = name
+        builder.superName = superName
+        builder.flavor = AttributeParser.flavor(access)
+        builder.extensibility = AttributeParser.extensibility(access)
+        builder.protection = AttributeParser.protection(access)
+        builder.interfaces = interfaces.toList()
     }
 
     override fun visitMethod(
@@ -137,12 +137,15 @@ private class TypeDescriptorParser : ClassVisitor(ASM9) {
         signature: String?,
         exceptions: Array<out String>?
     ): MethodVisitor? {
-        members.add(
-            MemberDescriptor(
-                MemberSymbolicReference.MethodSymbolicReference(name, descriptor),
-                AttributeParser.declaration(access),
-                AttributeParser.protection(access)
-            )
+        methods.add(
+            MemberDescriptor {
+                ref = SymbolicReference {
+                    this.name = name
+                    this.signature = descriptor
+                }
+                declaration = AttributeParser.declaration(access)
+                protection = AttributeParser.protection(access)
+            }
         )
 
         return null
@@ -155,12 +158,15 @@ private class TypeDescriptorParser : ClassVisitor(ASM9) {
         signature: String?,
         value: Any?
     ): FieldVisitor? {
-        members.add(
-            MemberDescriptor(
-                MemberSymbolicReference.FieldSymbolicReference(name, descriptor),
-                AttributeParser.declaration(access),
-                AttributeParser.protection(access)
-            )
+        fields.add(
+            MemberDescriptor {
+                ref = SymbolicReference {
+                    this.name = name
+                    this.signature = descriptor
+                }
+                declaration = AttributeParser.declaration(access)
+                protection = AttributeParser.protection(access)
+            }
         )
 
         return null

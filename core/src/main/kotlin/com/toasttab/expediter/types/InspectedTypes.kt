@@ -16,6 +16,10 @@
 package com.toasttab.expediter.types
 
 import com.toasttab.expediter.issue.Issue
+import protokt.v1.toasttab.expediter.v1.AccessProtection
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeExtensibility
+import protokt.v1.toasttab.expediter.v1.TypeFlavor
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -66,7 +70,13 @@ class InspectedTypes private constructor(
         return inspectedCache[s] ?: inspectedCache.computeIfAbsent(s) { s ->
             if (s.startsWith("[")) {
                 // TODO: make up a type descriptor for an array type; we could validate that the element type actually exists
-                TypeDescriptor(s, "java/lang/Object", emptyList(), emptyList(), AccessProtection.UNKNOWN, TypeFlavor.CLASS, TypeExtensibility.FINAL)
+                TypeDescriptor {
+                    name = s
+                    superName = "java/lang/Object"
+                    protection = AccessProtection.UNKNOWN
+                    flavor = TypeFlavor.CLASS
+                    extensibility = TypeExtensibility.FINAL
+                }
             } else {
                 platformTypeProvider.lookupPlatformType(s)
             }
