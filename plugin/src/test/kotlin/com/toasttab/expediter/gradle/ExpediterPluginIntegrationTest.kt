@@ -27,12 +27,12 @@ import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
 import kotlin.io.path.readText
 
-@TestKit(cleanup = false)
+@TestKit
 class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
         project.createRunner()
-            .withArguments("check", "--stacktrace")
+            .withArguments("check")
             .buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())

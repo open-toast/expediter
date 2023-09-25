@@ -9,7 +9,7 @@ dependencies {
     implementation(projects.core)
     implementation(projects.animalSnifferFormat)
 
-   testImplementation(libs.testkit.extension)
+   testImplementation(libs.testkit.junit5)
 }
 
 gradlePlugin {
