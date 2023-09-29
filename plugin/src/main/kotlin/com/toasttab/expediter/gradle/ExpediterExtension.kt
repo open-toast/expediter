@@ -18,7 +18,7 @@ package com.toasttab.expediter.gradle
 import com.toasttab.expediter.ignore.Ignore
 
 abstract class ExpediterExtension {
-    var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath")
+    var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath", sourceSet = "main")
     var platform: PlatformClassSelector = PlatformClassSelector(platformClassloader = true)
 
     var ignore: Ignore = Ignore.NOTHING

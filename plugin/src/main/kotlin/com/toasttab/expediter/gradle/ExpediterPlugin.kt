@@ -31,15 +31,15 @@ class ExpediterPlugin : Plugin<Project> {
 
         project.tasks.register<ExpediterTask>("expedite") {
             for (conf in extension.application.configurations) {
-                applicationClasspath.from(selector.artifacts(conf))
+                artifactCollection(selector.artifacts(conf))
             }
 
             for (file in extension.application.files) {
-                applicationClasspath.from(file)
+                files.from(file)
             }
 
             for (sourceSet in extension.application.sourceSets) {
-                applicationClasspath.from(project.sourceSet(sourceSet).java.classesDirectory)
+                files.from(project.sourceSet(sourceSet).java.classesDirectory)
             }
 
             jvmVersion = extension.platform.jvmVersion

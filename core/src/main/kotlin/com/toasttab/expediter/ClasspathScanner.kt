@@ -23,7 +23,7 @@ import java.util.jar.JarInputStream
 import java.util.zip.ZipFile
 
 class ClasspathScanner(
-    private val elements: Collection<File>
+    private val elements: Iterable<File>
 ) : ApplicationTypesProvider {
     override fun types(): List<ApplicationType> = elements.flatMap { types(it) }
 

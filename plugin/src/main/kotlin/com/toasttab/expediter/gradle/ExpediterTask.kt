@@ -27,7 +27,9 @@ import com.toasttab.expediter.types.PlatformTypeProvider
 import com.toasttab.expediter.types.PlatformTypeProviderChain
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
@@ -41,9 +43,27 @@ import java.io.File
 
 @CacheableTask
 abstract class ExpediterTask : DefaultTask() {
+    private val configurationArtifacts = mutableListOf<ArtifactCollection>()
+
     @get:InputFiles
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val applicationClasspath: ConfigurableFileCollection
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    val artifacts: FileCollection get() {
+        return if (configurationArtifacts.isEmpty()) {
+            project.objects.fileCollection()
+        } else {
+            configurationArtifacts.map {
+                it.artifactFiles
+            }.reduce(FileCollection::plus)
+        }
+    }
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    abstract val files: ConfigurableFileCollection
+
+    fun artifactCollection(artifactCollection: ArtifactCollection) {
+        configurationArtifacts.add(artifactCollection)
+    }
 
     @OutputFile
     lateinit var report: File
@@ -95,7 +115,7 @@ abstract class ExpediterTask : DefaultTask() {
 
         val issues = Expediter(
             ignore,
-            ClasspathScanner(applicationClasspath.files),
+            ClasspathScanner(artifacts + files),
             PlatformTypeProviderChain(
                 providers
             )

@@ -22,7 +22,7 @@ class ApplicationClassSelector constructor(
 ) {
     constructor() : this(mutableListOf())
 
-    constructor(configuration: String) : this(mutableListOf(configuration))
+    constructor(configuration: String, sourceSet: String) : this(configurations = mutableListOf(configuration), sourceSets = mutableListOf(sourceSet))
     fun configuration(configuration: String) {
         configurations.add(configuration)
     }

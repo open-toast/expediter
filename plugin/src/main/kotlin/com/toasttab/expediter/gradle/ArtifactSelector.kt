@@ -16,7 +16,11 @@
 package com.toasttab.expediter.gradle
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ArtifactCollection
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.Attribute
+import org.gradle.api.internal.tasks.DefaultTaskDependency
+import org.gradle.kotlin.dsl.artifacts
 import java.io.File
 
 private val ARTIFACT_TYPE_ATTR = Attribute.of("artifactType", String::class.java)
@@ -28,6 +32,7 @@ class ArtifactSelector(
     private fun android() {
         artifactType = "android-classes"
     }
+
     init {
         project.pluginManager.withPlugin("com.android.library") {
             android()
@@ -37,10 +42,11 @@ class ArtifactSelector(
             android()
         }
     }
-    fun artifacts(configuration: String): Collection<File> {
+
+    fun artifacts(configuration: String): ArtifactCollection {
         return project.configurations.getByName(configuration).incoming.artifactView {
             lenient(true)
             attributes.attribute(ARTIFACT_TYPE_ATTR, artifactType)
-        }.artifacts.artifacts.map { it.file }
+        }.artifacts
     }
 }
