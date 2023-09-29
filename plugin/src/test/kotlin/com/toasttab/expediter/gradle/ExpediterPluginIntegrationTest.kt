@@ -31,7 +31,7 @@ import kotlin.io.path.readText
 class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
-        project.createRunner()
+        val pout = project.createRunner()
             .withArguments("check")
             .buildAndFail()
 
@@ -63,6 +63,39 @@ class ExpediterPluginIntegrationTest {
         expectThat(report.issues).containsExactlyInAnyOrder(
             Issue.MissingMember(
                 "test/Caller",
+                MemberAccess.MethodAccess(
+                    "java/lang/String",
+                    MemberSymbolicReference.MethodSymbolicReference(
+                        "isBlank",
+                        "()Z"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @Test
+    fun multimodule(project: TestProject) {
+        project.createRunner().withArguments("app:expedite").buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("app/build/expediter.json").readText())
+
+        expectThat(report.issues).containsExactlyInAnyOrder(
+            Issue.MissingMember(
+                "test/A",
+                MemberAccess.MethodAccess(
+                    "java/lang/String",
+                    MemberSymbolicReference.MethodSymbolicReference(
+                        "isBlank",
+                        "()Z"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            ),
+
+            Issue.MissingMember(
+                "test/B",
                 MemberAccess.MethodAccess(
                     "java/lang/String",
                     MemberSymbolicReference.MethodSymbolicReference(
