@@ -17,11 +17,8 @@ package com.toasttab.expediter.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ArtifactCollection
-import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.Attribute
-import org.gradle.api.internal.tasks.DefaultTaskDependency
 import org.gradle.kotlin.dsl.artifacts
-import java.io.File
 
 private val ARTIFACT_TYPE_ATTR = Attribute.of("artifactType", String::class.java)
 
