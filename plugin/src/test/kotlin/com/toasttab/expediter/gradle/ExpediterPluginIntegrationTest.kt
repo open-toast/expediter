@@ -35,8 +35,6 @@ class ExpediterPluginIntegrationTest {
             .withArguments("check")
             .buildAndFail()
 
-        println(pout.output)
-
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).containsExactlyInAnyOrder(
@@ -79,9 +77,7 @@ class ExpediterPluginIntegrationTest {
 
     @Test
     fun multimodule(project: TestProject) {
-        val s = project.createRunner().withArguments("app:expedite").buildAndFail()
-
-        println(s.output)
+        project.createRunner().withArguments("app:expedite").buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("app/build/expediter.json").readText())
 
