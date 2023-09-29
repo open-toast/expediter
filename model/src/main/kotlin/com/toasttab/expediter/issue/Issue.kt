@@ -53,7 +53,7 @@ sealed interface Issue {
     data class AccessStaticMemberNonStatically(val caller: String, val member: MemberAccess<*>) : Issue {
         override val target: String get() = member.owner
 
-        override fun toString() = "$caller acceses static $member non-statically"
+        override fun toString() = "$caller accesses static $member non-statically"
     }
 
     @Serializable
