@@ -116,12 +116,14 @@ class ExpediterPluginIntegrationTest {
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).contains(
-            Issue.AccessInaccessibleMember("com/fasterxml/jackson/databind/ser/impl/PropertyBasedObjectIdGenerator",
+            Issue.AccessInaccessibleMember(
+                "com/fasterxml/jackson/databind/ser/impl/PropertyBasedObjectIdGenerator",
                 MemberAccess.MethodAccess(
                     "com/fasterxml/jackson/annotation/ObjectIdGenerators\$Base",
                     MemberSymbolicReference.MethodSymbolicReference("getScope", "()Ljava/lang/Class;"),
                     MethodAccessType.VIRTUAL
-                ))
+                )
+            )
         )
     }
 }
