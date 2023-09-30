@@ -65,14 +65,18 @@ fun <M : MemberType> findIssue(type: TypeDescriptor, access: MemberAccess<M>, ch
 
             if (member == null) {
                 Issue.MissingMember(type.name, access)
-            } else if (member.member.declaration == AccessDeclaration.STATIC && !access.accessType.isStatic()) {
-                Issue.AccessStaticMemberNonStatically(type.name, access)
-            } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
-                Issue.AccessInstanceMemberStatically(type.name, access)
-            } else if (!AccessCheck.allowedAccess(type, member.owner, member.member)) {
-                Issue.AccessInaccessibleMember(type.name, access)
             } else {
-                null
+                val clarifiedAccess = access.clarifyOwner(member.owner.name)
+
+                if (member.member.declaration == AccessDeclaration.STATIC && !access.accessType.isStatic()) {
+                    Issue.AccessStaticMemberNonStatically(type.name, clarifiedAccess)
+                } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
+                    Issue.AccessInstanceMemberStatically(type.name, clarifiedAccess)
+                } else if (!AccessCheck.allowedAccess(type, member.owner, member.member)) {
+                    Issue.AccessInaccessibleMember(type.name, clarifiedAccess)
+                } else {
+                    null
+                }
             }
         }
     }

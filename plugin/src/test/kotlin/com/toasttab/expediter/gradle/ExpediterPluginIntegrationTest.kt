@@ -24,6 +24,7 @@ import com.toasttab.gradle.testkit.TestKit
 import com.toasttab.gradle.testkit.TestProject
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
+import strikt.assertions.contains
 import strikt.assertions.containsExactlyInAnyOrder
 import kotlin.io.path.readText
 
@@ -102,6 +103,24 @@ class ExpediterPluginIntegrationTest {
                         "isBlank",
                         "()Z"
                     ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `cross library`(project: TestProject) {
+        project.createRunner().withArguments("check").buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.AccessInaccessibleMember(
+                "com/fasterxml/jackson/databind/ser/impl/PropertyBasedObjectIdGenerator",
+                MemberAccess.MethodAccess(
+                    "com/fasterxml/jackson/annotation/ObjectIdGenerators\$Base",
+                    MemberSymbolicReference.MethodSymbolicReference("getScope", "()Ljava/lang/Class;"),
                     MethodAccessType.VIRTUAL
                 )
             )

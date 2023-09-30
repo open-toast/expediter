@@ -24,6 +24,8 @@ sealed interface MemberAccess<M : MemberType> {
     val ref: MemberSymbolicReference<M>
     val accessType: MemberAccessType
 
+    fun clarifyOwner(moreSpecificOwner: String): MemberAccess<M>
+
     @Serializable
     @SerialName("method")
     data class MethodAccess(
@@ -32,6 +34,7 @@ sealed interface MemberAccess<M : MemberType> {
         override val accessType: MethodAccessType
     ) : MemberAccess<MemberType.Method> {
         override fun toString() = "${ref.type} $owner.$ref"
+        override fun clarifyOwner(moreSpecificOwner: String) = MethodAccess(moreSpecificOwner, ref, accessType)
     }
 
     @Serializable
@@ -42,6 +45,7 @@ sealed interface MemberAccess<M : MemberType> {
         override val accessType: FieldAccessType
     ) : MemberAccess<MemberType.Field> {
         override fun toString() = "${ref.type} $owner.$ref"
+        override fun clarifyOwner(moreSpecificOwner: String) = FieldAccess(moreSpecificOwner, ref, accessType)
     }
 }
 
