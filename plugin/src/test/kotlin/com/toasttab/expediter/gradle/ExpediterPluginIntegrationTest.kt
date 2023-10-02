@@ -126,4 +126,15 @@ class ExpediterPluginIntegrationTest {
             )
         )
     }
+
+    @Test
+    fun `android lib`(project: TestProject) {
+        project.createRunner().withArguments("check").buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingType("kotlin/io/path/DirectoryEntriesReader", "java/nio/file/Files")
+        )
+    }
 }
