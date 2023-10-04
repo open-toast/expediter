@@ -6,11 +6,11 @@ import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.TypeDescriptor
 
 object AccessCheck {
-    fun <M : MemberType> allowedAccess(caller: TypeDescriptor, owner: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
+    fun <M : MemberType> allowedAccess(caller: TypeDescriptor, target: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
         return if (member.protection == AccessProtection.PRIVATE) {
-            return caller.sameClassAs(owner)
-        } else if (member.protection == AccessProtection.PACKAGE_PRIVATE || owner.protection == AccessProtection.PACKAGE_PRIVATE) {
-            return caller.samePackageAs(owner)
+            return caller.sameClassAs(target)
+        } else if (member.protection == AccessProtection.PACKAGE_PRIVATE || target.protection == AccessProtection.PACKAGE_PRIVATE) {
+            return caller.samePackageAs(target)
         } else {
             true
         } // TODO: add other checks

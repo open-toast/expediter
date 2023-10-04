@@ -10,7 +10,11 @@ repositories {
 
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.5")
+    implementation("com.fasterxml.jackson.core:jackson-core") {
+        version {
+            strictly("2.13.5")
+        }
+    }
 }
 
 expediter {

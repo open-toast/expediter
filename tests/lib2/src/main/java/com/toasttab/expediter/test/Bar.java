@@ -15,10 +15,7 @@
 
 package com.toasttab.expediter.test;
 
-public class Bar {
-    // changes from public to package-private
-    int j;
-
+public class Bar extends BaseBar {
     // changes from static to instance
     public void bar() { }
 

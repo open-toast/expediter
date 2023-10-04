@@ -72,4 +72,6 @@ public class Caller {
     void fieldMovedFromSuper() {
         new Baz().i = 1;
     }
+
+    void fieldAccessedViaPublicSubclass() { bar.i = 1; }
 }

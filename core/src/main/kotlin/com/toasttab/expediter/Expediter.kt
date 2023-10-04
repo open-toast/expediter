@@ -38,7 +38,7 @@ class Expediter(
         return (
             inspectedTypes.classes.flatMap { cls ->
                 cls.refs.mapNotNull { access ->
-                    if (!ignore.ignore(cls.type.name, access.owner, access.ref)) {
+                    if (!ignore.ignore(cls.type.name, access.targetType, access.ref)) {
                         findIssue(cls.type, access, inspectedTypes.hierarchy(access))
                     } else {
                         null
@@ -55,25 +55,25 @@ fun <M : MemberType> findIssue(type: TypeDescriptor, access: MemberAccess<M>, ch
     return when (chain) {
         is TypeHierarchy.IncompleteTypeHierarchy -> Issue.MissingSuperType(
             type.name,
-            access.owner,
+            access.targetType,
             chain.missingType.map { it.name }.toSet()
         )
 
-        is TypeHierarchy.NoType -> Issue.MissingType(type.name, access.owner)
+        is TypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
         is TypeHierarchy.CompleteTypeHierarchy -> {
             val member = chain.findMember(access.ref)
 
             if (member == null) {
                 Issue.MissingMember(type.name, access)
             } else {
-                val clarifiedAccess = access.clarifyOwner(member.owner.name)
+                val resolvedAccess = access.withDeclaringType(member.declaringType.name)
 
                 if (member.member.declaration == AccessDeclaration.STATIC && !access.accessType.isStatic()) {
-                    Issue.AccessStaticMemberNonStatically(type.name, clarifiedAccess)
+                    Issue.AccessStaticMemberNonStatically(type.name, resolvedAccess)
                 } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
-                    Issue.AccessInstanceMemberStatically(type.name, clarifiedAccess)
-                } else if (!AccessCheck.allowedAccess(type, member.owner, member.member)) {
-                    Issue.AccessInaccessibleMember(type.name, clarifiedAccess)
+                    Issue.AccessInstanceMemberStatically(type.name, resolvedAccess)
+                } else if (!AccessCheck.allowedAccess(type, chain.type, member.member)) {
+                    Issue.AccessInaccessibleMember(type.name, resolvedAccess)
                 } else {
                     null
                 }
@@ -81,16 +81,16 @@ fun <M : MemberType> findIssue(type: TypeDescriptor, access: MemberAccess<M>, ch
         }
     }
 }
-private class MemberWithType<M : MemberType> (
+private class MemberWithDeclaringType<M : MemberType> (
     val member: MemberDescriptor<M>,
-    val owner: TypeDescriptor
+    val declaringType: TypeDescriptor
 )
 
-private fun <M : MemberType> TypeHierarchy.CompleteTypeHierarchy.findMember(ref: MemberSymbolicReference<M>): MemberWithType<M>? {
+private fun <M : MemberType> TypeHierarchy.CompleteTypeHierarchy.findMember(ref: MemberSymbolicReference<M>): MemberWithDeclaringType<M>? {
     for (cls in classes) {
         for (m in cls.members) {
             if (ref == m.ref) {
-                return MemberWithType(m as MemberDescriptor<M>, cls)
+                return MemberWithDeclaringType(m as MemberDescriptor<M>, cls)
             }
         }
     }
