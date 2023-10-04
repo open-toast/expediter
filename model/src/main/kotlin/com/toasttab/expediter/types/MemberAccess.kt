@@ -20,32 +20,59 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface MemberAccess<M : MemberType> {
-    val owner: String
+    /**
+     * The type via which the member is accessed. E.g. for `"a".hashCode()`, the target type is `String`.
+     */
+    val targetType: String
+
+    /**
+     * The type that declares the member, if found. E.g. for `"a".hashCode()`, the target type is `Object`.
+     */
+    val declaringType: String?
+
+    /**
+     * Symbolic reference identifying the member being accessed.
+     */
     val ref: MemberSymbolicReference<M>
+
+    /**
+     * The type of method access. E.g. for `"a".hashCode()`, the access is VIRTUAL,
+     * and for `Integer.MAX_VALUE`, the access is STATIC.
+     */
     val accessType: MemberAccessType
 
-    fun clarifyOwner(moreSpecificOwner: String): MemberAccess<M>
+    fun withDeclaringType(declaringType: String): MemberAccess<M>
+
+    fun description(): String {
+        return "${ref.type} " + if (declaringType == null || declaringType == targetType) {
+            "$targetType.$ref"
+        } else {
+            "$declaringType.$ref (via $targetType)"
+        }
+    }
 
     @Serializable
     @SerialName("method")
     data class MethodAccess(
-        override val owner: String,
+        override val targetType: String,
+        override val declaringType: String? = null,
         override val ref: MemberSymbolicReference.MethodSymbolicReference,
         override val accessType: MethodAccessType
     ) : MemberAccess<MemberType.Method> {
-        override fun toString() = "${ref.type} $owner.$ref"
-        override fun clarifyOwner(moreSpecificOwner: String) = MethodAccess(moreSpecificOwner, ref, accessType)
+        override fun toString() = description()
+        override fun withDeclaringType(declaringType: String) = copy(declaringType = declaringType)
     }
 
     @Serializable
     @SerialName("field")
     data class FieldAccess(
-        override val owner: String,
+        override val targetType: String,
+        override val declaringType: String? = null,
         override val ref: MemberSymbolicReference.FieldSymbolicReference,
         override val accessType: FieldAccessType
     ) : MemberAccess<MemberType.Field> {
-        override fun toString() = "${ref.type} $owner.$ref"
-        override fun clarifyOwner(moreSpecificOwner: String) = FieldAccess(moreSpecificOwner, ref, accessType)
+        override fun toString() = description()
+        override fun withDeclaringType(declaringType: String) = copy(declaringType = declaringType)
     }
 }
 

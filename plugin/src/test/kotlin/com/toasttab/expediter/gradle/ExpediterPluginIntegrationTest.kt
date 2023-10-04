@@ -32,7 +32,7 @@ import kotlin.io.path.readText
 class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
-        val pout = project.createRunner()
+        project.createRunner()
             .withArguments("check")
             .buildAndFail()
 
@@ -43,6 +43,7 @@ class ExpediterPluginIntegrationTest {
                 "test/Caller",
                 MemberAccess.MethodAccess(
                     "java/util/concurrent/ConcurrentHashMap",
+                    null,
                     MemberSymbolicReference.MethodSymbolicReference(
                         "computeIfAbsent",
                         "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
@@ -66,6 +67,7 @@ class ExpediterPluginIntegrationTest {
                 "test/Caller",
                 MemberAccess.MethodAccess(
                     "java/lang/String",
+                    null,
                     MemberSymbolicReference.MethodSymbolicReference(
                         "isBlank",
                         "()Z"
@@ -87,6 +89,7 @@ class ExpediterPluginIntegrationTest {
                 "test/A",
                 MemberAccess.MethodAccess(
                     "java/lang/String",
+                    null,
                     MemberSymbolicReference.MethodSymbolicReference(
                         "isBlank",
                         "()Z"
@@ -99,6 +102,7 @@ class ExpediterPluginIntegrationTest {
                 "test/B",
                 MemberAccess.MethodAccess(
                     "java/lang/String",
+                    null,
                     MemberSymbolicReference.MethodSymbolicReference(
                         "isBlank",
                         "()Z"
@@ -116,11 +120,15 @@ class ExpediterPluginIntegrationTest {
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).contains(
-            Issue.AccessInaccessibleMember(
-                "com/fasterxml/jackson/databind/ser/impl/PropertyBasedObjectIdGenerator",
+            Issue.MissingMember(
+                "com/fasterxml/jackson/databind/deser/BeanDeserializer",
                 MemberAccess.MethodAccess(
-                    "com/fasterxml/jackson/annotation/ObjectIdGenerators\$Base",
-                    MemberSymbolicReference.MethodSymbolicReference("getScope", "()Ljava/lang/Class;"),
+                    "com/fasterxml/jackson/core/JsonParser",
+                    null,
+                    MemberSymbolicReference.MethodSymbolicReference(
+                        "streamReadConstraints",
+                        "()Lcom/fasterxml/jackson/core/StreamReadConstraints;"
+                    ),
                     MethodAccessType.VIRTUAL
                 )
             )

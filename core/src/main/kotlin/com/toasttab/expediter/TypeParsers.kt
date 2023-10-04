@@ -75,6 +75,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                 refs.add(
                     MemberAccess.MethodAccess(
                         owner,
+                        null,
                         MemberSymbolicReference.MethodSymbolicReference(name, descriptor),
                         invokeType
                     )
@@ -88,7 +89,14 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                     FieldAccessType.INSTANCE
                 }
 
-                refs.add(MemberAccess.FieldAccess(owner, MemberSymbolicReference.FieldSymbolicReference(name, descriptor), type))
+                refs.add(
+                    MemberAccess.FieldAccess(
+                        owner,
+                        null,
+                        MemberSymbolicReference.FieldSymbolicReference(name, descriptor),
+                        type
+                    )
+                )
             }
         }
     }

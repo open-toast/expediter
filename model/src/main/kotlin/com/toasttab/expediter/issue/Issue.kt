@@ -44,14 +44,14 @@ sealed interface Issue {
     @Serializable
     @SerialName("method-missing")
     data class MissingMember(val caller: String, val member: MemberAccess<*>) : Issue {
-        override val target: String get() = member.owner
+        override val target: String get() = member.targetType
         override fun toString() = "$caller accesses missing $member"
     }
 
     @Serializable
     @SerialName("static-member")
     data class AccessStaticMemberNonStatically(val caller: String, val member: MemberAccess<*>) : Issue {
-        override val target: String get() = member.owner
+        override val target: String get() = member.targetType
 
         override fun toString() = "$caller accesses static $member non-statically"
     }
@@ -59,14 +59,14 @@ sealed interface Issue {
     @Serializable
     @SerialName("instance-member")
     data class AccessInstanceMemberStatically(val caller: String, val member: MemberAccess<*>) : Issue {
-        override val target: String get() = member.owner
+        override val target: String get() = member.targetType
         override fun toString() = "$caller accesses instance $member statically"
     }
 
     @Serializable
     @SerialName("member-inaccessible")
     data class AccessInaccessibleMember(val caller: String, val member: MemberAccess<*>) : Issue {
-        override val target: String get() = member.owner
+        override val target: String get() = member.targetType
         override fun toString() = "$caller accesses inaccessible $member"
     }
 }

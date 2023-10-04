@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.test;
 
-public class Bar {
+public class Bar extends BaseBar {
     public int i;
     public int j;
 

@@ -45,6 +45,7 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
                     "com/toasttab/expediter/test/Bar",
+                    null,
                     MethodSymbolicReference("bar", "(Ljava/lang/String;)V"),
                     MethodAccessType.VIRTUAL
                 )
@@ -53,6 +54,7 @@ class ExpediterIntegrationTest {
             Issue.AccessInstanceMemberStatically(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
+                    "com/toasttab/expediter/test/Bar",
                     "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "()V"),
                     MethodAccessType.STATIC
@@ -63,6 +65,7 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
                     "com/toasttab/expediter/test/Bar",
+                    "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "(I)V"),
                     MethodAccessType.VIRTUAL
                 )
@@ -71,6 +74,7 @@ class ExpediterIntegrationTest {
             Issue.AccessInaccessibleMember(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
+                    "com/toasttab/expediter/test/Bar",
                     "com/toasttab/expediter/test/Bar",
                     MethodSymbolicReference("bar", "(J)V"),
                     MethodAccessType.VIRTUAL
@@ -81,6 +85,7 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
+                    null,
                     MemberSymbolicReference.FieldSymbolicReference("a", "Ljava/lang/String;"),
                     FieldAccessType.INSTANCE
                 )
@@ -89,6 +94,7 @@ class ExpediterIntegrationTest {
             Issue.AccessInstanceMemberStatically(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
+                    "com/toasttab/expediter/test/Baz",
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("x", "I"),
                     FieldAccessType.STATIC
@@ -99,6 +105,7 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Baz",
+                    "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("y", "I"),
                     FieldAccessType.INSTANCE
                 )
@@ -107,6 +114,7 @@ class ExpediterIntegrationTest {
             Issue.AccessInaccessibleMember(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
+                    "com/toasttab/expediter/test/Baz",
                     "com/toasttab/expediter/test/Baz",
                     MemberSymbolicReference.FieldSymbolicReference("z", "I"),
                     FieldAccessType.INSTANCE
@@ -117,6 +125,7 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
                     "com/toasttab/expediter/test/Bar",
+                    "com/toasttab/expediter/test/BaseBar",
                     MemberSymbolicReference.FieldSymbolicReference("j", "I"),
                     FieldAccessType.INSTANCE
                 )

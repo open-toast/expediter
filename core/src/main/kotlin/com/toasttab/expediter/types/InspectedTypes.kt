@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentMap
 
 sealed class TypeHierarchy {
     object NoType : TypeHierarchy()
-    class IncompleteTypeHierarchy(val missingType: Set<MaybeType.MissingType>) : TypeHierarchy()
-    class CompleteTypeHierarchy(val classes: Sequence<TypeDescriptor>) : TypeHierarchy()
+    class IncompleteTypeHierarchy(val type: TypeDescriptor, val missingType: Set<MaybeType.MissingType>) : TypeHierarchy()
+    class CompleteTypeHierarchy(val type: TypeDescriptor, val classes: Sequence<TypeDescriptor>) : TypeHierarchy()
 }
 
 private class ApplicationTypeContainer(
@@ -115,29 +115,29 @@ class InspectedTypes private constructor(
     }
 
     private fun hierarchy(access: MemberAccess.FieldAccess): TypeHierarchy {
-        val cls = lookup(access.owner)?.let { traverse(it) }
+        val cls = lookup(access.targetType)?.let { traverse(it) }
 
         return if (cls == null) {
             TypeHierarchy.NoType
         } else {
             val missing = cls.superTypes.filterIsInstance<MaybeType.MissingType>()
             if (missing.isNotEmpty()) {
-                TypeHierarchy.IncompleteTypeHierarchy(missing.toSet())
+                TypeHierarchy.IncompleteTypeHierarchy(cls.cls, missing.toSet())
             } else {
-                TypeHierarchy.CompleteTypeHierarchy(sequenceOf(cls.cls) + cls.superTypes.asSequence().filterIsInstance<MaybeType.Type>().map { it.cls })
+                TypeHierarchy.CompleteTypeHierarchy(cls.cls, sequenceOf(cls.cls) + cls.superTypes.asSequence().filterIsInstance<MaybeType.Type>().map { it.cls })
             }
         }
     }
 
     private fun hierarchy(access: MemberAccess.MethodAccess): TypeHierarchy {
-        val cls = lookup(access.owner)?.let { traverse(it) }
+        val cls = lookup(access.targetType)?.let { traverse(it) }
 
         return if (cls == null) {
             TypeHierarchy.NoType
         } else {
             val missing = cls.superTypes.filterIsInstance<MaybeType.MissingType>()
             if (missing.isNotEmpty()) {
-                TypeHierarchy.IncompleteTypeHierarchy(missing.toSet())
+                TypeHierarchy.IncompleteTypeHierarchy(cls.cls, missing.toSet())
             } else if (access.accessType == MethodAccessType.VIRTUAL ||
                 access.accessType == MethodAccessType.STATIC ||
                 access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor()
@@ -145,11 +145,13 @@ class InspectedTypes private constructor(
                 // invokevirtual / static / special (except for constructors) may refer to
                 // a method declared on target type or target type's supertypes
                 TypeHierarchy.CompleteTypeHierarchy(
+                    cls.cls,
                     sequenceOf(cls.cls) + cls.superTypes.asSequence().filterIsInstance<MaybeType.Type>().map { it.cls }
                 )
             } else if (access.accessType == MethodAccessType.INTERFACE) {
                 // same story for invokeinterface, but method must be present on an interface type
                 TypeHierarchy.CompleteTypeHierarchy(
+                    cls.cls,
                     sequenceOf(cls.cls) + cls.superTypes.asSequence()
                         .filterIsInstance<MaybeType.Type>()
                         .map { it.cls }
@@ -158,7 +160,7 @@ class InspectedTypes private constructor(
             } else {
                 // constructor must be present on the target type
                 // TODO: this will catch non-constructor cases, like indy, need to handle or ignore them properly
-                TypeHierarchy.CompleteTypeHierarchy(sequenceOf(cls.cls))
+                TypeHierarchy.CompleteTypeHierarchy(cls.cls, sequenceOf(cls.cls))
             }
         }
     }
