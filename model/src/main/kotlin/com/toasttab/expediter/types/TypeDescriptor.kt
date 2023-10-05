@@ -36,7 +36,7 @@ interface IdentifiesType {
 /**
  * Represents declared properties (fields / methods / directly extended supertypes) of a type.
  */
-class TypeDescriptor (
+class TypeDescriptor(
     override val name: String,
     val superName: String?,
     val interfaces: List<String>,

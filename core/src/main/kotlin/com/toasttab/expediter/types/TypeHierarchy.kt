@@ -25,7 +25,8 @@ class TypeHierarchy(
         } else {
             ResolvedTypeHierarchy.CompleteTypeHierarchy(
                 type,
-                superTypes.asSequence().filterIsInstance<OptionalType.Type>().map { it.cls })
+                superTypes.asSequence().filterIsInstance<OptionalType.Type>().map { it.cls }
+            )
         }
     }
 }
@@ -59,14 +60,12 @@ sealed interface ResolvedOptionalTypeHierarchy {
     object NoType : ResolvedOptionalTypeHierarchy
 }
 
-sealed interface ResolvedTypeHierarchy: ResolvedOptionalTypeHierarchy {
+sealed interface ResolvedTypeHierarchy : ResolvedOptionalTypeHierarchy {
     class IncompleteTypeHierarchy(val type: TypeDescriptor, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
     class CompleteTypeHierarchy(val type: TypeDescriptor, val superTypes: Sequence<TypeDescriptor>) : ResolvedTypeHierarchy {
         val allTypes: Sequence<TypeDescriptor> get() = sequenceOf(type) + superTypes
     }
 }
-
-
 
 class ApplicationTypeWithResolvedHierarchy(
     val appType: ApplicationType,
