@@ -19,41 +19,41 @@ import com.toasttab.expediter.types.MemberSymbolicReference
 import java.io.Serializable
 
 interface Ignore : Serializable {
-    fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?): Boolean
+    fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?): Boolean
 
     companion object {
         val NOTHING: Ignore = object : Ignore {
-            override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = false
+            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = false
         }
     }
 
     class Not(
         private val ignore: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = !ignore.ignore(caller, type, ref)
+        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = !ignore.ignore(caller, type, ref)
     }
 
     class And(
         private vararg val ignores: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = ignores.all { it.ignore(caller, type, ref) }
+        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ignores.all { it.ignore(caller, type, ref) }
     }
 
     class Or(
         private vararg val ignores: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = ignores.any { it.ignore(caller, type, ref) }
+        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ignores.any { it.ignore(caller, type, ref) }
     }
 
     object IsConstructor : Ignore {
-        override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = ref is MemberSymbolicReference.MethodSymbolicReference && ref.isConstructor()
+        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ref is MemberSymbolicReference.MethodSymbolicReference && ref.isConstructor()
     }
 
     object Caller {
         class StartsWith(
             private vararg val partial: String
         ) : Ignore {
-            override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = caller != null && partial.any { caller.startsWith(it) }
+            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = caller != null && partial.any { caller.startsWith(it) }
         }
     }
 
@@ -61,14 +61,14 @@ interface Ignore : Serializable {
         class StartsWith(
             private vararg val partial: String
         ) : Ignore {
-            override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = partial.any { type.startsWith(it) }
+            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = partial.any { type != null && type.startsWith(it) }
         }
     }
 
     class Signature(
         private val signature: String
     ) : Ignore {
-        override fun ignore(caller: String?, type: String, ref: MemberSymbolicReference<*>?) = ref?.signature == signature
+        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ref?.signature == signature
 
         companion object {
             val IS_BLANK = Signature("()V")

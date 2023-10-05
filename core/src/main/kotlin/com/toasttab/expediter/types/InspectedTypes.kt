@@ -19,12 +19,6 @@ import com.toasttab.expediter.issue.Issue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
-sealed class TypeHierarchy {
-    object NoType : TypeHierarchy()
-    class IncompleteTypeHierarchy(val type: TypeDescriptor, val missingType: Set<MaybeType.MissingType>) : TypeHierarchy()
-    class CompleteTypeHierarchy(val type: TypeDescriptor, val classes: Sequence<TypeDescriptor>) : TypeHierarchy()
-}
-
 private class ApplicationTypeContainer(
     val appTypes: Map<String, ApplicationType>,
     val duplicates: List<Issue.DuplicateType>
@@ -64,7 +58,7 @@ class InspectedTypes private constructor(
         it.value.type
     }
 
-    private val hierarchyCache: MutableMap<TypeDescriptor, TypeWithHierarchy> = hashMapOf()
+    private val hierarchyCache: MutableMap<TypeDescriptor, TypeHierarchy> = hashMapOf()
 
     constructor(all: List<ApplicationType>, platformTypeProvider: PlatformTypeProvider) : this(ApplicationTypeContainer.create(all), platformTypeProvider)
 
@@ -72,18 +66,18 @@ class InspectedTypes private constructor(
         return inspectedCache[s] ?: inspectedCache.computeIfAbsent(s) { s ->
             if (s.startsWith("[")) {
                 // TODO: make up a type descriptor for an array type; we could validate that the element type actually exists
-                TypeDescriptor(s, "java/lang/Object", emptyList(), emptyList(), AccessProtection.UNKNOWN, TypeFlavor.CLASS)
+                TypeDescriptor(s, "java/lang/Object", emptyList(), emptyList(), AccessProtection.UNKNOWN, TypeFlavor.CLASS, TypeExtensibility.FINAL)
             } else {
                 platformTypeProvider.lookupPlatformType(s)
             }
         }
     }
 
-    private fun traverse(cls: TypeDescriptor): TypeWithHierarchy {
-        val loaded = hierarchyCache[cls]
+    private fun traverse(cls: TypeDescriptor): TypeHierarchy {
+        val cached = hierarchyCache[cls]
 
-        if (loaded == null) {
-            val superTypes = mutableSetOf<MaybeType>()
+        if (cached == null) {
+            val superTypes = mutableSetOf<OptionalType>()
             val superTypeNames = mutableListOf<String>()
 
             superTypeNames.addAll(cls.interfaces)
@@ -93,76 +87,28 @@ class InspectedTypes private constructor(
                 val l = lookup(s)
 
                 if (l == null) {
-                    superTypes.add(MaybeType.MissingType(s))
+                    superTypes.add(OptionalType.MissingType(s))
                 } else {
-                    val loaded = traverse(l)
-                    superTypes.add(MaybeType.Type(l))
-                    superTypes.addAll(loaded.superTypes)
+                    val hierarchy = traverse(l)
+                    superTypes.add(OptionalType.Type(l))
+                    superTypes.addAll(hierarchy.superTypes)
                 }
             }
 
-            return TypeWithHierarchy(cls, superTypes).also {
+            return TypeHierarchy(cls, superTypes).also {
                 hierarchyCache[cls] = it
             }
         } else {
-            return loaded
+            return cached
         }
     }
 
-    fun hierarchy(access: MemberAccess<*>) = when (access) {
-        is MemberAccess.FieldAccess -> hierarchy(access)
-        is MemberAccess.MethodAccess -> hierarchy(access)
+    fun resolveHierarchy(type: String): ResolvedOptionalTypeHierarchy {
+        return lookup(type)?.let { resolveHierarchy(it) } ?: ResolvedOptionalTypeHierarchy.NoType
     }
 
-    private fun hierarchy(access: MemberAccess.FieldAccess): TypeHierarchy {
-        val cls = lookup(access.targetType)?.let { traverse(it) }
-
-        return if (cls == null) {
-            TypeHierarchy.NoType
-        } else {
-            val missing = cls.superTypes.filterIsInstance<MaybeType.MissingType>()
-            if (missing.isNotEmpty()) {
-                TypeHierarchy.IncompleteTypeHierarchy(cls.cls, missing.toSet())
-            } else {
-                TypeHierarchy.CompleteTypeHierarchy(cls.cls, sequenceOf(cls.cls) + cls.superTypes.asSequence().filterIsInstance<MaybeType.Type>().map { it.cls })
-            }
-        }
-    }
-
-    private fun hierarchy(access: MemberAccess.MethodAccess): TypeHierarchy {
-        val cls = lookup(access.targetType)?.let { traverse(it) }
-
-        return if (cls == null) {
-            TypeHierarchy.NoType
-        } else {
-            val missing = cls.superTypes.filterIsInstance<MaybeType.MissingType>()
-            if (missing.isNotEmpty()) {
-                TypeHierarchy.IncompleteTypeHierarchy(cls.cls, missing.toSet())
-            } else if (access.accessType == MethodAccessType.VIRTUAL ||
-                access.accessType == MethodAccessType.STATIC ||
-                access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor()
-            ) {
-                // invokevirtual / static / special (except for constructors) may refer to
-                // a method declared on target type or target type's supertypes
-                TypeHierarchy.CompleteTypeHierarchy(
-                    cls.cls,
-                    sequenceOf(cls.cls) + cls.superTypes.asSequence().filterIsInstance<MaybeType.Type>().map { it.cls }
-                )
-            } else if (access.accessType == MethodAccessType.INTERFACE) {
-                // same story for invokeinterface, but method must be present on an interface type
-                TypeHierarchy.CompleteTypeHierarchy(
-                    cls.cls,
-                    sequenceOf(cls.cls) + cls.superTypes.asSequence()
-                        .filterIsInstance<MaybeType.Type>()
-                        .map { it.cls }
-                        .filter { it.flavor != TypeFlavor.CLASS }
-                )
-            } else {
-                // constructor must be present on the target type
-                // TODO: this will catch non-constructor cases, like indy, need to handle or ignore them properly
-                TypeHierarchy.CompleteTypeHierarchy(cls.cls, sequenceOf(cls.cls))
-            }
-        }
+    fun resolveHierarchy(type: TypeDescriptor): ResolvedTypeHierarchy {
+        return traverse(type).resolve()
     }
 
     val classes: Collection<ApplicationType> get() = appTypes.appTypes.values

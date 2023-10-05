@@ -26,4 +26,6 @@ public class Bar extends BaseBar {
     public void bar(int x) { }
 
     public void bar(long x) { }
+
+    public void bar(float x) { }
 }

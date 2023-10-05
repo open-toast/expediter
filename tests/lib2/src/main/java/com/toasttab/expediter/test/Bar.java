@@ -29,4 +29,7 @@ public class Bar extends BaseBar {
 
     // changes from public to package-private
     void bar(long x) { }
+
+    // changes from public to protected
+    protected void bar(float x) { }
 }

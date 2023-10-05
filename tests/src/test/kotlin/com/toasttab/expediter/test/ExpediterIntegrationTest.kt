@@ -81,6 +81,16 @@ class ExpediterIntegrationTest {
                 )
             ),
 
+            Issue.AccessInaccessibleMember(
+                "com/toasttab/expediter/test/caller/Caller",
+                MemberAccess.MethodAccess(
+                    "com/toasttab/expediter/test/Baz",
+                    "com/toasttab/expediter/test/Bar",
+                    MethodSymbolicReference("bar", "(F)V"),
+                    MethodAccessType.VIRTUAL
+                )
+            ),
+
             Issue.MissingMember(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.FieldAccess(
@@ -142,9 +152,19 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/BaseFoo"
             ),
 
+            Issue.MissingApplicationSuperType(
+                "com/toasttab/expediter/test/Foo",
+                setOf("com/toasttab/expediter/test/BaseFoo")
+            ),
+
             Issue.DuplicateType(
                 "com/toasttab/expediter/test/Dupe",
                 listOf("main", "lib2.jar")
+            ),
+
+            Issue.FinalApplicationSuperType(
+                "com/toasttab/expediter/test/caller/Caller",
+                setOf("com/toasttab/expediter/test/Base")
             )
         )
     }

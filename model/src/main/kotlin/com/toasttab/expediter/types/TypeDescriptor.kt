@@ -25,51 +25,27 @@ enum class TypeFlavor {
     CLASS, INTERFACE, UNKNOWN
 }
 
+enum class TypeExtensibility {
+    FINAL, NOT_FINAL, UNKNOWN
+}
+
+interface IdentifiesType {
+    val name: String
+}
+
 /**
  * Represents declared properties (fields / methods / directly extended supertypes) of a type.
  */
-class TypeDescriptor(
-    val name: String,
+class TypeDescriptor (
+    override val name: String,
     val superName: String?,
     val interfaces: List<String>,
 
     val members: List<MemberDescriptor<*>>,
     val protection: AccessProtection,
-    val flavor: TypeFlavor
-)
-
-/**
- * Sum type of [TypeDescriptor | MissingType = type not found on app's classpath]
- */
-sealed class MaybeType {
-    abstract val name: String
-
-    class Type(val cls: TypeDescriptor) : MaybeType() {
-        override val name: String
-            get() = cls.name
-    }
-
-    class MissingType(override val name: String) : MaybeType()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as MaybeType
-
-        return name == other.name
-    }
-
-    override fun hashCode() = name.hashCode()
-}
-
-/**
- * Represents declared properties and all supertypes of a type.
- */
-class TypeWithHierarchy(
-    val cls: TypeDescriptor,
-    val superTypes: Set<MaybeType>
-)
+    val flavor: TypeFlavor,
+    val extensibility: TypeExtensibility
+) : IdentifiesType
 
 /**
  * Represents declared properties of a type and all fields / methods that type's code accesses / invokes.
@@ -78,6 +54,6 @@ class ApplicationType(
     val type: TypeDescriptor,
     val refs: Set<MemberAccess<*>>,
     val source: String
-) {
+) : IdentifiesType by type {
     override fun toString() = "ApplicationType[${type.name}]"
 }
