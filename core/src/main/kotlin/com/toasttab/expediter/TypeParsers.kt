@@ -22,6 +22,7 @@ import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.TypeDescriptor
+import com.toasttab.expediter.types.TypeExtensibility
 import com.toasttab.expediter.types.TypeFlavor
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassReader.SKIP_DEBUG
@@ -109,8 +110,9 @@ private class TypeDescriptorParser : ClassVisitor(ASM9) {
     private val members: MutableList<MemberDescriptor<*>> = mutableListOf()
     private var access: Int = 0
     private var typeFlavor: TypeFlavor = TypeFlavor.UNKNOWN
+    private var typeExtensibility: TypeExtensibility = TypeExtensibility.UNKNOWN
 
-    fun get() = TypeDescriptor(name!!, superName, interfaces, members, AttributeParser.protection(access), typeFlavor)
+    fun get() = TypeDescriptor(name!!, superName, interfaces, members, AttributeParser.protection(access), typeFlavor, typeExtensibility)
 
     override fun visit(
         version: Int,
@@ -123,7 +125,8 @@ private class TypeDescriptorParser : ClassVisitor(ASM9) {
         this.name = name
         this.superName = superName
         this.access = access
-        this.typeFlavor = if (AttributeParser.isInterface(access)) TypeFlavor.INTERFACE else TypeFlavor.CLASS
+        this.typeFlavor = AttributeParser.flavor(access)
+        this.typeExtensibility = AttributeParser.extensibility(access)
         this.interfaces.addAll(interfaces)
     }
 

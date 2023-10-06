@@ -17,10 +17,12 @@ package com.toasttab.expediter
 
 import com.toasttab.expediter.types.AccessDeclaration
 import com.toasttab.expediter.types.AccessProtection
+import com.toasttab.expediter.types.TypeExtensibility
+import com.toasttab.expediter.types.TypeFlavor
 import org.objectweb.asm.Opcodes
 
 object AttributeParser {
-    fun isInterface(access: Int) = (access and Opcodes.ACC_INTERFACE) != 0
+    fun flavor(access: Int) = if (access and Opcodes.ACC_INTERFACE != 0) TypeFlavor.INTERFACE else TypeFlavor.CLASS
 
     fun protection(access: Int) =
         if (access and Opcodes.ACC_PRIVATE != 0) {
@@ -38,5 +40,12 @@ object AttributeParser {
             AccessDeclaration.STATIC
         } else {
             AccessDeclaration.INSTANCE
+        }
+
+    fun extensibility(access: Int) =
+        if (access and Opcodes.ACC_FINAL != 0) {
+            TypeExtensibility.FINAL
+        } else {
+            TypeExtensibility.NOT_FINAL
         }
 }

@@ -20,6 +20,7 @@ import com.toasttab.expediter.types.AccessProtection
 import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.TypeDescriptor
+import com.toasttab.expediter.types.TypeExtensibility
 import com.toasttab.expediter.types.TypeFlavor
 import java.io.InputStream
 import java.util.zip.GZIPInputStream
@@ -61,7 +62,8 @@ object AnimalSnifferParser {
                 it.superInterfaces,
                 members,
                 AccessProtection.UNKNOWN,
-                TypeFlavor.UNKNOWN
+                TypeFlavor.UNKNOWN,
+                TypeExtensibility.UNKNOWN
             )
         }
     }

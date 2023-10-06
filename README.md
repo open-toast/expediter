@@ -24,9 +24,10 @@ This tool can detect _some_ binary incompatibilities at build time. Specifically
 * Missing classes
 * Duplicate classes
 * Classes with missing superclasses and interfaces
+* Classes extending final classes
 * Missing methods and fields
 * Static methods and fields accessed non-statically and vice-versa
-* Inaccessible methods and fields (partially)
+* Inaccessible methods and fields
 
 ## Application vs platform classes
 

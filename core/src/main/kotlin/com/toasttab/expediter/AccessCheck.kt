@@ -1,21 +1,26 @@
 package com.toasttab.expediter
 
 import com.toasttab.expediter.types.AccessProtection
+import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
 import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberType
+import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.TypeDescriptor
 
 object AccessCheck {
-    fun <M : MemberType> allowedAccess(caller: TypeDescriptor, target: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
+    fun <M : MemberType> allowedAccess(caller: ApplicationTypeWithResolvedHierarchy, target: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
         return if (member.protection == AccessProtection.PRIVATE) {
-            return caller.sameClassAs(target)
+            caller.name == target.name
         } else if (member.protection == AccessProtection.PACKAGE_PRIVATE || target.protection == AccessProtection.PACKAGE_PRIVATE) {
-            return caller.samePackageAs(target)
+            samePackage(caller.name, target.name)
+        } else if (member.protection == AccessProtection.PROTECTED) {
+            samePackage(caller.name, target.name) ||
+                // if we can't resolve all supertypes, we can't say for sure that access is not allowed
+                caller.hierarchy !is ResolvedTypeHierarchy.CompleteTypeHierarchy ||
+                caller.hierarchy.allTypes.any { it.name == target.name }
         } else {
             true
-        } // TODO: add other checks
+        }
     }
-
-    private fun TypeDescriptor.sameClassAs(other: TypeDescriptor) = name == other.name
-    private fun TypeDescriptor.samePackageAs(other: TypeDescriptor) = name.substringBeforeLast('/') == other.name.substringBeforeLast('/')
+    private fun samePackage(a: String, b: String) = a.substringBeforeLast('/') == b.substringBeforeLast('/')
 }

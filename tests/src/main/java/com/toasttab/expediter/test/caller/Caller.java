@@ -16,11 +16,12 @@
 package com.toasttab.expediter.test.caller;
 
 import com.toasttab.expediter.test.Bar;
+import com.toasttab.expediter.test.Base;
 import com.toasttab.expediter.test.BaseFoo;
 import com.toasttab.expediter.test.Baz;
 import com.toasttab.expediter.test.Foo;
 
-public class Caller {
+public final class Caller extends Base {
     Foo foo;
     BaseFoo baseFoo;
     Bar bar;
@@ -69,9 +70,15 @@ public class Caller {
         bar.j = 1;
     }
 
+    void protectedField() {
+        new Baz().bar(1f);
+    }
+
     void fieldMovedFromSuper() {
         new Baz().i = 1;
     }
 
     void fieldAccessedViaPublicSubclass() { bar.i = 1; }
+
+    void accessProtectedField() { w = 0; }
 }

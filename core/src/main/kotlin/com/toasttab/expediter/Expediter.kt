@@ -18,50 +18,98 @@ package com.toasttab.expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.types.AccessDeclaration
+import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberDescriptor
-import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MemberType
+import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformTypeProvider
+import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.TypeDescriptor
-import com.toasttab.expediter.types.TypeHierarchy
+import com.toasttab.expediter.types.TypeExtensibility
+import com.toasttab.expediter.types.TypeFlavor
 
 class Expediter(
     private val ignore: Ignore,
     private val applicationTypesProvider: ApplicationTypesProvider,
     private val platformTypeProvider: PlatformTypeProvider
 ) {
-    fun findIssues(): Set<Issue> {
-        val inspectedTypes = InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
+    private val inspectedTypes: InspectedTypes by lazy {
+        InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
+    }
 
-        return (
-            inspectedTypes.classes.flatMap { cls ->
-                cls.refs.mapNotNull { access ->
-                    if (!ignore.ignore(cls.type.name, access.targetType, access.ref)) {
-                        findIssue(cls.type, access, inspectedTypes.hierarchy(access))
-                    } else {
-                        null
-                    }
-                }
-            } + inspectedTypes.duplicateTypes.filter {
-                !ignore.ignore(null, it.target, null)
+    private fun duplicates() = inspectedTypes.duplicateTypes.filter {
+        !ignore.ignore(null, it.target, null)
+    }
+
+    private fun findIssues(appTypeWithHierarchy: ApplicationTypeWithResolvedHierarchy): Collection<Issue> {
+        val issues = mutableListOf<Issue>()
+
+        when (appTypeWithHierarchy.hierarchy) {
+            is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> {
+                issues.add(
+                    Issue.MissingApplicationSuperType(
+                        appTypeWithHierarchy.name,
+                        appTypeWithHierarchy.hierarchy.missingType.map { it.name }.toSet()
+                    )
+                )
             }
+
+            is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
+                val finalSupertypes =
+                    appTypeWithHierarchy.hierarchy.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }
+                        .toList()
+                if (finalSupertypes.isNotEmpty()) {
+                    issues.add(
+                        Issue.FinalApplicationSuperType(
+                            appTypeWithHierarchy.name,
+                            finalSupertypes.map { it.name }.toSet()
+                        )
+                    )
+                }
+            }
+        }
+
+        issues.addAll(
+            appTypeWithHierarchy.appType.refs.mapNotNull { access ->
+                if (!ignore.ignore(appTypeWithHierarchy.name, access.targetType, access.ref)) {
+                    findIssue(appTypeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
+                } else {
+                    null
+                }
+            }
+        )
+
+        return issues
+    }
+
+    fun findIssues(): Set<Issue> {
+        return (
+            inspectedTypes.classes.flatMap { appType ->
+                findIssues(
+                    ApplicationTypeWithResolvedHierarchy(
+                        appType,
+                        inspectedTypes.resolveHierarchy(appType.type)
+                    )
+                )
+            } + duplicates()
             ).toSet()
     }
 }
 
-fun <M : MemberType> findIssue(type: TypeDescriptor, access: MemberAccess<M>, chain: TypeHierarchy): Issue? {
+fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, access: MemberAccess<M>, chain: OptionalResolvedTypeHierarchy): Issue? {
     return when (chain) {
-        is TypeHierarchy.IncompleteTypeHierarchy -> Issue.MissingSuperType(
+        is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> Issue.MissingSuperType(
             type.name,
             access.targetType,
             chain.missingType.map { it.name }.toSet()
         )
 
-        is TypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
-        is TypeHierarchy.CompleteTypeHierarchy -> {
-            val member = chain.findMember(access.ref)
+        is OptionalResolvedTypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
+        is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
+            val member = chain.resolveMember(access)
 
             if (member == null) {
                 Issue.MissingMember(type.name, access)
@@ -86,10 +134,28 @@ private class MemberWithDeclaringType<M : MemberType> (
     val declaringType: TypeDescriptor
 )
 
-private fun <M : MemberType> TypeHierarchy.CompleteTypeHierarchy.findMember(ref: MemberSymbolicReference<M>): MemberWithDeclaringType<M>? {
-    for (cls in classes) {
+private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess<M>): Sequence<TypeDescriptor> {
+    return if (access !is MemberAccess.MethodAccess ||
+        access.accessType == MethodAccessType.VIRTUAL ||
+        access.accessType == MethodAccessType.STATIC ||
+        (access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor())
+    ) {
+        // fields and methods, except for constructors and methods invoked via invokeinterface
+        // can be declared on any type in the hierarchy
+        allTypes
+    } else if (access.accessType == MethodAccessType.INTERFACE) {
+        // methods invoked via invokeinterface must be declared on an interface
+        allTypes.filter { it.flavor != TypeFlavor.CLASS }
+    } else {
+        // constructors must always be declared by the type being constructed
+        sequenceOf(type)
+    }
+}
+
+private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess<M>): MemberWithDeclaringType<M>? {
+    for (cls in filterToAccessType(access)) {
         for (m in cls.members) {
-            if (ref == m.ref) {
+            if (access.ref == m.ref) {
                 return MemberWithDeclaringType(m as MemberDescriptor<M>, cls)
             }
         }
