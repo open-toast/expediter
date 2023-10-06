@@ -103,8 +103,8 @@ class InspectedTypes private constructor(
         }
     }
 
-    fun resolveHierarchy(type: String): ResolvedOptionalTypeHierarchy {
-        return lookup(type)?.let { resolveHierarchy(it) } ?: ResolvedOptionalTypeHierarchy.NoType
+    fun resolveHierarchy(type: String): OptionalResolvedTypeHierarchy {
+        return lookup(type)?.let { resolveHierarchy(it) } ?: OptionalResolvedTypeHierarchy.NoType
     }
 
     fun resolveHierarchy(type: TypeDescriptor): ResolvedTypeHierarchy {

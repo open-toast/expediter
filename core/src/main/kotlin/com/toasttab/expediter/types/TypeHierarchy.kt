@@ -56,11 +56,11 @@ sealed class OptionalType {
     override fun hashCode() = name.hashCode()
 }
 
-sealed interface ResolvedOptionalTypeHierarchy {
-    object NoType : ResolvedOptionalTypeHierarchy
+sealed interface OptionalResolvedTypeHierarchy {
+    object NoType : OptionalResolvedTypeHierarchy
 }
 
-sealed interface ResolvedTypeHierarchy : ResolvedOptionalTypeHierarchy {
+sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy {
     class IncompleteTypeHierarchy(val type: TypeDescriptor, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
     class CompleteTypeHierarchy(val type: TypeDescriptor, val superTypes: Sequence<TypeDescriptor>) : ResolvedTypeHierarchy {
         val allTypes: Sequence<TypeDescriptor> get() = sequenceOf(type) + superTypes

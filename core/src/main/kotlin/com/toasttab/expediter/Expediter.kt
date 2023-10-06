@@ -24,8 +24,8 @@ import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformTypeProvider
-import com.toasttab.expediter.types.ResolvedOptionalTypeHierarchy
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.TypeDescriptor
 import com.toasttab.expediter.types.TypeExtensibility
@@ -36,59 +36,70 @@ class Expediter(
     private val applicationTypesProvider: ApplicationTypesProvider,
     private val platformTypeProvider: PlatformTypeProvider
 ) {
+    private val inspectedTypes: InspectedTypes by lazy {
+        InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
+    }
+
+    private fun duplicates() = inspectedTypes.duplicateTypes.filter {
+        !ignore.ignore(null, it.target, null)
+    }
+
+    private fun findIssues(appTypeWithHierarchy: ApplicationTypeWithResolvedHierarchy): Collection<Issue> {
+        val issues = mutableListOf<Issue>()
+
+        when (appTypeWithHierarchy.hierarchy) {
+            is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> {
+                issues.add(
+                    Issue.MissingApplicationSuperType(
+                        appTypeWithHierarchy.name,
+                        appTypeWithHierarchy.hierarchy.missingType.map { it.name }.toSet()
+                    )
+                )
+            }
+
+            is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
+                val finalSupertypes =
+                    appTypeWithHierarchy.hierarchy.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }
+                        .toList()
+                if (finalSupertypes.isNotEmpty()) {
+                    issues.add(
+                        Issue.FinalApplicationSuperType(
+                            appTypeWithHierarchy.name,
+                            finalSupertypes.map { it.name }.toSet()
+                        )
+                    )
+                }
+            }
+        }
+
+        issues.addAll(
+            appTypeWithHierarchy.appType.refs.mapNotNull { access ->
+                if (!ignore.ignore(appTypeWithHierarchy.name, access.targetType, access.ref)) {
+                    findIssue(appTypeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
+                } else {
+                    null
+                }
+            }
+        )
+
+        return issues
+    }
+
     fun findIssues(): Set<Issue> {
-        val inspectedTypes = InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
         return (
             inspectedTypes.classes.flatMap { appType ->
-                val issues = mutableListOf<Issue>()
-
-                val h = inspectedTypes.resolveHierarchy(appType.type)
-
-                when (h) {
-                    is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> {
-                        issues.add(
-                            Issue.MissingApplicationSuperType(
-                                appType.name,
-                                h.missingType.map { it.name }.toSet()
-                            )
-                        )
-                    }
-
-                    is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
-                        val finalSupertypes =
-                            h.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }.toList()
-                        if (finalSupertypes.isNotEmpty()) {
-                            issues.add(
-                                Issue.FinalApplicationSuperType(
-                                    appType.name,
-                                    finalSupertypes.map { it.name }.toSet()
-                                )
-                            )
-                        }
-                    }
-                }
-
-                val typeWithHierarchy = ApplicationTypeWithResolvedHierarchy(appType, h)
-
-                issues.addAll(
-                    appType.refs.mapNotNull { access ->
-                        if (!ignore.ignore(appType.name, access.targetType, access.ref)) {
-                            findIssue(typeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
-                        } else {
-                            null
-                        }
-                    }
+                findIssues(
+                    ApplicationTypeWithResolvedHierarchy(
+                        appType,
+                        inspectedTypes.resolveHierarchy(appType.type)
+                    )
                 )
-
-                issues
-            } + inspectedTypes.duplicateTypes.filter {
-                !ignore.ignore(null, it.target, null)
-            }
+            } + duplicates()
             ).toSet()
     }
 }
 
-fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, access: MemberAccess<M>, chain: ResolvedOptionalTypeHierarchy): Issue? {
+fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, access: MemberAccess<M>, chain: OptionalResolvedTypeHierarchy): Issue? {
     return when (chain) {
         is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> Issue.MissingSuperType(
             type.name,
@@ -96,9 +107,9 @@ fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, acces
             chain.missingType.map { it.name }.toSet()
         )
 
-        is ResolvedOptionalTypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
+        is OptionalResolvedTypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
         is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
-            val member = chain.findMember(access)
+            val member = chain.resolveMember(access)
 
             if (member == null) {
                 Issue.MissingMember(type.name, access)
@@ -123,8 +134,8 @@ private class MemberWithDeclaringType<M : MemberType> (
     val declaringType: TypeDescriptor
 )
 
-private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.findMember(access: MemberAccess<M>): MemberWithDeclaringType<M>? {
-    val classes = if (access !is MemberAccess.MethodAccess ||
+private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess<M>): Sequence<TypeDescriptor> {
+    return if (access !is MemberAccess.MethodAccess ||
         access.accessType == MethodAccessType.VIRTUAL ||
         access.accessType == MethodAccessType.STATIC ||
         (access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor())
@@ -139,8 +150,10 @@ private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.findMem
         // constructors must always be declared by the type being constructed
         sequenceOf(type)
     }
+}
 
-    for (cls in classes) {
+private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess<M>): MemberWithDeclaringType<M>? {
+    for (cls in filterToAccessType(access)) {
         for (m in cls.members) {
             if (access.ref == m.ref) {
                 return MemberWithDeclaringType(m as MemberDescriptor<M>, cls)
