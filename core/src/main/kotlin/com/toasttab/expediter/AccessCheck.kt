@@ -15,6 +15,7 @@ object AccessCheck {
             samePackage(caller.name, target.name)
         } else if (member.protection == AccessProtection.PROTECTED) {
             samePackage(caller.name, target.name) ||
+                // if we can't resolve all supertypes, we can't say for sure that access is not allowed
                 caller.hierarchy !is ResolvedTypeHierarchy.CompleteTypeHierarchy ||
                 caller.hierarchy.allTypes.any { it.name == target.name }
         } else {
