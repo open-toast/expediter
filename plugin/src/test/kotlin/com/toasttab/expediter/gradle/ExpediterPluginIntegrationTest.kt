@@ -33,7 +33,7 @@ class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
         project.createRunner()
-            .withArguments("check")
+            .withArguments("check", "--stacktrace")
             .buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
@@ -144,5 +144,15 @@ class ExpediterPluginIntegrationTest {
         expectThat(report.issues).contains(
             Issue.MissingType("kotlin/io/path/DirectoryEntriesReader", "java/nio/file/Files")
         )
+    }
+
+    @Test
+    fun `ignore`(project: TestProject) {
+        project.createRunner().withArguments("check").build()
+    }
+
+    @Test
+    fun `ignore file`(project: TestProject) {
+        project.createRunner().withArguments("check").build()
     }
 }

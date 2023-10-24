@@ -15,14 +15,15 @@
 
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.ignore.Ignore
 import org.gradle.api.Action
 
 abstract class ExpediterExtension {
     var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath", sourceSet = "main")
     var platform: PlatformClassSelector = PlatformClassSelector(platformClassloader = true)
 
-    var ignore: Ignore = Ignore.NOTHING
+    val ignoreSpec = IgnoreSpec()
+
+    @Deprecated("use the ignore closure instead", replaceWith = ReplaceWith("ignore { file = ignoreFile }"))
     var ignoreFile: Any? = null
 
     var failOnIssues: Boolean = false
@@ -35,5 +36,9 @@ abstract class ExpediterExtension {
     fun platform(configure: Action<PlatformClassSelector>) {
         platform = PlatformClassSelector(false)
         configure.execute(platform)
+    }
+
+    fun ignore(configure: Action<IgnoreSpec>) {
+        configure.execute(ignoreSpec)
     }
 }

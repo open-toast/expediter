@@ -40,10 +40,6 @@ class Expediter(
         InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
     }
 
-    private fun duplicates() = inspectedTypes.duplicateTypes.filter {
-        !ignore.ignore(null, it.target, null)
-    }
-
     private fun findIssues(appTypeWithHierarchy: ApplicationTypeWithResolvedHierarchy): Collection<Issue> {
         val issues = mutableListOf<Issue>()
 
@@ -74,11 +70,7 @@ class Expediter(
 
         issues.addAll(
             appTypeWithHierarchy.appType.refs.mapNotNull { access ->
-                if (!ignore.ignore(appTypeWithHierarchy.name, access.targetType, access.ref)) {
-                    findIssue(appTypeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
-                } else {
-                    null
-                }
+                findIssue(appTypeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
             }
         )
 
@@ -94,8 +86,8 @@ class Expediter(
                         inspectedTypes.resolveHierarchy(appType.type)
                     )
                 )
-            } + duplicates()
-            ).toSet()
+            } + inspectedTypes.duplicateTypes
+            ).filter { !ignore.ignore(it) }.toSet()
     }
 }
 
