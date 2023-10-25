@@ -16,6 +16,7 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.ignore.Ignore
+import org.gradle.api.Action
 
 abstract class ExpediterExtension {
     var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath", sourceSet = "main")
@@ -25,12 +26,14 @@ abstract class ExpediterExtension {
     var ignoreFile: Any? = null
 
     var failOnIssues: Boolean = false
-    fun application(configure: ApplicationClassSelector.() -> Unit) {
+
+    fun application(configure: Action<ApplicationClassSelector>) {
         application = ApplicationClassSelector()
-        application.configure()
+        configure.execute(application)
     }
-    fun platform(configure: PlatformClassSelector.() -> Unit) {
+
+    fun platform(configure: Action<PlatformClassSelector>) {
         platform = PlatformClassSelector(false)
-        platform.configure()
+        configure.execute(platform)
     }
 }
