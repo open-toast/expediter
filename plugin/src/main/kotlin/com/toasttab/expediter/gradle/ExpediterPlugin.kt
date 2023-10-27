@@ -63,8 +63,9 @@ class ExpediterPlugin : Plugin<Project> {
                 animalSnifferSignatures.from(project.configurations.getByName(conf))
             }
 
-            ignore = extension.ignore
-            ignoreFile = extension.ignoreFile?.let { project.file(it) }
+            ignore = extension.ignoreSpec.buildIgnore()
+
+            ignoreFile = (extension.ignoreSpec.file ?: extension.ignoreFile)?.let { project.file(it) }
 
             report = project.layout.buildDirectory.file("expediter.json").get().asFile
 

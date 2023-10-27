@@ -15,65 +15,63 @@
 
 package com.toasttab.expediter.ignore
 
+import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.types.MemberSymbolicReference
 import java.io.Serializable
 
 interface Ignore : Serializable {
-    fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?): Boolean
+    fun ignore(issue: Issue): Boolean
 
     companion object {
         val NOTHING: Ignore = object : Ignore {
-            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = false
+            override fun ignore(issue: Issue) = false
         }
     }
 
     class Not(
         private val ignore: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = !ignore.ignore(caller, type, ref)
+        override fun ignore(issue: Issue) = !ignore.ignore(issue)
     }
 
     class And(
         private vararg val ignores: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ignores.all { it.ignore(caller, type, ref) }
+        override fun ignore(issue: Issue) = ignores.all { it.ignore(issue) }
     }
 
     class Or(
         private vararg val ignores: Ignore
     ) : Ignore {
-        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ignores.any { it.ignore(caller, type, ref) }
+        override fun ignore(issue: Issue) = ignores.any { it.ignore(issue) }
     }
 
     object IsConstructor : Ignore {
-        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ref is MemberSymbolicReference.MethodSymbolicReference && ref.isConstructor()
-    }
-
-    object Caller {
-        class StartsWith(
-            private vararg val partial: String
-        ) : Ignore {
-            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = caller != null && partial.any { caller.startsWith(it) }
+        override fun ignore(issue: Issue) = issue is Issue.WithMemberAccess && issue.member.ref.run {
+            this is MemberSymbolicReference.MethodSymbolicReference && isConstructor()
         }
     }
 
-    object Type {
-        class StartsWith(
-            private vararg val partial: String
-        ) : Ignore {
-            override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = partial.any { type != null && type.startsWith(it) }
-        }
+    class TargetStartsWith(
+        private vararg val partial: String
+    ) : Ignore {
+        override fun ignore(issue: Issue) = partial.any { issue.target?.run { startsWith(it) } ?: false }
+    }
+
+    class CallerStartsWith(
+        private vararg val partial: String
+    ) : Ignore {
+        override fun ignore(issue: Issue) = issue.caller?.run { partial.any { this.startsWith(it) } } ?: false
     }
 
     class Signature(
         private val signature: String
     ) : Ignore {
-        override fun ignore(caller: String?, type: String?, ref: MemberSymbolicReference<*>?) = ref?.signature == signature
+        override fun ignore(issue: Issue) =
+            issue is Issue.WithMemberAccess && issue.member.ref.signature == signature
 
         companion object {
             val IS_BLANK = Signature("()V")
         }
     }
 }
-infix fun Ignore.and(other: Ignore): Ignore = Ignore.And(this, other)
-infix fun Ignore.or(other: Ignore): Ignore = Ignore.Or(this, other)

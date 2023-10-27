@@ -112,5 +112,5 @@ class InspectedTypes private constructor(
     }
 
     val classes: Collection<ApplicationType> get() = appTypes.appTypes.values
-    val duplicateTypes: Collection<Issue> get() = appTypes.duplicates
+    val duplicateTypes: Collection<Issue.DuplicateType> get() = appTypes.duplicates
 }

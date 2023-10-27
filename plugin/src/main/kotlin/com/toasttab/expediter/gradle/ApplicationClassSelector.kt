@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.gradle
 
-class ApplicationClassSelector constructor(
+class ApplicationClassSelector(
     val configurations: MutableList<String>,
     val files: MutableList<String> = mutableListOf(),
     val sourceSets: MutableList<String> = mutableListOf()

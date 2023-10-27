@@ -124,12 +124,14 @@ which will generate a report of binary incompatibilities under `build/expediter.
 
 Typically, there is a lot of noise in the report from unused parts of libraries and missing optional dependencies.
 
-You can filter out issues using the Ignore DSL or by checking in a file with known issues.
+You can filter out issues using the `Ignore` API or by checking in a file with known issues.
 
 ```kotlin
 expediter {
-    ignore = Ignore.Type.StartsWith("some/unused/Type")
-    ignoreFile = "knownIssues.json"
+    ignore {
+        targetStartsWith("some/unused/Type")
+        file = "knownIssues.json"
+    }
 }
 ```
 
