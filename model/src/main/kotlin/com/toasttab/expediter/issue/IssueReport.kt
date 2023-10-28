@@ -29,7 +29,9 @@ class IssueReport(
     val issues: List<Issue>
 ) {
     companion object {
-        private val JSON = Json { }
+        private val JSON = Json {
+            prettyPrint = true
+        }
 
         fun fromJson(string: String) = JSON.decodeFromString<IssueReport>(string)
         fun fromJson(stream: InputStream) = JSON.decodeFromStream<IssueReport>(stream)
