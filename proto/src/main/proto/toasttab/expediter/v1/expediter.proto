@@ -30,32 +30,6 @@ enum TypeExtensibility {
   TYPE_EXTENSIBILITY_NOT_FINAL = 2;
 }
 
-//enum MethodAccessType {
-//  METHOD_ACCESS_UNKNOWN = 0;
-//  METHOD_ACCESS_INTERFACE = 1;
-//  METHOD_ACCESS_VIRTUAL = 2;
-//  METHOD_ACCESS_SPECIAL = 3;
-//  METHOD_ACCESS_STATIC = 4;
-//}
-//
-//enum FieldAccessType {
-//  FIELD_ACCESS_UNKNOWN = 0;
-//  FIELD_ACCESS_INSTANCE = 1;
-//  FIELD_ACCESS_STATIC = 2;
-//}
-//
-//message MethodAccess {
-//  string owner = 1;
-//  SymbolicReference ref = 2;
-//  MethodAccessType type = 3;
-//}
-//
-//message FieldAccess {
-//  string owner = 1;
-//  SymbolicReference ref = 2;
-//  FieldAccessType type = 3;
-//}
-
 message MemberDescriptor {
   SymbolicReference ref = 1 [(protokt.v1.property).non_null = true];
   AccessProtection protection = 2;
