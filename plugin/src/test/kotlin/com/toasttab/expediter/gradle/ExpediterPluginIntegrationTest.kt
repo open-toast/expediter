@@ -33,7 +33,7 @@ class ExpediterPluginIntegrationTest {
     @Test
     fun `android compat`(project: TestProject) {
         project.createRunner()
-            .withArguments("check", "--stacktrace")
+            .withArguments("check")
             .buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
@@ -44,7 +44,7 @@ class ExpediterPluginIntegrationTest {
                 MemberAccess.MethodAccess(
                     "java/util/concurrent/ConcurrentHashMap",
                     null,
-                    MemberSymbolicReference.MethodSymbolicReference(
+                    MemberSymbolicReference(
                         "computeIfAbsent",
                         "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
                     ),
@@ -68,7 +68,7 @@ class ExpediterPluginIntegrationTest {
                 MemberAccess.MethodAccess(
                     "java/lang/String",
                     null,
-                    MemberSymbolicReference.MethodSymbolicReference(
+                    MemberSymbolicReference(
                         "isBlank",
                         "()Z"
                     ),
@@ -90,7 +90,7 @@ class ExpediterPluginIntegrationTest {
                 MemberAccess.MethodAccess(
                     "java/lang/String",
                     null,
-                    MemberSymbolicReference.MethodSymbolicReference(
+                    MemberSymbolicReference(
                         "isBlank",
                         "()Z"
                     ),
@@ -103,7 +103,7 @@ class ExpediterPluginIntegrationTest {
                 MemberAccess.MethodAccess(
                     "java/lang/String",
                     null,
-                    MemberSymbolicReference.MethodSymbolicReference(
+                    MemberSymbolicReference(
                         "isBlank",
                         "()Z"
                     ),
@@ -125,7 +125,7 @@ class ExpediterPluginIntegrationTest {
                 MemberAccess.MethodAccess(
                     "com/fasterxml/jackson/core/JsonParser",
                     null,
-                    MemberSymbolicReference.MethodSymbolicReference(
+                    MemberSymbolicReference(
                         "streamReadConstraints",
                         "()Lcom/fasterxml/jackson/core/StreamReadConstraints;"
                     ),

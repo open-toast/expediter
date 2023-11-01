@@ -16,31 +16,16 @@
 package com.toasttab.expediter.types
 
 import kotlinx.serialization.Serializable
+import protokt.v1.toasttab.expediter.v1.SymbolicReference
 
-sealed interface MemberSymbolicReference<M : MemberType> {
-    val name: String
+@Serializable
+data class MemberSymbolicReference(
+    val name: String,
     val signature: String
-    val type: M
+) {
+    override fun toString() = "$name$signature"
 
-    @Serializable
-    data class FieldSymbolicReference(
-        override val name: String,
-        override val signature: String
-    ) : MemberSymbolicReference<MemberType.Field> {
-        override val type = MemberType.Field
+    fun same(symbolicReference: SymbolicReference) = name == symbolicReference.name && signature == symbolicReference.signature
 
-        override fun toString() = "$name$signature"
-    }
-
-    @Serializable
-    data class MethodSymbolicReference(
-        override val name: String,
-        override val signature: String
-    ) : MemberSymbolicReference<MemberType.Method> {
-        override val type = MemberType.Method
-
-        fun isConstructor() = "<init>" == name
-
-        override fun toString() = "$name$signature"
-    }
+    fun isConstructor() = name == "<init>"
 }

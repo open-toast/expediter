@@ -17,19 +17,20 @@ package com.toasttab.expediter
 
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
-import com.toasttab.expediter.types.AccessDeclaration
 import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberDescriptor
 import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformTypeProvider
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
-import com.toasttab.expediter.types.TypeDescriptor
-import com.toasttab.expediter.types.TypeExtensibility
-import com.toasttab.expediter.types.TypeFlavor
+import com.toasttab.expediter.types.members
+import protokt.v1.toasttab.expediter.v1.AccessDeclaration
+import protokt.v1.toasttab.expediter.v1.MemberDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeExtensibility
+import protokt.v1.toasttab.expediter.v1.TypeFlavor
 
 class Expediter(
     private val ignore: Ignore,
@@ -121,8 +122,8 @@ fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, acces
         }
     }
 }
-private class MemberWithDeclaringType<M : MemberType> (
-    val member: MemberDescriptor<M>,
+private class MemberWithDeclaringType(
+    val member: MemberDescriptor,
     val declaringType: TypeDescriptor
 )
 
@@ -144,11 +145,11 @@ private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterT
     }
 }
 
-private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess<M>): MemberWithDeclaringType<M>? {
+private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess<M>): MemberWithDeclaringType? {
     for (cls in filterToAccessType(access)) {
         for (m in cls.members) {
-            if (access.ref == m.ref) {
-                return MemberWithDeclaringType(m as MemberDescriptor<M>, cls)
+            if (access.ref.same(m.ref!!)) {
+                return MemberWithDeclaringType(m, cls)
             }
         }
     }

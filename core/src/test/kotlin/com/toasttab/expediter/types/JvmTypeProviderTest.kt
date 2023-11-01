@@ -16,6 +16,7 @@
 package com.toasttab.expediter.types
 
 import org.junit.jupiter.api.Test
+import protokt.v1.toasttab.expediter.v1.SymbolicReference
 import strikt.api.expectThat
 import strikt.assertions.isNotNull
 import strikt.assertions.isNull
@@ -42,10 +43,10 @@ class JvmTypeProviderTest {
         expectThat(type).isNotNull().and {
             get {
                 members.find {
-                    it.ref == MemberSymbolicReference.MethodSymbolicReference(
-                        "readString",
-                        "(Ljava/nio/file/Path;)Ljava/lang/String;"
-                    )
+                    it.ref == SymbolicReference {
+                        name = "readString"
+                        signature = "(Ljava/nio/file/Path;)Ljava/lang/String;"
+                    }
                 }
             }.isNull()
         }
@@ -58,10 +59,10 @@ class JvmTypeProviderTest {
         expectThat(type).isNotNull().and {
             get {
                 members.find {
-                    it.ref == MemberSymbolicReference.MethodSymbolicReference(
-                        "readString",
-                        "(Ljava/nio/file/Path;)Ljava/lang/String;"
-                    )
+                    it.ref == SymbolicReference {
+                        name = "readString"
+                        signature = "(Ljava/nio/file/Path;)Ljava/lang/String;"
+                    }
                 }
             }.isNotNull()
         }
@@ -74,10 +75,10 @@ class JvmTypeProviderTest {
         expectThat(type).isNotNull().and {
             get {
                 members.find {
-                    it.ref == MemberSymbolicReference.MethodSymbolicReference(
-                        "copyOf",
-                        "(Ljava/util/Collection;)Ljava/util/List;"
-                    )
+                    it.ref == SymbolicReference {
+                        name = "copyOf"
+                        signature = "(Ljava/util/Collection;)Ljava/util/List;"
+                    }
                 }
             }.isNull()
         }
@@ -89,11 +90,11 @@ class JvmTypeProviderTest {
 
         expectThat(type).isNotNull().and {
             get {
-                members.find {
-                    it.ref == MemberSymbolicReference.MethodSymbolicReference(
-                        "copyOf",
-                        "(Ljava/util/Collection;)Ljava/util/List;"
-                    )
+                methods.find {
+                    it.ref == SymbolicReference {
+                        name = "copyOf"
+                        signature = "(Ljava/util/Collection;)Ljava/util/List;"
+                    }
                 }
             }.isNotNull()
         }

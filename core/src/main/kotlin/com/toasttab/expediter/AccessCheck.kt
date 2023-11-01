@@ -1,14 +1,13 @@
 package com.toasttab.expediter
 
-import com.toasttab.expediter.types.AccessProtection
 import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
-import com.toasttab.expediter.types.MemberDescriptor
-import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
-import com.toasttab.expediter.types.TypeDescriptor
+import protokt.v1.toasttab.expediter.v1.AccessProtection
+import protokt.v1.toasttab.expediter.v1.MemberDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 
 object AccessCheck {
-    fun <M : MemberType> allowedAccess(caller: ApplicationTypeWithResolvedHierarchy, target: TypeDescriptor, member: MemberDescriptor<M>): Boolean {
+    fun allowedAccess(caller: ApplicationTypeWithResolvedHierarchy, target: TypeDescriptor, member: MemberDescriptor): Boolean {
         return if (member.protection == AccessProtection.PRIVATE) {
             caller.name == target.name
         } else if (member.protection == AccessProtection.PACKAGE_PRIVATE || target.protection == AccessProtection.PACKAGE_PRIVATE) {

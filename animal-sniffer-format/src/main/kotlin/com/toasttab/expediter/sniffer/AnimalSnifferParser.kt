@@ -15,13 +15,13 @@
 
 package com.toasttab.expediter.sniffer
 
-import com.toasttab.expediter.types.AccessDeclaration
-import com.toasttab.expediter.types.AccessProtection
-import com.toasttab.expediter.types.MemberDescriptor
-import com.toasttab.expediter.types.MemberSymbolicReference
-import com.toasttab.expediter.types.TypeDescriptor
-import com.toasttab.expediter.types.TypeExtensibility
-import com.toasttab.expediter.types.TypeFlavor
+import protokt.v1.toasttab.expediter.v1.AccessDeclaration
+import protokt.v1.toasttab.expediter.v1.AccessProtection
+import protokt.v1.toasttab.expediter.v1.MemberDescriptor
+import protokt.v1.toasttab.expediter.v1.SymbolicReference
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeExtensibility
+import protokt.v1.toasttab.expediter.v1.TypeFlavor
 import java.io.InputStream
 import java.util.zip.GZIPInputStream
 
@@ -31,40 +31,48 @@ import java.util.zip.GZIPInputStream
 object AnimalSnifferParser {
     fun parse(stream: InputStream): List<TypeDescriptor> {
         return Deserializer(GZIPInputStream(stream)).deserialize().map {
-            val members = it.signatures.map { sig ->
+            val fields = mutableListOf<MemberDescriptor>()
+            val methods = mutableListOf<MemberDescriptor>()
+
+            for (sig in it.signatures) {
                 val fieldIdx = sig.indexOf('#')
 
                 if (fieldIdx >= 0) {
-                    MemberDescriptor(
-                        MemberSymbolicReference.FieldSymbolicReference(
-                            sig.substring(0, fieldIdx),
-                            sig.substring(fieldIdx + 1)
-                        ),
-                        AccessDeclaration.UNKNOWN,
-                        AccessProtection.UNKNOWN
+                    fields.add(
+                        MemberDescriptor {
+                            ref = SymbolicReference {
+                                name = sig.substring(0, fieldIdx)
+                                signature = sig.substring(fieldIdx + 1)
+                            }
+                            declaration = AccessDeclaration.UNKNOWN
+                            protection = AccessProtection.UNKNOWN
+                        }
                     )
                 } else {
                     val methodIdx = sig.indexOf('(')
-                    MemberDescriptor(
-                        MemberSymbolicReference.MethodSymbolicReference(
-                            sig.substring(0, methodIdx),
-                            sig.substring(methodIdx)
-                        ),
-                        AccessDeclaration.UNKNOWN,
-                        AccessProtection.UNKNOWN
+                    methods.add(
+                        MemberDescriptor {
+                            ref = SymbolicReference {
+                                name = sig.substring(0, methodIdx)
+                                signature = sig.substring(methodIdx)
+                            }
+                            declaration = AccessDeclaration.UNKNOWN
+                            protection = AccessProtection.UNKNOWN
+                        }
                     )
                 }
             }
 
-            TypeDescriptor(
-                it.name,
-                it.superClass,
-                it.superInterfaces,
-                members,
-                AccessProtection.UNKNOWN,
-                TypeFlavor.UNKNOWN,
-                TypeExtensibility.UNKNOWN
-            )
+            TypeDescriptor {
+                name = it.name
+                superName = it.superClass
+                interfaces = it.superInterfaces
+                this.fields = fields
+                this.methods = methods
+                protection = AccessProtection.UNKNOWN
+                flavor = TypeFlavor.UNKNOWN
+                extensibility = TypeExtensibility.UNKNOWN
+            }
         }
     }
 }

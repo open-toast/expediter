@@ -15,11 +15,11 @@
 
 package com.toasttab.expediter
 
-import com.toasttab.expediter.types.AccessDeclaration
-import com.toasttab.expediter.types.AccessProtection
-import com.toasttab.expediter.types.TypeExtensibility
-import com.toasttab.expediter.types.TypeFlavor
 import org.objectweb.asm.Opcodes
+import protokt.v1.toasttab.expediter.v1.AccessDeclaration
+import protokt.v1.toasttab.expediter.v1.AccessProtection
+import protokt.v1.toasttab.expediter.v1.TypeExtensibility
+import protokt.v1.toasttab.expediter.v1.TypeFlavor
 
 object AttributeParser {
     fun flavor(access: Int) = if (access and Opcodes.ACC_INTERFACE != 0) TypeFlavor.INTERFACE else TypeFlavor.CLASS

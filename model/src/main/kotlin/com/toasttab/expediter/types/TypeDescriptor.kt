@@ -15,37 +15,14 @@
 
 package com.toasttab.expediter.types
 
-class MemberDescriptor<M : MemberType>(
-    val ref: MemberSymbolicReference<M>,
-    val declaration: AccessDeclaration,
-    val protection: AccessProtection
-)
-
-enum class TypeFlavor {
-    CLASS, INTERFACE, UNKNOWN
-}
-
-enum class TypeExtensibility {
-    FINAL, NOT_FINAL, UNKNOWN
-}
+import protokt.v1.toasttab.expediter.v1.MemberDescriptor
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 
 interface IdentifiesType {
     val name: String
 }
 
-/**
- * Represents declared properties (fields / methods / directly extended supertypes) of a type.
- */
-class TypeDescriptor(
-    override val name: String,
-    val superName: String?,
-    val interfaces: List<String>,
-
-    val members: List<MemberDescriptor<*>>,
-    val protection: AccessProtection,
-    val flavor: TypeFlavor,
-    val extensibility: TypeExtensibility
-) : IdentifiesType
+val TypeDescriptor.members: Sequence<MemberDescriptor> get() = fields.asSequence() + methods.asSequence()
 
 /**
  * Represents declared properties of a type and all fields / methods that type's code accesses / invokes.
@@ -54,6 +31,8 @@ class ApplicationType(
     val type: TypeDescriptor,
     val refs: Set<MemberAccess<*>>,
     val source: String
-) : IdentifiesType by type {
-    override fun toString() = "ApplicationType[${type.name}]"
+) : IdentifiesType {
+    override val name = type.name
+
+    override fun toString() = "ApplicationType[$name]"
 }

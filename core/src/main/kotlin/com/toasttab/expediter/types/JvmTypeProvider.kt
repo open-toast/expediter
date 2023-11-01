@@ -16,6 +16,7 @@
 package com.toasttab.expediter.types
 
 import com.toasttab.expediter.TypeParsers
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 import java.nio.file.Paths
 import java.util.jar.JarFile
 import kotlin.io.path.pathString

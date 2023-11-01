@@ -33,7 +33,7 @@ sealed interface MemberAccess<M : MemberType> {
     /**
      * Symbolic reference identifying the member being accessed.
      */
-    val ref: MemberSymbolicReference<M>
+    val ref: MemberSymbolicReference
 
     /**
      * The type of method access. E.g. for `"a".hashCode()`, the access is VIRTUAL,
@@ -44,7 +44,7 @@ sealed interface MemberAccess<M : MemberType> {
     fun withDeclaringType(declaringType: String): MemberAccess<M>
 
     fun description(): String {
-        return "${ref.type} " + if (declaringType == null || declaringType == targetType) {
+        return if (declaringType == null || declaringType == targetType) {
             "$targetType.$ref"
         } else {
             "$declaringType.$ref (via $targetType)"
@@ -56,7 +56,7 @@ sealed interface MemberAccess<M : MemberType> {
     data class MethodAccess(
         override val targetType: String,
         override val declaringType: String? = null,
-        override val ref: MemberSymbolicReference.MethodSymbolicReference,
+        override val ref: MemberSymbolicReference,
         override val accessType: MethodAccessType
     ) : MemberAccess<MemberType.Method> {
         override fun toString() = description()
@@ -68,7 +68,7 @@ sealed interface MemberAccess<M : MemberType> {
     data class FieldAccess(
         override val targetType: String,
         override val declaringType: String? = null,
-        override val ref: MemberSymbolicReference.FieldSymbolicReference,
+        override val ref: MemberSymbolicReference,
         override val accessType: FieldAccessType
     ) : MemberAccess<MemberType.Field> {
         override fun toString() = description()
