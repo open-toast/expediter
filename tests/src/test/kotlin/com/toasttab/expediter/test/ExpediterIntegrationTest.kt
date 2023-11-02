@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.test
 
-import com.toasttab.expediter.ClasspathScanner
+import com.toasttab.expediter.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
@@ -36,7 +36,7 @@ class ExpediterIntegrationTest {
     @Test
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
-        val scanner = ClasspathScanner(testClasspath.split(':').map { File(it) })
+        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { File(it) })
         val p = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
         expectThat(p).containsExactlyInAnyOrder(
