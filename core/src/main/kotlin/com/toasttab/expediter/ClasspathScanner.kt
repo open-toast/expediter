@@ -15,8 +15,8 @@
 
 package com.toasttab.expediter
 
-import com.toasttab.expediter.types.ApplicationType
 import java.io.File
+import java.io.InputStream
 import java.lang.Exception
 import java.lang.RuntimeException
 import java.util.jar.JarInputStream
@@ -24,51 +24,51 @@ import java.util.zip.ZipFile
 
 class ClasspathScanner(
     private val elements: Iterable<File>
-) : ApplicationTypesProvider {
-    override fun types(): List<ApplicationType> = elements.flatMap { types(it) }
+) {
+    fun <T> scan(parse: (stream: InputStream, source: String) -> T): List<T> = elements.flatMap { types(it, parse) }
 
     private fun isClassFile(name: String) = name.endsWith(".class") &&
         !name.startsWith("META-INF/versions") && // mrjars not supported yet
         !name.endsWith("package-info.class") &&
         !name.endsWith("module-info.class")
 
-    private fun scanJarStream(stream: JarInputStream, source: String) = generateSequence { stream.nextJarEntry }
+    private fun <T> scanJarStream(stream: JarInputStream, source: String, parse: (stream: InputStream, source: String) -> T) = generateSequence { stream.nextJarEntry }
         .filter { isClassFile(it.name) }
         .map {
-            try { TypeParsers.applicationType(stream, source) } catch (e: Exception) {
+            try { parse(stream, source) } catch (e: Exception) {
                 throw RuntimeException("could not parse ${it.name}", e)
             }
         }
         .toList()
 
-    private fun scanJar(path: File): List<ApplicationType> = path.inputStream().use {
-        scanJarStream(JarInputStream(it), path.name)
+    fun <T> scanJar(path: File, parse: (stream: InputStream, source: String) -> T): List<T> = path.inputStream().use {
+        scanJarStream(JarInputStream(it), path.name, parse)
     }
 
-    private fun scanAar(path: File): List<ApplicationType> =
+    fun <T> scanAar(path: File, parse: (stream: InputStream, source: String) -> T): List<T> =
         ZipFile(path).use { aar ->
             when (val classesEntry = aar.getEntry("classes.jar")) {
                 null -> emptyList()
                 else -> {
                     JarInputStream(aar.getInputStream(classesEntry)).use {
-                        scanJarStream(it, path.name)
+                        scanJarStream(it, path.name, parse)
                     }
                 }
             }
         }
 
-    private fun scanClassDir(path: File): List<ApplicationType> =
+    fun <T> scanClassDir(path: File, parse: (stream: InputStream, source: String) -> T): List<T> =
         path.walkTopDown().filter { isClassFile(it.name) }.map {
             it.inputStream().use { classStream ->
-                TypeParsers.applicationType(classStream, path.name)
+                parse(classStream, path.name)
             }
         }.toList()
 
-    private fun types(path: File) =
+    private fun <T> types(path: File, parse: (stream: InputStream, source: String) -> T) =
         when {
-            path.isDirectory -> scanClassDir(path)
-            path.name.endsWith(".jar") -> scanJar(path)
-            path.name.endsWith(".aar") -> scanAar(path)
+            path.isDirectory -> scanClassDir(path, parse)
+            path.name.endsWith(".jar") -> scanJar(path, parse)
+            path.name.endsWith(".aar") -> scanAar(path, parse)
             else -> emptyList()
         }
 }

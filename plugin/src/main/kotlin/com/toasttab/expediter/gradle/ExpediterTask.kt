@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.ClasspathScanner
+import com.toasttab.expediter.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
@@ -115,7 +115,7 @@ abstract class ExpediterTask : DefaultTask() {
 
         val issues = Expediter(
             ignore,
-            ClasspathScanner(artifacts + files),
+            ClasspathApplicationTypesProvider(artifacts + files),
             PlatformTypeProviderChain(
                 providers
             )
