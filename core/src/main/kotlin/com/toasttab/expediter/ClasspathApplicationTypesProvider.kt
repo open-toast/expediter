@@ -18,8 +18,8 @@ package com.toasttab.expediter
 import java.io.File
 
 class ClasspathApplicationTypesProvider(
-   elements: Iterable<File>
-): ApplicationTypesProvider {
+    elements: Iterable<File>
+) : ApplicationTypesProvider {
     private val scanner = ClasspathScanner(elements)
 
     override fun types() = scanner.scan(TypeParsers::applicationType)
