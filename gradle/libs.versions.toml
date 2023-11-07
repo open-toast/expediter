@@ -7,6 +7,7 @@ nexus = "1.3.0"
 ktlint = "0.50.0"
 spotless = "6.21.0"
 protokt = "1.0.0-alpha.10"
+protobuf = "3.24.0"
 
 # test
 junit = "5.10.0"
@@ -23,6 +24,7 @@ kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version = "1.2.0" }
 protokt-extensions = { module = "com.toasttab.protokt:protokt-extensions", version.ref = "protokt" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
 
 # test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }

@@ -19,7 +19,7 @@ import org.gradle.api.Action
 
 abstract class ExpediterExtension {
     var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath", sourceSet = "main")
-    var platform: PlatformClassSelector = PlatformClassSelector(platformClassloader = true)
+    var platform: PlatformClassSelector = PlatformClassSelector()
 
     val ignoreSpec = IgnoreSpec()
 
@@ -34,7 +34,6 @@ abstract class ExpediterExtension {
     }
 
     fun platform(configure: Action<PlatformClassSelector>) {
-        platform = PlatformClassSelector(false)
         configure.execute(platform)
     }
 

@@ -11,8 +11,14 @@ repositories {
 expediter {
     failOnIssues = true
 
+    application {
+        sourceSet("main")
+    }
+
     platform {
         androidSdk = 19
+
+        configuration("runtimeClasspath")
     }
 }
 
