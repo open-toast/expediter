@@ -130,7 +130,7 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }
 
-        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty) {
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformArtifacts.isEmpty) {
             logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
 
             providers.add(PlatformClassloaderTypeProvider)
