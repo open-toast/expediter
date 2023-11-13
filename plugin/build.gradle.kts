@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation(projects.core)
     implementation(projects.animalSnifferFormat)
+    implementation(libs.protobuf.java)
 
    testImplementation(libs.testkit.junit5)
 }

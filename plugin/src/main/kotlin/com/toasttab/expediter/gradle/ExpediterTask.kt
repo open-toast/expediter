@@ -16,7 +16,9 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.ClasspathApplicationTypesProvider
+import com.toasttab.expediter.ClasspathScanner
 import com.toasttab.expediter.Expediter
+import com.toasttab.expediter.TypeParsers
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.sniffer.AnimalSnifferParser
@@ -39,22 +41,27 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
+import java.util.zip.GZIPInputStream
 
 @CacheableTask
 abstract class ExpediterTask : DefaultTask() {
-    private val configurationArtifacts = mutableListOf<ArtifactCollection>()
+    private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
+    private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
-    val artifacts: FileCollection get() {
-        return if (configurationArtifacts.isEmpty()) {
-            project.objects.fileCollection()
-        } else {
-            configurationArtifacts.map {
-                it.artifactFiles
-            }.reduce(FileCollection::plus)
-        }
+    val applicationArtifacts get() = applicationConfigurationArtifacts.asFileCollection()
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
+
+    private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
+        project.objects.fileCollection()
+    } else {
+        map { it.artifactFiles }.reduce(FileCollection::plus)
     }
 
     @get:InputFiles
@@ -62,7 +69,11 @@ abstract class ExpediterTask : DefaultTask() {
     abstract val files: ConfigurableFileCollection
 
     fun artifactCollection(artifactCollection: ArtifactCollection) {
-        configurationArtifacts.add(artifactCollection)
+        applicationConfigurationArtifacts.add(artifactCollection)
+    }
+
+    fun platformArtifactCollection(artifactCollection: ArtifactCollection) {
+        platformConfigurationArtifacts.add(artifactCollection)
     }
 
     @OutputFile
@@ -78,6 +89,10 @@ abstract class ExpediterTask : DefaultTask() {
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val animalSnifferSignatures: ConfigurableFileCollection
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val typeDescriptors: ConfigurableFileCollection
 
     @InputFile
     @PathSensitive(PathSensitivity.RELATIVE)
@@ -95,13 +110,27 @@ abstract class ExpediterTask : DefaultTask() {
             providers.add(JvmTypeProvider.forTarget(it))
         }
 
+        if (!platformArtifacts.isEmpty) {
+            providers.add(
+                InMemoryPlatformTypeProvider(
+                    ClasspathScanner(platformArtifacts).scan { i, _ -> TypeParsers.typeDescriptor(i) }
+                )
+            )
+        }
+
         for (signaturesFile in animalSnifferSignatures) {
             signaturesFile.inputStream().buffered().use {
                 providers.add(InMemoryPlatformTypeProvider(AnimalSnifferParser.parse(it)))
             }
         }
 
-        if (jvmVersion == null && animalSnifferSignatures.isEmpty) {
+        for (descriptorFile in typeDescriptors) {
+            GZIPInputStream(descriptorFile.inputStream().buffered()).use {
+                providers.add(InMemoryPlatformTypeProvider(TypeDescriptors.deserialize(it).types))
+            }
+        }
+
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformArtifacts.isEmpty) {
             logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
 
             providers.add(PlatformClassloaderTypeProvider)
@@ -115,7 +144,7 @@ abstract class ExpediterTask : DefaultTask() {
 
         val issues = Expediter(
             ignore,
-            ClasspathApplicationTypesProvider(artifacts + files),
+            ClasspathApplicationTypesProvider(applicationArtifacts + files),
             PlatformTypeProviderChain(
                 providers
             )

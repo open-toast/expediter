@@ -44,23 +44,31 @@ class ExpediterPlugin : Plugin<Project> {
 
             jvmVersion = extension.platform.jvmVersion
 
-            val animalSnifferConfigurations = extension.platform.animalSnifferConfigurations.toMutableList()
+            val expediterConfigurations = extension.platform.expediterConfigurations.toMutableList()
 
             if (extension.platform.androidSdk != null) {
-                val config = project.configurations.create("_expediter_animal_sniffer_")
+                val config = project.configurations.create("_expediter_type_descriptors_")
                 project.dependencies.add(
                     config.name,
-                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.5.1@signature"
+                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.6.0@expediter"
                 )
-                animalSnifferConfigurations.add(config.name)
+                expediterConfigurations.add(config.name)
+            }
+
+            for (conf in expediterConfigurations) {
+                typeDescriptors.from(project.configurations.getByName(conf))
+            }
+
+            for (conf in extension.platform.animalSnifferConfigurations) {
+                animalSnifferSignatures.from(project.configurations.getByName(conf))
             }
 
             if (extension.platform.jvmVersion != null && extension.platform.androidSdk != null) {
                 logger.warn("Both jvmVersion and androidSdk are set.")
             }
 
-            for (conf in animalSnifferConfigurations) {
-                animalSnifferSignatures.from(project.configurations.getByName(conf))
+            for (conf in extension.platform.configurations) {
+                platformArtifactCollection(selector.artifacts(conf))
             }
 
             ignore = extension.ignoreSpec.buildIgnore()
