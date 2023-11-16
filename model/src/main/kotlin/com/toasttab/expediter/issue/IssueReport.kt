@@ -20,6 +20,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.serializer
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -31,6 +34,14 @@ class IssueReport(
     companion object {
         private val JSON = Json {
             prettyPrint = true
+            ignoreUnknownKeys = true
+            serializersModule = SerializersModule {
+                polymorphic(Issue::class) {
+                    defaultDeserializer {
+                        Issue.UnknownIssue.serializer()
+                    }
+                }
+            }
         }
 
         fun fromJson(string: String) = JSON.decodeFromString<IssueReport>(string)

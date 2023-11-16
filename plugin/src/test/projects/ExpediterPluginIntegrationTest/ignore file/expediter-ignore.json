@@ -688,7 +688,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
@@ -701,7 +701,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/BeanDeserializerBase",
       "member": {
         "type": "method",
@@ -714,7 +714,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/BeanDeserializer",
       "member": {
         "type": "method",
@@ -727,7 +727,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$DoubleDeserializer",
       "member": {
         "type": "method",
@@ -740,7 +740,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigIntegerDeserializer",
       "member": {
         "type": "method",
@@ -753,7 +753,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/impl/UnwrappedPropertyHandler",
       "member": {
         "type": "method",
@@ -766,7 +766,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigDecimalDeserializer",
       "member": {
         "type": "method",
@@ -779,7 +779,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer",
       "member": {
         "type": "method",
@@ -792,7 +792,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer",
       "member": {
         "type": "method",
@@ -805,7 +805,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer",
       "member": {
         "type": "method",
@@ -858,7 +858,7 @@
       "target": "com/fasterxml/jackson/core/StreamReadConstraints"
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "field",
@@ -871,7 +871,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "field",
@@ -884,7 +884,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
       "member": {
         "type": "field",
@@ -897,7 +897,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
       "member": {
         "type": "field",
@@ -910,7 +910,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$DoubleDeserializer",
       "member": {
         "type": "field",
@@ -923,7 +923,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigIntegerDeserializer",
       "member": {
         "type": "field",
@@ -936,7 +936,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$FloatDeserializer",
       "member": {
         "type": "field",
@@ -949,7 +949,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigDecimalDeserializer",
       "member": {
         "type": "field",
@@ -962,7 +962,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
       "member": {
         "type": "field",
@@ -975,7 +975,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
@@ -988,7 +988,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
@@ -1001,7 +1001,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
@@ -1014,7 +1014,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
       "member": {
         "type": "method",
@@ -1027,7 +1027,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
       "member": {
         "type": "method",
@@ -1040,7 +1040,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
       "member": {
         "type": "method",
@@ -1053,7 +1053,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigIntegerDeserializer",
       "member": {
         "type": "method",
@@ -1066,7 +1066,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$FloatDeserializer",
       "member": {
         "type": "method",
@@ -1079,7 +1079,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigDecimalDeserializer",
       "member": {
         "type": "method",
@@ -1092,7 +1092,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
       "member": {
         "type": "method",
@@ -1105,7 +1105,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
       "member": {
         "type": "method",
@@ -1118,7 +1118,7 @@
       }
     },
     {
-      "type": "method-missing",
+      "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
       "member": {
         "type": "method",

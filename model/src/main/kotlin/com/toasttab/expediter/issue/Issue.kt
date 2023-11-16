@@ -65,7 +65,7 @@ sealed interface Issue {
     }
 
     @Serializable
-    @SerialName("method-missing")
+    @SerialName("member-missing")
     data class MissingMember(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses missing $member"
@@ -92,6 +92,13 @@ sealed interface Issue {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses inaccessible $member"
     }
+
+    @Serializable
+    data class UnknownIssue internal constructor(
+        val type: String,
+        override val caller: String? = null,
+        override val target: String? = null
+    ) : Issue
 }
 
 private val Collection<String>.readable: String get() = if (size == 1) {

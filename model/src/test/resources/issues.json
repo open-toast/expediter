@@ -1,0 +1,23 @@
+{
+  "name": "test",
+  "issues": [
+    {
+      "type": "test-issue",
+      "caller": "foo/Foo",
+      "target": "bar/Bar"
+    },
+    {
+      "type": "member-missing",
+      "caller": "foo/Foo",
+      "member": {
+        "type": "method",
+        "targetType": "bar/Bar",
+        "ref": {
+          "name": "bar",
+          "signature": "()V"
+        },
+        "accessType": "VIRTUAL"
+      }
+    }
+  ]
+}
