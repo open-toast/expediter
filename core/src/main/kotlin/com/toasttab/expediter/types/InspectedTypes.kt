@@ -66,19 +66,19 @@ class InspectedTypes private constructor(
 
     constructor(all: List<ApplicationType>, platformTypeProvider: PlatformTypeProvider) : this(ApplicationTypeContainer.create(all), platformTypeProvider)
 
-    private fun lookup(s: String): TypeDescriptor? {
-        return inspectedCache[s] ?: inspectedCache.computeIfAbsent(s) { s ->
-            if (s.startsWith("[")) {
+    private fun lookup(typeName: String): TypeDescriptor? {
+        return inspectedCache[typeName] ?: inspectedCache.computeIfAbsent(typeName) { _ ->
+            if (typeName.startsWith("[")) {
                 // TODO: make up a type descriptor for an array type; we could validate that the element type actually exists
                 TypeDescriptor {
-                    name = s
+                    name = typeName
                     superName = "java/lang/Object"
                     protection = AccessProtection.UNKNOWN
                     flavor = TypeFlavor.CLASS
                     extensibility = TypeExtensibility.FINAL
                 }
             } else {
-                platformTypeProvider.lookupPlatformType(s)
+                platformTypeProvider.lookupPlatformType(typeName)
             }
         }
     }
