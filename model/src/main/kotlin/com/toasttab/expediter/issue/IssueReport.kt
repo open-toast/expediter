@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.issue
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -34,9 +35,13 @@ class IssueReport(
         }
 
         fun fromJson(string: String) = JSON.decodeFromString<IssueReport>(string)
+
+        @OptIn(ExperimentalSerializationApi::class)
         fun fromJson(stream: InputStream) = JSON.decodeFromStream<IssueReport>(stream)
     }
 
     fun toJson() = JSON.encodeToString(this)
+
+    @OptIn(ExperimentalSerializationApi::class)
     fun toJson(stream: OutputStream) = JSON.encodeToStream(this, stream)
 }
