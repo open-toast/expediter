@@ -3,7 +3,7 @@ plugins {
     id("com.android.library") version "8.1.2"
     id("org.jetbrains.kotlin.android") version "1.9.0"
     id("com.toasttab.expediter")
-    id("com.toasttab.testkit.coverage") version "0.0.2"
+    id("com.toasttab.testkit.coverage") version "0.0.4"
 }
 
 expediter {
