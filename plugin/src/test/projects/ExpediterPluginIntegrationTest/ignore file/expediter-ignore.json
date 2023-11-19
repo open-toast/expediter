@@ -2,692 +2,6 @@
   "name": "test",
   "issues": [
     {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/io/CharTypes",
-      "member": {
-        "type": "method",
-        "targetType": "[B",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/io/CharTypes",
-      "member": {
-        "type": "method",
-        "targetType": "[C",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonAutoDetect$Visibility",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonAutoDetect$Visibility;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonCreator$Mode",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonCreator$Mode;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonFormat$Feature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonFormat$Feature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonFormat$Shape",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonFormat$Shape;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonInclude$Include",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonInclude$Include;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonProperty$Access",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonProperty$Access;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonTypeInfo$As",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonTypeInfo$As;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/JsonTypeInfo$Id",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/JsonTypeInfo$Id;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/Nulls",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/Nulls;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/OptBoolean",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/OptBoolean;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/annotation/PropertyAccessor",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/annotation/PropertyAccessor;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/Base64Variant$PaddingReadBehaviour",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/Base64Variant$PaddingReadBehaviour;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonEncoding",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonEncoding;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonFactory$Feature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonFactory$Feature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonGenerator$Feature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonGenerator$Feature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonParser$Feature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonParser$Feature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonParser$NumberType",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonParser$NumberType;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/JsonToken",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/JsonToken;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/StreamReadCapability",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/StreamReadCapability;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/StreamReadFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/StreamReadFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/StreamWriteCapability",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/StreamWriteCapability;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/StreamWriteFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/StreamWriteFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/filter/TokenFilter$Inclusion",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/filter/TokenFilter$Inclusion;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/format/MatchStrength",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/format/MatchStrength;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/json/JsonReadFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/json/JsonReadFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/json/JsonWriteFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/json/JsonWriteFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/core/type/WritableTypeId$Inclusion",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/core/type/WritableTypeId$Inclusion;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/AnnotationIntrospector$ReferenceProperty$Type",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/AnnotationIntrospector$ReferenceProperty$Type;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/DeserializationFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/DeserializationFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/JsonNode$OverwriteMode",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/JsonNode$OverwriteMode;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/MapperFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/MapperFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/ObjectMapper$DefaultTyping",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/ObjectMapper$DefaultTyping;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/SerializationFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/SerializationFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/annotation/JsonSerialize$Inclusion",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/annotation/JsonSerialize$Inclusion;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/annotation/JsonSerialize$Typing",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/annotation/JsonSerialize$Typing;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/cfg/CoercionAction",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/cfg/CoercionAction;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/cfg/CoercionInputShape",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/cfg/CoercionInputShape;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/cfg/ConstructorDetector$SingleArgConstructor",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/cfg/ConstructorDetector$SingleArgConstructor;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/cfg/EnumFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/cfg/EnumFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/cfg/JsonNodeFeature",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/cfg/JsonNodeFeature;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/jsonFormatVisitors/JsonFormatTypes",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/jsonFormatVisitors/JsonFormatTypes;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/jsonFormatVisitors/JsonValueFormat",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/jsonFormatVisitors/JsonValueFormat;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/jsontype/PolymorphicTypeValidator$Validity",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/jsontype/PolymorphicTypeValidator$Validity;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/node/JsonNodeType",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/node/JsonNodeType;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/type/LogicalType",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/type/LogicalType;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/util/AccessPattern",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/util/AccessPattern;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/util/internal/PrivateMaxEntriesMap$DrainStatus",
-      "member": {
-        "type": "method",
-        "targetType": "[Lcom/fasterxml/jackson/databind/util/internal/PrivateMaxEntriesMap$DrainStatus;",
-        "declaringType": "java/lang/Object",
-        "ref": {
-          "name": "clone",
-          "signature": "()Ljava/lang/Object;"
-        },
-        "accessType": "VIRTUAL"
-      }
-    },
-    {
       "type": "member-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
@@ -798,8 +112,8 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/JsonParser",
         "ref": {
-          "name": "getNumberValueDeferred",
-          "signature": "()Ljava/lang/Object;"
+          "name": "streamReadConstraints",
+          "signature": "()Lcom/fasterxml/jackson/core/StreamReadConstraints;"
         },
         "accessType": "VIRTUAL"
       }
@@ -811,8 +125,8 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/JsonParser",
         "ref": {
-          "name": "streamReadConstraints",
-          "signature": "()Lcom/fasterxml/jackson/core/StreamReadConstraints;"
+          "name": "getNumberValueDeferred",
+          "signature": "()Ljava/lang/Object;"
         },
         "accessType": "VIRTUAL"
       }
@@ -864,7 +178,7 @@
         "type": "field",
         "targetType": "com/fasterxml/jackson/core/StreamReadFeature",
         "ref": {
-          "name": "USE_FAST_BIG_NUMBER_PARSER",
+          "name": "USE_FAST_DOUBLE_PARSER",
           "signature": "Lcom/fasterxml/jackson/core/StreamReadFeature;"
         },
         "accessType": "STATIC"
@@ -877,7 +191,7 @@
         "type": "field",
         "targetType": "com/fasterxml/jackson/core/StreamReadFeature",
         "ref": {
-          "name": "USE_FAST_DOUBLE_PARSER",
+          "name": "USE_FAST_BIG_NUMBER_PARSER",
           "signature": "Lcom/fasterxml/jackson/core/StreamReadFeature;"
         },
         "accessType": "STATIC"
@@ -981,19 +295,6 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
-          "name": "parseBigInteger",
-          "signature": "(Ljava/lang/String;Z)Ljava/math/BigInteger;"
-        },
-        "accessType": "STATIC"
-      }
-    },
-    {
-      "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
-      "member": {
-        "type": "method",
-        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
-        "ref": {
           "name": "parseDouble",
           "signature": "(Ljava/lang/String;Z)D"
         },
@@ -1015,13 +316,26 @@
     },
     {
       "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
+      "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
           "name": "parseBigInteger",
           "signature": "(Ljava/lang/String;Z)Ljava/math/BigInteger;"
+        },
+        "accessType": "STATIC"
+      }
+    },
+    {
+      "type": "member-missing",
+      "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
+      "member": {
+        "type": "method",
+        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
+        "ref": {
+          "name": "parseDouble",
+          "signature": "(Ljava/lang/String;Z)D"
         },
         "accessType": "STATIC"
       }
@@ -1046,8 +360,8 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
-          "name": "parseDouble",
-          "signature": "(Ljava/lang/String;Z)D"
+          "name": "parseBigInteger",
+          "signature": "(Ljava/lang/String;Z)Ljava/math/BigInteger;"
         },
         "accessType": "STATIC"
       }
@@ -1098,6 +412,19 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
+          "name": "parseDouble",
+          "signature": "(Ljava/lang/String;Z)D"
+        },
+        "accessType": "STATIC"
+      }
+    },
+    {
+      "type": "member-missing",
+      "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
+      "member": {
+        "type": "method",
+        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
+        "ref": {
           "name": "parseFloat",
           "signature": "(Ljava/lang/String;)F"
         },
@@ -1115,33 +442,6 @@
           "signature": "(Ljava/lang/String;Z)F"
         },
         "accessType": "STATIC"
-      }
-    },
-    {
-      "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
-      "member": {
-        "type": "method",
-        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
-        "ref": {
-          "name": "parseDouble",
-          "signature": "(Ljava/lang/String;Z)D"
-        },
-        "accessType": "STATIC"
-      }
-    },
-    {
-      "type": "member-inaccessible",
-      "caller": "com/fasterxml/jackson/databind/ObjectMapper$1",
-      "member": {
-        "type": "field",
-        "targetType": "com/fasterxml/jackson/databind/deser/DefaultDeserializationContext",
-        "declaringType": "com/fasterxml/jackson/databind/DeserializationContext",
-        "ref": {
-          "name": "_factory",
-          "signature": "Lcom/fasterxml/jackson/databind/deser/DeserializerFactory;"
-        },
-        "accessType": "INSTANCE"
       }
     }
   ]

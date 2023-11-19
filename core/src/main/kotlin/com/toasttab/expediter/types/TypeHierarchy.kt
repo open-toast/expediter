@@ -63,14 +63,12 @@ sealed interface OptionalResolvedTypeHierarchy {
     object NoType : OptionalResolvedTypeHierarchy
 }
 
-sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy {
-    class IncompleteTypeHierarchy(val type: TypeDescriptor, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
-    class CompleteTypeHierarchy(val type: TypeDescriptor, val superTypes: Sequence<TypeDescriptor>) : ResolvedTypeHierarchy {
+sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy, IdentifiesType {
+    val type: TypeDescriptor
+    override val name get() = type.name
+
+    class IncompleteTypeHierarchy(override val type: TypeDescriptor, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
+    class CompleteTypeHierarchy(override val type: TypeDescriptor, val superTypes: Sequence<TypeDescriptor>) : ResolvedTypeHierarchy {
         val allTypes: Sequence<TypeDescriptor> get() = sequenceOf(type) + superTypes
     }
 }
-
-class ApplicationTypeWithResolvedHierarchy(
-    val appType: ApplicationType,
-    val hierarchy: ResolvedTypeHierarchy
-) : IdentifiesType by appType

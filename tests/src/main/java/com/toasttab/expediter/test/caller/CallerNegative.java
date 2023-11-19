@@ -16,6 +16,8 @@
 package com.toasttab.expediter.test.caller;
 
 public class CallerNegative {
+    private int x;
+
     void arrayCloneIsOk() {
         Object[] array = new Object[0];
         array.clone();
@@ -24,5 +26,17 @@ public class CallerNegative {
     void arrayLengthIsOk() {
         int[] array = new int[0];
         int i = array.length;
+    }
+
+    void privateAccessToNestedIsOk() {
+        new Nested().f = 1;
+    }
+
+    private class Nested {
+        private int f;
+
+        void privateAccessFromNestedIsOk() {
+            x = 1;
+        }
     }
 }

@@ -17,7 +17,7 @@ package com.toasttab.expediter
 
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
-import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
+import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberType
@@ -41,27 +41,27 @@ class Expediter(
         InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
     }
 
-    private fun findIssues(appTypeWithHierarchy: ApplicationTypeWithResolvedHierarchy): Collection<Issue> {
+    private fun findIssues(appType: ApplicationType): Collection<Issue> {
+        val hierarchy = inspectedTypes.resolveHierarchy(appType.type)
         val issues = mutableListOf<Issue>()
 
-        when (appTypeWithHierarchy.hierarchy) {
+        when (hierarchy) {
             is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> {
                 issues.add(
                     Issue.MissingApplicationSuperType(
-                        appTypeWithHierarchy.name,
-                        appTypeWithHierarchy.hierarchy.missingType.map { it.name }.toSet()
+                        appType.name,
+                        hierarchy.missingType.map { it.name }.toSet()
                     )
                 )
             }
 
             is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
-                val finalSupertypes =
-                    appTypeWithHierarchy.hierarchy.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }
-                        .toList()
+                val finalSupertypes = hierarchy.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }
+                    .toList()
                 if (finalSupertypes.isNotEmpty()) {
                     issues.add(
                         Issue.FinalApplicationSuperType(
-                            appTypeWithHierarchy.name,
+                            appType.name,
                             finalSupertypes.map { it.name }.toSet()
                         )
                     )
@@ -70,8 +70,8 @@ class Expediter(
         }
 
         issues.addAll(
-            appTypeWithHierarchy.appType.refs.mapNotNull { access ->
-                findIssue(appTypeWithHierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
+            appType.refs.mapNotNull { access ->
+                findIssue(appType, hierarchy, access, inspectedTypes.resolveHierarchy(access.targetType))
             }
         )
 
@@ -81,18 +81,13 @@ class Expediter(
     fun findIssues(): Set<Issue> {
         return (
             inspectedTypes.classes.flatMap { appType ->
-                findIssues(
-                    ApplicationTypeWithResolvedHierarchy(
-                        appType,
-                        inspectedTypes.resolveHierarchy(appType.type)
-                    )
-                )
+                findIssues(appType)
             } + inspectedTypes.duplicateTypes
             ).filter { !ignore.ignore(it) }.toSet()
     }
 }
 
-fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, access: MemberAccess<M>, chain: OptionalResolvedTypeHierarchy): Issue? {
+fun <M : MemberType> findIssue(type: ApplicationType, hierarchy: ResolvedTypeHierarchy, access: MemberAccess<M>, chain: OptionalResolvedTypeHierarchy): Issue? {
     return when (chain) {
         is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> Issue.MissingSuperType(
             type.name,
@@ -113,7 +108,7 @@ fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, acces
                     Issue.AccessStaticMemberNonStatically(type.name, resolvedAccess)
                 } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
                     Issue.AccessInstanceMemberStatically(type.name, resolvedAccess)
-                } else if (!AccessCheck.allowedAccess(type, chain.type, member.member)) {
+                } else if (!AccessCheck.allowedAccess(hierarchy, chain, member.member, member.declaringType)) {
                     Issue.AccessInaccessibleMember(type.name, resolvedAccess)
                 } else {
                     null
