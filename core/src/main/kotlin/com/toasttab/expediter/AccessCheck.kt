@@ -1,6 +1,5 @@
 package com.toasttab.expediter
 
-import com.toasttab.expediter.types.ApplicationTypeWithResolvedHierarchy
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
 import protokt.v1.toasttab.expediter.v1.AccessProtection
@@ -11,6 +10,10 @@ object AccessCheck {
     /**
      * Check if a class is allowed to access a member of another class.
      *
+     * This check is lenient. If there's insufficient information to determine access, this method returns true.
+     * E.g. if member protection is unknown, we assume it's public, and access is allowed. Similarly,
+     * for protected members, if the hierarchy of the application type cannot be resolved, we assume access is allowed.
+     *
      * See JVM Specification, 5.4.4 "Access Control" and `sun.invoke.util.VerifyAccess.isMemberAccessible`.
      *
      * @param caller the class trying to access the member
@@ -19,7 +22,7 @@ object AccessCheck {
      * @param declaringType the type that declares the member
      */
     fun allowedAccess(
-        caller: ApplicationTypeWithResolvedHierarchy,
+        caller: ResolvedTypeHierarchy,
         refType: ResolvedTypeHierarchy.CompleteTypeHierarchy,
         member: MemberDescriptor,
         declaringType: TypeDescriptor
@@ -42,7 +45,7 @@ object AccessCheck {
     }
 
     private fun isProtectedAccessAllowed(
-        caller: ApplicationTypeWithResolvedHierarchy,
+        caller: ResolvedTypeHierarchy,
         refType: ResolvedTypeHierarchy.CompleteTypeHierarchy,
         member: MemberDescriptor,
         declaringType: TypeDescriptor
@@ -53,18 +56,18 @@ object AccessCheck {
         }
 
         // if the caller type hierarchy cannot be resolved, we cannot proceed further, so assume member is accessible
-        if (caller.hierarchy !is ResolvedTypeHierarchy.CompleteTypeHierarchy) {
+        if (caller !is ResolvedTypeHierarchy.CompleteTypeHierarchy) {
             return true
         }
 
         // if the caller is not in the same package as the declaring type, it must inherit from the declaring type
-        return if (caller.hierarchy.isSubtypeOf(declaringType)) {
+        return if (caller.isSubtypeOf(declaringType)) {
             // if the member is not static,
             // the caller, the reference type, and the declaring type must be part of the same hierarchy,
             // i.e. the caller must be a subtype or a supertype of the reference type
             member.declaration != AccessDeclaration.INSTANCE ||
-                refType.isSubtypeOf(caller.appType.type) ||
-                caller.hierarchy.isSubtypeOf(refType.type)
+                refType.isSubtypeOf(caller.type) ||
+                caller.isSubtypeOf(refType.type)
         } else {
             false
         }
@@ -74,7 +77,7 @@ object AccessCheck {
         return allTypes.any { it.name == type.name }
     }
 
-    private fun isClassAccessible(caller: ApplicationTypeWithResolvedHierarchy, target: TypeDescriptor): Boolean {
+    private fun isClassAccessible(caller: ResolvedTypeHierarchy, target: TypeDescriptor): Boolean {
         return when (target.protection) {
             // public classes are accessible
             is AccessProtection.UNRECOGNIZED, AccessProtection.UNKNOWN, AccessProtection.PUBLIC -> true
