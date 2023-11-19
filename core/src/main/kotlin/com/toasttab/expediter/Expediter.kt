@@ -113,7 +113,7 @@ fun <M : MemberType> findIssue(type: ApplicationTypeWithResolvedHierarchy, acces
                     Issue.AccessStaticMemberNonStatically(type.name, resolvedAccess)
                 } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
                     Issue.AccessInstanceMemberStatically(type.name, resolvedAccess)
-                } else if (!AccessCheck.allowedAccess(type, chain.type, member.member)) {
+                } else if (!AccessCheck.allowedAccess(type, chain, member.member, member.declaringType)) {
                     Issue.AccessInaccessibleMember(type.name, resolvedAccess)
                 } else {
                     null
