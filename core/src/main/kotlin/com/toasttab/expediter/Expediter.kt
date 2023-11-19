@@ -57,7 +57,7 @@ class Expediter(
 
             is ResolvedTypeHierarchy.CompleteTypeHierarchy -> {
                 val finalSupertypes = hierarchy.superTypes.filter { it.extensibility == TypeExtensibility.FINAL }
-                        .toList()
+                    .toList()
                 if (finalSupertypes.isNotEmpty()) {
                     issues.add(
                         Issue.FinalApplicationSuperType(
