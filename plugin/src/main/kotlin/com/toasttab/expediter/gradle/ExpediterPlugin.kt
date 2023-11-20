@@ -50,7 +50,7 @@ class ExpediterPlugin : Plugin<Project> {
                 val config = project.configurations.create("_expediter_type_descriptors_")
                 project.dependencies.add(
                     config.name,
-                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.6.0@expediter"
+                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.7.0@expediter"
                 )
                 expediterConfigurations.add(config.name)
             }
