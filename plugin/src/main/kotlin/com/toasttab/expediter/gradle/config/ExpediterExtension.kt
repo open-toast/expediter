@@ -13,27 +13,36 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.gradle
+package com.toasttab.expediter.gradle.config
 
 import org.gradle.api.Action
+import org.slf4j.LoggerFactory
 
 abstract class ExpediterExtension {
-    var application: ApplicationClassSelector = ApplicationClassSelector(configuration = "runtimeClasspath", sourceSet = "main")
-    var platform: PlatformClassSelector = PlatformClassSelector()
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ExpediterExtension::class.java)
+    }
+
+    var application: ApplicationSpec = ApplicationSpec(configuration = "runtimeClasspath", sourceSet = "main")
+    var platform: PlatformSpec = PlatformSpec()
 
     val ignoreSpec = IgnoreSpec()
 
-    @Deprecated("use the ignore closure instead", replaceWith = ReplaceWith("ignore { file = ignoreFile }"))
-    var ignoreFile: Any? = null
-
     var failOnIssues: Boolean = false
 
-    fun application(configure: Action<ApplicationClassSelector>) {
-        application = ApplicationClassSelector()
+    @Deprecated("use ignore closure instead")
+    var ignoreFile: Any? = null
+        set(value) {
+            LOGGER.warn("ignoreFile property is deprecated and will be removed, use ignore { file = ... }")
+            ignoreSpec.file = value
+        }
+
+    fun application(configure: Action<ApplicationSpec>) {
+        application = ApplicationSpec()
         configure.execute(application)
     }
 
-    fun platform(configure: Action<PlatformClassSelector>) {
+    fun platform(configure: Action<PlatformSpec>) {
         configure.execute(platform)
     }
 

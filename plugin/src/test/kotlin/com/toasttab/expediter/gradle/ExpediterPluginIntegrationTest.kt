@@ -34,7 +34,9 @@ class ExpediterPluginIntegrationTest {
     fun `android compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
-            .buildAndFail()
+            .buildAndFail().let {
+                println(it.output)
+            }
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.gradle
+package com.toasttab.expediter.gradle.config
 
-class ApplicationClassSelector(
+class ApplicationSpec(
     val configurations: MutableList<String>,
     val files: MutableList<String> = mutableListOf(),
     val sourceSets: MutableList<String> = mutableListOf()

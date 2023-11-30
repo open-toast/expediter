@@ -95,7 +95,9 @@ For Android compatibility, you may use a shorthand, which will set up the [Gummy
 ```kotlin
 expediter {
     platform {
-        androidSdk = 21
+        android {
+            sdk = 21
+        }
     }
 }
 ```
@@ -112,7 +114,7 @@ expediter {
 configurations.create("_descriptors_")
 
 dependencies {
-    add("_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.6.1@expediter")
+    add("_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.7.0@expediter")
 }
 ```
 

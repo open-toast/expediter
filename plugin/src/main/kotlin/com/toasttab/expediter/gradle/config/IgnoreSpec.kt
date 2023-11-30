@@ -1,4 +1,4 @@
-package com.toasttab.expediter.gradle
+package com.toasttab.expediter.gradle.config
 
 import com.toasttab.expediter.ignore.Ignore
 
