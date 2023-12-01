@@ -34,7 +34,7 @@ class PlatformSpec {
         set(value) {
             LOGGER.warn("androidSdk property is deprecated and will be removed, use android { sdk = ... }")
             android.sdk = value
-    }
+        }
 
     val android: AndroidSpec = AndroidSpec()
 
