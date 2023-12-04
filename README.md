@@ -114,7 +114,7 @@ expediter {
 configurations.create("_descriptors_")
 
 dependencies {
-    add("_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.7.0@expediter")
+    add("_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.8.0@expediter")
 }
 ```
 
@@ -130,7 +130,7 @@ expediter {
 configurations.create("_animal_sniffer_descriptors_")
 
 dependencies {
-    add("_animal_sniffer_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.6.1@signature")
+    add("_animal_sniffer_descriptors_", "com.toasttab.android:gummy-bears-api-21:0.8.0@signature")
 }
 ```
 
