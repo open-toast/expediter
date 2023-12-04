@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.gradle
 
+import com.toasttab.expediter.gradle.config.ExpediterExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
@@ -46,13 +47,12 @@ class ExpediterPlugin : Plugin<Project> {
 
             val expediterConfigurations = extension.platform.expediterConfigurations.toMutableList()
 
-            if (extension.platform.androidSdk != null) {
-                val config = project.configurations.create("_expediter_type_descriptors_")
-                project.dependencies.add(
-                    config.name,
-                    "com.toasttab.android:gummy-bears-api-${extension.platform.androidSdk}:0.6.0@expediter"
-                )
-                expediterConfigurations.add(config.name)
+            extension.platform.android.run {
+                if (sdk != null) {
+                    val config = project.configurations.create("_expediter_type_descriptors_")
+                    project.dependencies.add(config.name, artifact())
+                    expediterConfigurations.add(config.name)
+                }
             }
 
             for (conf in expediterConfigurations) {
@@ -63,8 +63,8 @@ class ExpediterPlugin : Plugin<Project> {
                 animalSnifferSignatures.from(project.configurations.getByName(conf))
             }
 
-            if (extension.platform.jvmVersion != null && extension.platform.androidSdk != null) {
-                logger.warn("Both jvmVersion and androidSdk are set.")
+            if (extension.platform.jvmVersion != null && extension.platform.android.sdk != null) {
+                logger.warn("Both JVM version and Android SDK are set.")
             }
 
             for (conf in extension.platform.configurations) {
@@ -73,8 +73,7 @@ class ExpediterPlugin : Plugin<Project> {
 
             ignore = extension.ignoreSpec.buildIgnore()
 
-            @Suppress("DEPRECATION")
-            ignoreFile = (extension.ignoreSpec.file ?: extension.ignoreFile)?.let { project.file(it) }
+            ignoreFile = extension.ignoreSpec.file?.let(project::file)
 
             report = project.layout.buildDirectory.file("expediter.json").get().asFile
 

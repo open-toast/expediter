@@ -13,15 +13,35 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.gradle
+package com.toasttab.expediter.gradle.config
 
-class PlatformClassSelector(
-    val animalSnifferConfigurations: MutableList<String> = mutableListOf(),
-    val expediterConfigurations: MutableList<String> = mutableListOf(),
-    val configurations: MutableList<String> = mutableListOf(),
-    var androidSdk: Int? = null,
+import org.gradle.api.Action
+import org.slf4j.LoggerFactory
+
+class PlatformSpec {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(PlatformSpec::class.java)
+    }
+
+    val animalSnifferConfigurations: MutableList<String> = mutableListOf()
+    val expediterConfigurations: MutableList<String> = mutableListOf()
+    val configurations: MutableList<String> = mutableListOf()
+
     var jvmVersion: Int? = null
-) {
+
+    @Deprecated("use android closure instead")
+    var androidSdk: Int? = null
+        set(value) {
+            LOGGER.warn("androidSdk property is deprecated and will be removed, use android { sdk = ... }")
+            android.sdk = value
+        }
+
+    val android: AndroidSpec = AndroidSpec()
+
+    fun android(configure: Action<AndroidSpec>) {
+        configure.execute(android)
+    }
+
     fun animalSnifferConfiguration(configuration: String) {
         animalSnifferConfigurations.add(configuration)
     }
