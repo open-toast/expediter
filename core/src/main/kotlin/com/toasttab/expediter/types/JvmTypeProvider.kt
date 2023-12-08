@@ -46,7 +46,11 @@ class JvmTypeProvider private constructor(
         fun forTarget(jvmTarget: Int): PlatformTypeProvider {
             val ctSym = findCtSymFile()
             // files are prefixed with the version, 9=9, 10=A, 11=B, etc.
-            val jvmVersion = jvmTarget.digitToChar(36)
+            val jvmVersion = if (jvmTarget < 10) {
+                '0' + jvmTarget
+            } else {
+                'A' + jvmTarget - 10
+            }
 
             // having e.g. B/system-modules indicates that we're running on Java 11
             return if (ctSym.getJarEntry("$jvmVersion/system-modules") != null) {
