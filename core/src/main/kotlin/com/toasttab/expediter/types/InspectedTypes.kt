@@ -80,8 +80,8 @@ class InspectedTypes private constructor(
             val superTypes = mutableSetOf<OptionalType>()
             val superTypeNames = mutableListOf<String>()
 
-            superTypeNames.addAll(cls.interfaces)
             cls.superName?.let { superTypeNames.add(it) }
+            superTypeNames.addAll(cls.interfaces)
 
             for (s in superTypeNames) {
                 val l = lookup(s)

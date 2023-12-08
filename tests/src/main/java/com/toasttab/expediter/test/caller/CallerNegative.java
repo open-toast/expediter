@@ -23,6 +23,12 @@ public class CallerNegative {
         array.clone();
     }
 
+    void subclassCloneIsOk() throws Exception {
+        Clones.C xx = new Clones.C();
+
+        xx.clone();
+    }
+
     void arrayLengthIsOk() {
         int[] array = new int[0];
         int i = array.length;
