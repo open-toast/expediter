@@ -140,17 +140,6 @@ class ExpediterIntegrationTest {
                 )
             ),
 
-            Issue.MissingSuperType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Foo",
-                setOf("com/toasttab/expediter/test/BaseFoo")
-            ),
-
-            Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/BaseFoo"
-            ),
-
             Issue.MissingApplicationSuperType(
                 "com/toasttab/expediter/test/Foo",
                 setOf("com/toasttab/expediter/test/BaseFoo")
@@ -164,6 +153,36 @@ class ExpediterIntegrationTest {
             Issue.FinalApplicationSuperType(
                 "com/toasttab/expediter/test/caller/Caller",
                 setOf("com/toasttab/expediter/test/Base")
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Var"
+            ),
+
+            Issue.MissingApplicationSuperType(
+                "com/toasttab/expediter/test/caller/VarVar",
+                setOf("com/toasttab/expediter/test/Var")
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Ex"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Param"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/Bar",
+                "com/toasttab/expediter/test/Param"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Lambda"
             )
         )
     }

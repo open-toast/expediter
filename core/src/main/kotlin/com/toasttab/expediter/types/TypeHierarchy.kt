@@ -15,10 +15,8 @@
 
 package com.toasttab.expediter.types
 
-import protokt.v1.toasttab.expediter.v1.TypeDescriptor
-
 class TypeHierarchy(
-    val type: TypeDescriptor,
+    val type: Type,
     val superTypes: Set<OptionalType>
 ) {
     fun resolve(): ResolvedTypeHierarchy {
@@ -28,7 +26,7 @@ class TypeHierarchy(
         } else {
             ResolvedTypeHierarchy.CompleteTypeHierarchy(
                 type,
-                superTypes.asSequence().filterIsInstance<OptionalType.Type>().map { it.cls }
+                superTypes.asSequence().filterIsInstance<OptionalType.PresentType>().map { it.type }
             )
         }
     }
@@ -40,9 +38,9 @@ class TypeHierarchy(
 sealed class OptionalType {
     abstract val name: String
 
-    class Type(val cls: TypeDescriptor) : OptionalType() {
+    class PresentType(val type: Type) : OptionalType() {
         override val name: String
-            get() = cls.name
+            get() = type.name
     }
 
     class MissingType(override val name: String) : OptionalType()
@@ -64,11 +62,12 @@ sealed interface OptionalResolvedTypeHierarchy {
 }
 
 sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy, IdentifiesType {
-    val type: TypeDescriptor
+    val type: Type
+
     override val name get() = type.name
 
-    class IncompleteTypeHierarchy(override val type: TypeDescriptor, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
-    class CompleteTypeHierarchy(override val type: TypeDescriptor, val superTypes: Sequence<TypeDescriptor>) : ResolvedTypeHierarchy {
-        val allTypes: Sequence<TypeDescriptor> get() = sequenceOf(type) + superTypes
+    class IncompleteTypeHierarchy(override val type: Type, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
+    class CompleteTypeHierarchy(override val type: Type, val superTypes: Sequence<Type>) : ResolvedTypeHierarchy {
+        val allTypes: Sequence<Type> get() = sequenceOf(type) + superTypes
     }
 }

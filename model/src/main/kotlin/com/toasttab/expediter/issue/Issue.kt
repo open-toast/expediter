@@ -40,10 +40,15 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("application-supertype-missing")
-    data class MissingApplicationSuperType(override val caller: String, val missing: Set<String>) : Issue {
+    data class MissingApplicationSuperType(override val caller: String, override val missing: Set<String>) : Issue, WithMissingTypes {
         override fun toString() = "$caller extends missing ${missing.readable}"
 
         override val target = null
+    }
+
+    interface WithMissingTypes {
+        val caller: String
+        val missing: Set<String>
     }
 
     @Serializable
@@ -56,7 +61,7 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("supertype-missing")
-    data class MissingSuperType(override val caller: String, override val target: String, val missing: Set<String>) : Issue {
+    data class MissingSuperType(override val caller: String, override val target: String, override val missing: Set<String>) : Issue, WithMissingTypes {
         override fun toString() = "$caller refers to type $target with missing super${missing.readable}"
     }
 

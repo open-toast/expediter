@@ -1,6 +1,7 @@
 package com.toasttab.expediter
 
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
+import com.toasttab.expediter.types.Type
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
 import protokt.v1.toasttab.expediter.v1.AccessProtection
 import protokt.v1.toasttab.expediter.v1.MemberDescriptor
@@ -25,10 +26,10 @@ object AccessCheck {
         caller: ResolvedTypeHierarchy,
         refType: ResolvedTypeHierarchy.CompleteTypeHierarchy,
         member: MemberDescriptor,
-        declaringType: TypeDescriptor
+        declaringType: Type
     ): Boolean {
         // reference type must be accessible from the caller
-        if (!isClassAccessible(caller, refType.type)) {
+        if (!isClassAccessible(caller, refType.type.descriptor)) {
             return false
         }
 
@@ -40,7 +41,7 @@ object AccessCheck {
             // private members are accessible to classes in the same nest as the declaring type
             AccessProtection.PRIVATE -> sameNest(caller.name, declaringType.name)
             // protected logic is more complicated, see below
-            AccessProtection.PROTECTED -> isProtectedAccessAllowed(caller, refType, member, declaringType)
+            AccessProtection.PROTECTED -> isProtectedAccessAllowed(caller, refType, member, declaringType.descriptor)
         }
     }
 
@@ -66,8 +67,8 @@ object AccessCheck {
             // the caller, the reference type, and the declaring type must be part of the same hierarchy,
             // i.e. the caller must be a subtype or a supertype of the reference type
             member.declaration != AccessDeclaration.INSTANCE ||
-                refType.isSubtypeOf(caller.type) ||
-                caller.isSubtypeOf(refType.type)
+                refType.isSubtypeOf(caller.type.descriptor) ||
+                caller.isSubtypeOf(refType.type.descriptor)
         } else {
             false
         }

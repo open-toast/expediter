@@ -22,17 +22,32 @@ interface IdentifiesType {
     val name: String
 }
 
-val TypeDescriptor.members: Sequence<MemberDescriptor> get() = fields.asSequence() + methods.asSequence()
+sealed interface Type : IdentifiesType {
+    val descriptor: TypeDescriptor
+    val application: Boolean
+
+    override val name: String get() = descriptor.name
+}
 
 /**
  * Represents declared properties of a type and all fields / methods that type's code accesses / invokes.
  */
 class ApplicationType(
-    val type: TypeDescriptor,
-    val refs: Set<MemberAccess<*>>,
+    override val descriptor: TypeDescriptor,
+    val memberAccess: Set<MemberAccess<*>>,
+    val indy: Set<InvokeDynamic>,
+    val referencedTypes: Set<String>,
     val source: String
-) : IdentifiesType {
-    override val name = type.name
+) : Type {
+    override val application get() = true
 
     override fun toString() = "ApplicationType[$name]"
 }
+
+class PlatformType(
+    override val descriptor: TypeDescriptor
+) : Type {
+    override val application: Boolean get() = false
+}
+
+val TypeDescriptor.members: Sequence<MemberDescriptor> get() = fields.asSequence() + methods.asSequence()

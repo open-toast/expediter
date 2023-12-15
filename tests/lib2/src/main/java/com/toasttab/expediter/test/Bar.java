@@ -32,4 +32,6 @@ public class Bar extends BaseBar {
 
     // changes from public to protected
     protected void bar(float x) { }
+
+    public void arg(Param[][] param) { }
 }

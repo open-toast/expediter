@@ -16,7 +16,6 @@
 package com.toasttab.expediter.types
 
 import com.toasttab.expediter.issue.Issue
-import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -30,15 +29,15 @@ private class ApplicationTypeContainer(
             val types = HashMap<String, ApplicationType>()
 
             for (type in all) {
-                types.compute(type.type.name) { _, v ->
+                types.compute(type.name) { _, v ->
                     if (v == null) {
                         type
                     } else {
-                        val a = duplicates[type.type.name]
+                        val a = duplicates[type.name]
                         if (a != null) {
                             a.add(type.source)
                         } else {
-                            duplicates[type.type.name] = mutableListOf(type.source, v.source)
+                            duplicates[type.name] = mutableListOf(type.source, v.source)
                         }
 
                         v
@@ -55,33 +54,33 @@ class InspectedTypes private constructor(
     private val appTypes: ApplicationTypeContainer,
     private val platformTypeProvider: PlatformTypeProvider
 ) {
-    private val inspectedCache: ConcurrentMap<String, TypeDescriptor> = appTypes.appTypes.mapValuesTo(ConcurrentHashMap()) {
-        it.value.type
-    }
+    private val inspectedCache: ConcurrentMap<String, Type> = ConcurrentHashMap(appTypes.appTypes)
 
-    private val hierarchyCache: MutableMap<TypeDescriptor, TypeHierarchy> = hashMapOf()
+    private val hierarchyCache: MutableMap<String, TypeHierarchy> = hashMapOf()
 
     constructor(all: List<ApplicationType>, platformTypeProvider: PlatformTypeProvider) : this(ApplicationTypeContainer.create(all), platformTypeProvider)
 
-    private fun lookup(typeName: String): TypeDescriptor? {
+    private fun lookup(typeName: String): Type? {
         return inspectedCache[typeName] ?: inspectedCache.computeIfAbsent(typeName) { _ ->
             if (ArrayDescriptor.isArray(typeName)) {
-                ArrayDescriptor.create(typeName)
+                val descriptor = ArrayDescriptor.parse(typeName)
+
+                PlatformType(descriptor.type)
             } else {
-                platformTypeProvider.lookupPlatformType(typeName)
+                platformTypeProvider.lookupPlatformType(typeName)?.let { PlatformType(it) }
             }
         }
     }
 
-    private fun traverse(cls: TypeDescriptor): TypeHierarchy {
-        val cached = hierarchyCache[cls]
+    private fun traverse(type: Type): TypeHierarchy {
+        val cached = hierarchyCache[type.name]
 
         if (cached == null) {
             val superTypes = mutableSetOf<OptionalType>()
             val superTypeNames = mutableListOf<String>()
 
-            cls.superName?.let { superTypeNames.add(it) }
-            superTypeNames.addAll(cls.interfaces)
+            type.descriptor.superName?.let { superTypeNames.add(it) }
+            superTypeNames.addAll(type.descriptor.interfaces)
 
             for (s in superTypeNames) {
                 val l = lookup(s)
@@ -90,13 +89,13 @@ class InspectedTypes private constructor(
                     superTypes.add(OptionalType.MissingType(s))
                 } else {
                     val hierarchy = traverse(l)
-                    superTypes.add(OptionalType.Type(l))
+                    superTypes.add(OptionalType.PresentType(l))
                     superTypes.addAll(hierarchy.superTypes)
                 }
             }
 
-            return TypeHierarchy(cls, superTypes).also {
-                hierarchyCache[cls] = it
+            return TypeHierarchy(type, superTypes).also {
+                hierarchyCache[type.name] = it
             }
         } else {
             return cached
@@ -107,7 +106,7 @@ class InspectedTypes private constructor(
         return lookup(type)?.let { resolveHierarchy(it) } ?: OptionalResolvedTypeHierarchy.NoType
     }
 
-    fun resolveHierarchy(type: TypeDescriptor): ResolvedTypeHierarchy {
+    fun resolveHierarchy(type: Type): ResolvedTypeHierarchy {
         return traverse(type).resolve()
     }
 
