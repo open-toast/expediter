@@ -16,6 +16,7 @@
 package com.toasttab.expediter.types
 
 import com.toasttab.expediter.SignatureParser
+import com.toasttab.expediter.TypeSignature
 import com.toasttab.expediter.issue.Issue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -61,18 +62,16 @@ class InspectedTypes private constructor(
 
     constructor(all: List<ApplicationType>, platformTypeProvider: PlatformTypeProvider) : this(ApplicationTypeContainer.create(all), platformTypeProvider)
 
-    private fun lookup(typeName: String): Type? {
-        return inspectedCache[typeName] ?: inspectedCache.computeIfAbsent(typeName) { _ ->
-            val signature = SignatureParser.parseType(typeName)
-
-            if (signature.array) {
-                if (signature.primitive || lookup(signature.scalarName) != null) {
-                    PlatformType(ArrayDescriptor.create(typeName))
-                } else {
-                    null
-                }
+    private fun lookup(signature: TypeSignature): Type? {
+        return if (signature.isArray()) {
+            if (signature.primitive || lookup(signature.scalarSignature()) != null) {
+                PlatformType(ArrayDescriptor.create(signature.name))
             } else {
-                platformTypeProvider.lookupPlatformType(typeName)?.let { PlatformType(it) }
+                null
+            }
+        } else {
+            inspectedCache[signature.scalarName] ?: inspectedCache.computeIfAbsent(signature.scalarName) { _ ->
+                platformTypeProvider.lookupPlatformType(signature.scalarName)?.let { PlatformType(it) }
             }
         }
     }
@@ -87,14 +86,15 @@ class InspectedTypes private constructor(
             type.descriptor.superName?.let { superTypeNames.add(it) }
             superTypeNames.addAll(type.descriptor.interfaces)
 
-            for (s in superTypeNames) {
-                val l = lookup(s)
+            for (superName in superTypeNames) {
+                val signature = SignatureParser.parseInternalType(superName)
+                val superType = lookup(signature)
 
-                if (l == null) {
-                    superTypes.add(OptionalType.MissingType(s))
+                if (superType == null) {
+                    superTypes.add(OptionalType.MissingType(signature.name))
                 } else {
-                    val hierarchy = traverse(l)
-                    superTypes.add(OptionalType.PresentType(l))
+                    val hierarchy = traverse(superType)
+                    superTypes.add(OptionalType.PresentType(superType))
                     superTypes.addAll(hierarchy.superTypes)
                 }
             }
@@ -108,7 +108,8 @@ class InspectedTypes private constructor(
     }
 
     fun resolveHierarchy(type: String): OptionalResolvedTypeHierarchy {
-        return lookup(type)?.let { resolveHierarchy(it) } ?: OptionalResolvedTypeHierarchy.NoType
+        val signature = SignatureParser.parseInternalType(type)
+        return lookup(signature)?.let { resolveHierarchy(it) } ?: OptionalResolvedTypeHierarchy.NoType(signature.name)
     }
 
     fun resolveHierarchy(type: Type): ResolvedTypeHierarchy {

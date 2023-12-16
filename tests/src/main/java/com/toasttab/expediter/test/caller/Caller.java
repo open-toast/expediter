@@ -21,6 +21,7 @@ import com.toasttab.expediter.test.Baz;
 import com.toasttab.expediter.test.Ex;
 import com.toasttab.expediter.test.Foo;
 import com.toasttab.expediter.test.Lambda;
+import com.toasttab.expediter.test.ParamParam;
 import com.toasttab.expediter.test.Var;
 
 import java.util.stream.Stream;
@@ -99,5 +100,9 @@ public final class Caller extends Base {
 
     void missingTypeMethodArg() {
         bar.arg(null);
+    }
+
+    boolean missingTypeInstanceof(Object o) {
+        return o instanceof ParamParam[];
     }
 }

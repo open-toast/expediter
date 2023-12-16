@@ -176,6 +176,11 @@ class ExpediterIntegrationTest {
             ),
 
             Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/ParamParam"
+            ),
+
+            Issue.MissingType(
                 "com/toasttab/expediter/test/Bar",
                 "com/toasttab/expediter/test/Param"
             ),

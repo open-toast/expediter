@@ -58,7 +58,7 @@ sealed class OptionalType {
 }
 
 sealed interface OptionalResolvedTypeHierarchy {
-    object NoType : OptionalResolvedTypeHierarchy
+    class NoType(val name: String) : OptionalResolvedTypeHierarchy
 }
 
 sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy, IdentifiesType {

@@ -15,8 +15,6 @@
 
 package com.toasttab.expediter.test.caller;
 
-import java.util.stream.Stream;
-
 public class CallerNegative {
     private int x;
 

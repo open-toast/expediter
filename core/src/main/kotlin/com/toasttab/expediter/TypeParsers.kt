@@ -136,7 +136,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
             }
 
             override fun visitTypeInsn(opcode: Int, type: String) {
-                referencedTypes.add(type)
+                referencedTypes.addAll(SignatureParser.parseInternalType(type).referencedTypes())
             }
         }
     }
