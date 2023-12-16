@@ -15,18 +15,18 @@
 
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
-import com.toasttab.expediter.scanner.ClasspathScanner
 import com.toasttab.expediter.Expediter
-import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
-import com.toasttab.expediter.sniffer.AnimalSnifferParser
+import com.toasttab.expediter.parser.TypeParsers
+import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
 import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProviderChain
+import com.toasttab.expediter.scanner.ClasspathScanner
+import com.toasttab.expediter.sniffer.AnimalSnifferParser
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection

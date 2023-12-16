@@ -19,6 +19,7 @@ import com.toasttab.expediter.access.AccessCheck
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.provider.ApplicationTypesProvider
+import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
@@ -26,7 +27,6 @@ import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformType
-import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.Type
 import com.toasttab.expediter.types.members
