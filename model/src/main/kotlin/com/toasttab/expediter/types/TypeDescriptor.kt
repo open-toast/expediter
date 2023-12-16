@@ -24,7 +24,6 @@ interface IdentifiesType {
 
 sealed interface Type : IdentifiesType {
     val descriptor: TypeDescriptor
-    val application: Boolean
 
     override val name: String get() = descriptor.name
 }
@@ -35,19 +34,14 @@ sealed interface Type : IdentifiesType {
 class ApplicationType(
     override val descriptor: TypeDescriptor,
     val memberAccess: Set<MemberAccess<*>>,
-    val indy: Set<InvokeDynamic>,
     val referencedTypes: Set<String>,
     val source: String
 ) : Type {
-    override val application get() = true
-
     override fun toString() = "ApplicationType[$name]"
 }
 
 class PlatformType(
     override val descriptor: TypeDescriptor
-) : Type {
-    override val application: Boolean get() = false
-}
+) : Type
 
 val TypeDescriptor.members: Sequence<MemberDescriptor> get() = fields.asSequence() + methods.asSequence()

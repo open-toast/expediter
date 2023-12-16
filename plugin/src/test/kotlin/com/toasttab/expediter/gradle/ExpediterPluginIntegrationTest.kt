@@ -79,7 +79,9 @@ class ExpediterPluginIntegrationTest {
                     ),
                     MethodAccessType.VIRTUAL
                 )
-            )
+            ),
+
+            Issue.MissingType("test/Caller", "java/util/function/Function")
         )
     }
 

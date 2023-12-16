@@ -23,6 +23,7 @@ import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
+import com.toasttab.expediter.types.PlatformType
 import com.toasttab.expediter.types.PlatformTypeProvider
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.Type
@@ -80,7 +81,7 @@ class Expediter(
 
             if (chain is OptionalResolvedTypeHierarchy.NoType) {
                 missingTypes.add(refType)
-            } else if (chain is ResolvedTypeHierarchy.IncompleteTypeHierarchy && !chain.type.application) {
+            } else if (chain is ResolvedTypeHierarchy.IncompleteTypeHierarchy && chain.type is PlatformType) {
                 issues.add(Issue.MissingSuperType(appType.name, refType, chain.missingType.map { it.name }.toSet()))
             }
         }
@@ -125,7 +126,7 @@ class Expediter(
             is OptionalResolvedTypeHierarchy.NoType -> Issue.MissingType(type.name, access.targetType)
 
             is ResolvedTypeHierarchy.IncompleteTypeHierarchy -> {
-                if (!chain.type.application) {
+                if (chain.type is PlatformType) {
                     Issue.MissingSuperType(
                         type.name,
                         access.targetType,

@@ -17,8 +17,6 @@ package com.toasttab.expediter
 
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.FieldAccessType
-import com.toasttab.expediter.types.InvokeDynamic
-import com.toasttab.expediter.types.InvokeDynamicHandle
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
@@ -48,10 +46,9 @@ object TypeParsers {
 
 private class ApplicationTypeParser(private val source: String) : ClassVisitor(ASM9, TypeDescriptorParser()) {
     private val refs: MutableSet<MemberAccess<*>> = hashSetOf()
-    private val indy: MutableSet<InvokeDynamic> = hashSetOf()
     private val referencedTypes: MutableSet<String> = hashSetOf()
 
-    fun get() = ApplicationType((cv as TypeDescriptorParser).get(), refs, indy, referencedTypes, source)
+    fun get() = ApplicationType((cv as TypeDescriptorParser).get(), refs, referencedTypes, source)
 
     override fun visitField(
         access: Int,
@@ -129,24 +126,13 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                 bootstrapMethodHandle: Handle,
                 vararg bootstrapMethodArguments: Any?
             ) {
-                indy.add(
-                    InvokeDynamic(
-                        MemberSymbolicReference(name, descriptor),
-                        InvokeDynamicHandle(
-                            bootstrapMethodHandle.owner,
-                            MemberSymbolicReference(
-                                bootstrapMethodHandle.name,
-                                bootstrapMethodHandle.desc
-                            )
-                        )
-                    )
-                )
-
                 referencedTypes.addAll(SignatureParser.parseMethod(descriptor).referencedTypes())
             }
 
-            override fun visitTryCatchBlock(start: Label?, end: Label?, handler: Label?, type: String) {
-                referencedTypes.add(type)
+            override fun visitTryCatchBlock(start: Label?, end: Label?, handler: Label?, type: String?) {
+                if (type != null) {
+                    referencedTypes.add(type)
+                }
             }
 
             override fun visitTypeInsn(opcode: Int, type: String) {
