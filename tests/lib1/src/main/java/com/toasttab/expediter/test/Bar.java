@@ -28,4 +28,6 @@ public class Bar extends BaseBar {
     public void bar(long x) { }
 
     public void bar(float x) { }
+
+    public void arg(Param[][] param) { }
 }

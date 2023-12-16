@@ -17,13 +17,17 @@ package com.toasttab.expediter.test.caller;
 
 import com.toasttab.expediter.test.Bar;
 import com.toasttab.expediter.test.Base;
-import com.toasttab.expediter.test.BaseFoo;
 import com.toasttab.expediter.test.Baz;
+import com.toasttab.expediter.test.Ex;
 import com.toasttab.expediter.test.Foo;
+import com.toasttab.expediter.test.Lambda;
+import com.toasttab.expediter.test.ParamParam;
+import com.toasttab.expediter.test.Var;
+
+import java.util.stream.Stream;
 
 public final class Caller extends Base {
     Foo foo;
-    BaseFoo baseFoo;
     Bar bar;
 
     void missingMethod() {
@@ -36,10 +40,6 @@ public final class Caller extends Base {
 
     void missingSuper() {
         foo.base();
-    }
-
-    void missingType() {
-        baseFoo.base();
     }
 
     void privateMethod() {
@@ -81,4 +81,28 @@ public final class Caller extends Base {
     void fieldAccessedViaPublicSubclass() { bar.i = 1; }
 
     void accessProtectedField() { w = 0; }
+
+    void missingTypeLocalVar() {
+        Var v = new Var();
+    }
+
+    void missingIndyLambda() {
+        Lambda l = () -> { };
+    }
+
+    void missingTypeException() {
+        try {
+            new Object();
+        } catch (Ex e) {
+
+        }
+    }
+
+    void missingTypeMethodArg() {
+        bar.arg(null);
+    }
+
+    boolean missingTypeInstanceof(Object o) {
+        return o instanceof ParamParam[];
+    }
 }

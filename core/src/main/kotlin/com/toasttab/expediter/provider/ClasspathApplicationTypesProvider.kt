@@ -13,8 +13,10 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.provider
 
+import com.toasttab.expediter.parser.TypeParsers
+import com.toasttab.expediter.scanner.ClasspathScanner
 import java.io.File
 
 class ClasspathApplicationTypesProvider(

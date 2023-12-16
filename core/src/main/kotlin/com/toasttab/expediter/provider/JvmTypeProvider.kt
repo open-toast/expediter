@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.expediter.provider
 
-import com.toasttab.expediter.TypeParsers
+import com.toasttab.expediter.parser.TypeParsers
 import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 import java.nio.file.Paths
 import java.util.jar.JarFile

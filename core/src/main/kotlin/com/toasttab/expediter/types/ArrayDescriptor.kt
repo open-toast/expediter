@@ -56,9 +56,8 @@ object ArrayDescriptor {
         }
     )
 
-    fun isArray(typeName: String) = typeName.startsWith("[")
-    fun create(typeName: String) = TypeDescriptor {
-        name = typeName
+    fun create(typeSignature: String) = TypeDescriptor {
+        name = typeSignature
         superName = "java/lang/Object"
         interfaces = INTERFACES
         protection = AccessProtection.PUBLIC

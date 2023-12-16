@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.scanner
 
 import java.io.File
 import java.io.InputStream

@@ -148,6 +148,11 @@
     },
     {
       "type": "type-missing",
+      "caller": "com/fasterxml/jackson/databind/deser/BeanDeserializer",
+      "target": "com/fasterxml/jackson/core/StreamReadConstraints"
+    },
+    {
+      "type": "type-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$DoubleDeserializer",
       "target": "com/fasterxml/jackson/core/StreamReadConstraints"
     },
@@ -158,7 +163,17 @@
     },
     {
       "type": "type-missing",
+      "caller": "com/fasterxml/jackson/databind/deser/impl/UnwrappedPropertyHandler",
+      "target": "com/fasterxml/jackson/core/StreamReadConstraints"
+    },
+    {
+      "type": "type-missing",
       "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$BigDecimalDeserializer",
+      "target": "com/fasterxml/jackson/core/StreamReadConstraints"
+    },
+    {
+      "type": "type-missing",
+      "caller": "com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer",
       "target": "com/fasterxml/jackson/core/StreamReadConstraints"
     },
     {
@@ -289,17 +304,9 @@
       }
     },
     {
-      "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
-      "member": {
-        "type": "method",
-        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
-        "ref": {
-          "name": "parseDouble",
-          "signature": "(Ljava/lang/String;Z)D"
-        },
-        "accessType": "STATIC"
-      }
+      "type": "type-missing",
+      "caller": "com/fasterxml/jackson/databind/node/BaseJsonNode",
+      "target": "com/fasterxml/jackson/core/exc/StreamConstraintsException"
     },
     {
       "type": "member-missing",
@@ -329,13 +336,26 @@
     },
     {
       "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
+      "caller": "com/fasterxml/jackson/databind/deser/std/NumberDeserializers$NumberDeserializer",
       "member": {
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
           "name": "parseDouble",
           "signature": "(Ljava/lang/String;Z)D"
+        },
+        "accessType": "STATIC"
+      }
+    },
+    {
+      "type": "member-missing",
+      "caller": "com/fasterxml/jackson/databind/util/TokenBuffer$Parser",
+      "member": {
+        "type": "method",
+        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
+        "ref": {
+          "name": "parseBigInteger",
+          "signature": "(Ljava/lang/String;Z)Ljava/math/BigInteger;"
         },
         "accessType": "STATIC"
       }
@@ -360,8 +380,8 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
-          "name": "parseBigInteger",
-          "signature": "(Ljava/lang/String;Z)Ljava/math/BigInteger;"
+          "name": "parseDouble",
+          "signature": "(Ljava/lang/String;Z)D"
         },
         "accessType": "STATIC"
       }
@@ -412,6 +432,19 @@
         "type": "method",
         "targetType": "com/fasterxml/jackson/core/io/NumberInput",
         "ref": {
+          "name": "parseFloat",
+          "signature": "(Ljava/lang/String;Z)F"
+        },
+        "accessType": "STATIC"
+      }
+    },
+    {
+      "type": "member-missing",
+      "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
+      "member": {
+        "type": "method",
+        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
+        "ref": {
           "name": "parseDouble",
           "signature": "(Ljava/lang/String;Z)D"
         },
@@ -427,19 +460,6 @@
         "ref": {
           "name": "parseFloat",
           "signature": "(Ljava/lang/String;)F"
-        },
-        "accessType": "STATIC"
-      }
-    },
-    {
-      "type": "member-missing",
-      "caller": "com/fasterxml/jackson/databind/deser/std/StdDeserializer",
-      "member": {
-        "type": "method",
-        "targetType": "com/fasterxml/jackson/core/io/NumberInput",
-        "ref": {
-          "name": "parseFloat",
-          "signature": "(Ljava/lang/String;Z)F"
         },
         "accessType": "STATIC"
       }

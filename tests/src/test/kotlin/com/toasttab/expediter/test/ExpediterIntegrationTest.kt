@@ -15,15 +15,15 @@
 
 package com.toasttab.expediter.test
 
-import com.toasttab.expediter.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
+import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
+import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
 import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
-import com.toasttab.expediter.types.PlatformClassloaderTypeProvider
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
@@ -140,17 +140,6 @@ class ExpediterIntegrationTest {
                 )
             ),
 
-            Issue.MissingSuperType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Foo",
-                setOf("com/toasttab/expediter/test/BaseFoo")
-            ),
-
-            Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/BaseFoo"
-            ),
-
             Issue.MissingApplicationSuperType(
                 "com/toasttab/expediter/test/Foo",
                 setOf("com/toasttab/expediter/test/BaseFoo")
@@ -164,6 +153,41 @@ class ExpediterIntegrationTest {
             Issue.FinalApplicationSuperType(
                 "com/toasttab/expediter/test/caller/Caller",
                 setOf("com/toasttab/expediter/test/Base")
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Var"
+            ),
+
+            Issue.MissingApplicationSuperType(
+                "com/toasttab/expediter/test/caller/VarVar",
+                setOf("com/toasttab/expediter/test/Var")
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Ex"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Param"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/ParamParam"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/Bar",
+                "com/toasttab/expediter/test/Param"
+            ),
+
+            Issue.MissingType(
+                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/Lambda"
             )
         )
     }

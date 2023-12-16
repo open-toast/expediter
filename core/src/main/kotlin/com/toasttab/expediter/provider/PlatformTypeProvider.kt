@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.expediter.provider
 
-class PlatformTypeProviderChain(
-    private val providers: Collection<PlatformTypeProvider>
-) : PlatformTypeProvider {
-    override fun lookupPlatformType(name: String) = providers.firstNotNullOfOrNull { it.lookupPlatformType(name) }
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
+
+interface PlatformTypeProvider {
+    fun lookupPlatformType(name: String): TypeDescriptor?
 }

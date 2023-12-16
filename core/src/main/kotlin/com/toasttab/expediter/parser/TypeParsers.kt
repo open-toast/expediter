@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.parser
 
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.FieldAccessType
@@ -24,6 +24,8 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassReader.SKIP_DEBUG
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.Handle
+import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Opcodes.ASM9
@@ -44,8 +46,21 @@ object TypeParsers {
 
 private class ApplicationTypeParser(private val source: String) : ClassVisitor(ASM9, TypeDescriptorParser()) {
     private val refs: MutableSet<MemberAccess<*>> = hashSetOf()
+    private val referencedTypes: MutableSet<String> = hashSetOf()
 
-    fun get() = ApplicationType((cv as TypeDescriptorParser).get(), refs, source)
+    fun get() = ApplicationType((cv as TypeDescriptorParser).get(), refs, referencedTypes, source)
+
+    override fun visitField(
+        access: Int,
+        name: String,
+        descriptor: String,
+        signature: String?,
+        value: Any?
+    ): FieldVisitor? {
+        referencedTypes.addAll(SignatureParser.parseType(descriptor).referencedTypes())
+
+        return super.visitField(access, name, descriptor, signature, value)
+    }
 
     override fun visitMethod(
         access: Int,
@@ -55,6 +70,8 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
         exceptions: Array<out String>?
     ): MethodVisitor {
         super.visitMethod(access, name, descriptor, signature, exceptions)
+
+        referencedTypes.addAll(SignatureParser.parseMethod(descriptor).referencedTypes())
 
         return object : MethodVisitor(ASM9) {
             override fun visitMethodInsn(
@@ -80,6 +97,8 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                         invokeType
                     )
                 )
+
+                referencedTypes.addAll(SignatureParser.parseMethod(descriptor).referencedTypes())
             }
 
             override fun visitFieldInsn(opcode: Int, owner: String, name: String, descriptor: String) {
@@ -97,6 +116,27 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                         type
                     )
                 )
+
+                referencedTypes.addAll(SignatureParser.parseType(descriptor).referencedTypes())
+            }
+
+            override fun visitInvokeDynamicInsn(
+                name: String,
+                descriptor: String,
+                bootstrapMethodHandle: Handle,
+                vararg bootstrapMethodArguments: Any?
+            ) {
+                referencedTypes.addAll(SignatureParser.parseMethod(descriptor).referencedTypes())
+            }
+
+            override fun visitTryCatchBlock(start: Label?, end: Label?, handler: Label?, type: String?) {
+                if (type != null) {
+                    referencedTypes.add(type)
+                }
+            }
+
+            override fun visitTypeInsn(opcode: Int, type: String) {
+                referencedTypes.addAll(SignatureParser.parseInternalType(type).referencedTypes())
             }
         }
     }
