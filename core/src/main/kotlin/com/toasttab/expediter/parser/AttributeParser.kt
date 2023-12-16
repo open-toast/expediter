@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.parser
 
 import org.objectweb.asm.Opcodes
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration

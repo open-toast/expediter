@@ -15,9 +15,10 @@
 
 package com.toasttab.expediter.types
 
-import com.toasttab.expediter.SignatureParser
-import com.toasttab.expediter.TypeSignature
+import com.toasttab.expediter.parser.SignatureParser
+import com.toasttab.expediter.parser.TypeSignature
 import com.toasttab.expediter.issue.Issue
+import com.toasttab.expediter.provider.PlatformTypeProvider
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -71,7 +72,7 @@ class InspectedTypes private constructor(
             }
         } else {
             inspectedCache[signature.scalarName] ?: inspectedCache.computeIfAbsent(signature.scalarName) { _ ->
-                platformTypeProvider.lookupPlatformType(signature.scalarName)?.let { PlatformType(it) }
+                platformTypeProvider.lookupPlatformType(signature.scalarName)?.let(::PlatformType)
             }
         }
     }

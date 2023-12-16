@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.parser
 
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.FieldAccessType

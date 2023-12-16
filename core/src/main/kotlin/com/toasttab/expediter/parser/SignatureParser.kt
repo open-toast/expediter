@@ -1,9 +1,9 @@
-package com.toasttab.expediter
+package com.toasttab.expediter.parser
 
 class SignatureParser private constructor(private val signature: String) {
     private var idx = 0
 
-    private fun nextType(simplified: Boolean): TypeSignature {
+    private fun nextType(internal: Boolean): TypeSignature {
         var primitive = true
         var dimensions = 0
         var c = signature[idx]
@@ -12,7 +12,7 @@ class SignatureParser private constructor(private val signature: String) {
             c = signature[++idx]
         }
 
-        val name = if (dimensions > 0 || !simplified) {
+        val name = if (dimensions > 0 || !internal) {
             if (c == 'L') {
                 primitive = false
                 val next = signature.indexOf(';', startIndex = idx + 1)
@@ -65,7 +65,7 @@ class SignatureParser private constructor(private val signature: String) {
         fun parseType(type: String) = SignatureParser(type).nextType(false)
 
         /**
-         * Parses a internal type descriptor, as reported by ASM for method owners, e.g.
+         * Parses a internal type descriptor, as reported by ASM for method owners, instanceof, etc; e.g.
          *
          * [L/java/lang/Object; for Object[]
          *

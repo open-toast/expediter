@@ -1,4 +1,4 @@
-package com.toasttab.expediter
+package com.toasttab.expediter.access
 
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.Type

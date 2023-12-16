@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.expediter.provider
 
-import com.toasttab.expediter.TypeParsers
+import com.toasttab.expediter.parser.TypeParsers
 
 object PlatformClassloaderTypeProvider : PlatformTypeProvider {
     override fun lookupPlatformType(name: String) =

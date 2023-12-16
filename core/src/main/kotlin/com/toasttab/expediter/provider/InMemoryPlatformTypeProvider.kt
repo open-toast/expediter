@@ -13,10 +13,14 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter
+package com.toasttab.expediter.provider
 
-import com.toasttab.expediter.types.ApplicationType
+import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 
-interface ApplicationTypesProvider {
-    fun types(): List<ApplicationType>
+class InMemoryPlatformTypeProvider private constructor(
+    private val types: Map<String, TypeDescriptor>
+) : PlatformTypeProvider {
+    constructor(types: Collection<TypeDescriptor>) : this(types.associateBy { it.name })
+
+    override fun lookupPlatformType(name: String) = types[name]
 }

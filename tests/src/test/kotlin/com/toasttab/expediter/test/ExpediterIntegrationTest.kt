@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.test
 
-import com.toasttab.expediter.ClasspathApplicationTypesProvider
+import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
@@ -23,7 +23,7 @@ import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
-import com.toasttab.expediter.types.PlatformClassloaderTypeProvider
+import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder

@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.types
 
+import com.toasttab.expediter.provider.JvmTypeProvider
 import org.junit.jupiter.api.Test
 import protokt.v1.toasttab.expediter.v1.SymbolicReference
 import strikt.api.expectThat
