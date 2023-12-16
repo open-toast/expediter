@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.types
 
+import com.toasttab.expediter.SignatureParser
 import com.toasttab.expediter.issue.Issue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -62,10 +63,14 @@ class InspectedTypes private constructor(
 
     private fun lookup(typeName: String): Type? {
         return inspectedCache[typeName] ?: inspectedCache.computeIfAbsent(typeName) { _ ->
-            if (ArrayDescriptor.isArray(typeName)) {
-                val descriptor = ArrayDescriptor.parse(typeName)
+            val signature = SignatureParser.parseType(typeName)
 
-                PlatformType(descriptor.type)
+            if (signature.array) {
+                if (signature.primitive || lookup(signature.scalarName) != null) {
+                    PlatformType(ArrayDescriptor.create(typeName))
+                } else {
+                    null
+                }
             } else {
                 platformTypeProvider.lookupPlatformType(typeName)?.let { PlatformType(it) }
             }

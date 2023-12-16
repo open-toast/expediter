@@ -31,70 +31,39 @@ import protokt.v1.toasttab.expediter.v1.TypeFlavor
  * public Object clone();
  * ```
  */
-class ArrayDescriptor private constructor(
-    val type: TypeDescriptor,
-    val scalar: String,
-    val primitive: Boolean,
-    val dimensions: Int
-) {
-    companion object {
-        private val INTERFACES = listOf("java/lang/Cloneable", "java/io/Serializable")
+object ArrayDescriptor {
+    private val INTERFACES = listOf("java/lang/Cloneable", "java/io/Serializable")
 
-        private val FIELDS = listOf(
-            MemberDescriptor {
-                ref = SymbolicReference {
-                    name = "length"
-                    signature = "I"
-                }
-                protection = AccessProtection.PUBLIC
-                declaration = AccessDeclaration.INSTANCE
+    private val FIELDS = listOf(
+        MemberDescriptor {
+            ref = SymbolicReference {
+                name = "length"
+                signature = "I"
             }
-        )
-
-        private val METHODS = listOf(
-            MemberDescriptor {
-                ref = SymbolicReference {
-                    name = "clone"
-                    signature = "()Ljava/lang/Object;"
-                }
-                protection = AccessProtection.PUBLIC
-                declaration = AccessDeclaration.INSTANCE
-            }
-        )
-
-        fun isArray(typeName: String) = typeName.startsWith("[")
-
-        fun parse(typeSignature: String): ArrayDescriptor {
-            if (!isArray(typeSignature)) {
-                throw IllegalArgumentException("$typeSignature is not an array")
-            }
-
-            val dimensions = typeSignature.lastIndexOf('[') + 1
-            val scalarSignature = typeSignature.substring(dimensions)
-            val isObjectType = scalarSignature.startsWith("L")
-
-            return ArrayDescriptor(
-                type = TypeDescriptor {
-                    name = typeSignature
-                    superName = "java/lang/Object"
-                    interfaces = INTERFACES
-                    protection = AccessProtection.PUBLIC
-                    flavor = TypeFlavor.CLASS
-                    extensibility = TypeExtensibility.FINAL
-                    fields = FIELDS
-                    methods = METHODS
-                },
-
-                primitive = !isObjectType,
-
-                scalar = if (isObjectType) {
-                    typeSignature.substring(1, scalarSignature.length - 1)
-                } else {
-                    scalarSignature
-                },
-
-                dimensions = dimensions
-            )
+            protection = AccessProtection.PUBLIC
+            declaration = AccessDeclaration.INSTANCE
         }
+    )
+
+    private val METHODS = listOf(
+        MemberDescriptor {
+            ref = SymbolicReference {
+                name = "clone"
+                signature = "()Ljava/lang/Object;"
+            }
+            protection = AccessProtection.PUBLIC
+            declaration = AccessDeclaration.INSTANCE
+        }
+    )
+
+    fun create(typeSignature: String) = TypeDescriptor {
+        name = typeSignature
+        superName = "java/lang/Object"
+        interfaces = INTERFACES
+        protection = AccessProtection.PUBLIC
+        flavor = TypeFlavor.CLASS
+        extensibility = TypeExtensibility.FINAL
+        fields = FIELDS
+        methods = METHODS
     }
 }
