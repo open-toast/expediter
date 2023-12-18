@@ -8,7 +8,7 @@ class IgnoreSpec {
         private val LOGGER = LoggerFactory.getLogger(PlatformSpec::class.java)
     }
 
-    private var file: Any? = null
+    var file: Any? = null
         set(value) {
             LOGGER.warn("file property is deprecated, use the file function instead: ignore { file('path') }")
             value?.let(files::add)
