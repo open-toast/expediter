@@ -34,7 +34,6 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
@@ -94,10 +93,9 @@ abstract class ExpediterTask : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val typeDescriptors: ConfigurableFileCollection
 
-    @InputFile
-    @PathSensitive(PathSensitivity.RELATIVE)
-    @Optional
-    var ignoreFile: File? = null
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val ignoreFiles: ConfigurableFileCollection
 
     @Input
     var failOnIssues: Boolean = false
@@ -136,11 +134,11 @@ abstract class ExpediterTask : DefaultTask() {
             providers.add(PlatformClassloaderTypeProvider)
         }
 
-        val ignores = ignoreFile?.let {
+        val ignores = ignoreFiles.flatMap {
             it.inputStream().buffered().use {
-                IssueReport.fromJson(it)
-            }.issues.toSet()
-        } ?: setOf()
+                IssueReport.fromJson(it).issues
+            }
+        }.toSet()
 
         val issues = Expediter(
             ignore,

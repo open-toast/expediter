@@ -73,7 +73,7 @@ class ExpediterPlugin : Plugin<Project> {
 
             ignore = extension.ignoreSpec.buildIgnore()
 
-            ignoreFile = extension.ignoreSpec.file?.let(project::file)
+            ignoreFiles.from(extension.ignoreSpec.files)
 
             report = project.layout.buildDirectory.file("expediter.json").get().asFile
 
