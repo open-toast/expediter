@@ -22,7 +22,7 @@ import com.toasttab.expediter.provider.PlatformTypeProvider
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
-private class ApplicationTypeContainer(
+class ApplicationTypeContainer(
     val appTypes: Map<String, ApplicationType>,
     val duplicates: List<Issue.DuplicateType>
 ) {
@@ -53,15 +53,13 @@ private class ApplicationTypeContainer(
     }
 }
 
-class InspectedTypes private constructor(
+class InspectedTypes(
     private val appTypes: ApplicationTypeContainer,
     private val platformTypeProvider: PlatformTypeProvider
 ) {
     private val inspectedCache: ConcurrentMap<String, Type> = ConcurrentHashMap(appTypes.appTypes)
 
     private val hierarchyCache: MutableMap<String, TypeHierarchy> = hashMapOf()
-
-    constructor(all: List<ApplicationType>, platformTypeProvider: PlatformTypeProvider) : this(ApplicationTypeContainer.create(all), platformTypeProvider)
 
     private fun lookup(signature: TypeSignature): Type? {
         return if (signature.isArray()) {
