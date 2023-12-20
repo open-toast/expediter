@@ -15,20 +15,35 @@
 
 package com.toasttab.expediter.gradle.config
 
-class ApplicationSpec(
-    val configurations: MutableList<String>,
+data class ApplicationSpec(
+    val configurations: MutableList<String> = mutableListOf(),
     val files: MutableList<String> = mutableListOf(),
     val sourceSets: MutableList<String> = mutableListOf()
 ) {
-    constructor() : this(mutableListOf())
-
-    constructor(configuration: String, sourceSet: String) : this(configurations = mutableListOf(configuration), sourceSets = mutableListOf(sourceSet))
-
     fun configuration(configuration: String) {
         configurations.add(configuration)
     }
 
     fun sourceSet(sourceSet: String) {
         sourceSets.add(sourceSet)
+    }
+
+    fun file(file: String) {
+        files.add(file)
+    }
+
+    fun isEmpty(): Boolean {
+        return configurations.isEmpty() && sourceSets.isEmpty() && files.isEmpty()
+    }
+
+    fun orDefaultIfEmpty(): ApplicationSpec {
+        return if (isEmpty()) {
+            ApplicationSpec().apply {
+                configuration("runtimeClasspath")
+                sourceSet("main")
+            }
+        } else {
+            this
+        }
     }
 }

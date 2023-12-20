@@ -203,3 +203,31 @@ expediter {
     failOnIssues = true
 }
 ```
+
+## Executing multiple checks
+
+Expediter can execute checks for multiple combinations of application and platform types within the same 
+project.
+
+For example, to check application classes against Java 11 and Android SDK 21.
+
+```kotlin
+expediter {
+    check("jvm") {
+        platform {
+            jvmVersion = 11
+        }
+    }
+    
+    check("android") {
+        platform {
+            android {
+                sdk = 21
+            }
+        }
+    }
+}
+```
+
+The output of the `jvm` check will be written into `build/expediter-jvm.json`, and the output of the
+`android` check will be written into `build/expediter-android.json`.

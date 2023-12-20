@@ -16,10 +16,10 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.Expediter
+import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.parser.TypeParsers
-import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
 import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
@@ -32,9 +32,11 @@ import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
@@ -48,6 +50,9 @@ import java.util.zip.GZIPInputStream
 abstract class ExpediterTask : DefaultTask() {
     private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
     private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
+
+    @get:Internal
+    abstract val cache: Property<ApplicationTypeCache>
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
@@ -142,10 +147,8 @@ abstract class ExpediterTask : DefaultTask() {
 
         val issues = Expediter(
             ignore,
-            ClasspathApplicationTypesProvider(applicationArtifacts + files),
-            PlatformTypeProviderChain(
-                providers
-            )
+            cache.get().resolve(applicationArtifacts + files),
+            PlatformTypeProviderChain(providers)
         ).findIssues().subtract(ignores)
 
         for (issue in issues) {

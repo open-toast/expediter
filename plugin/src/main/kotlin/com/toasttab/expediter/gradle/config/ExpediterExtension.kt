@@ -15,38 +15,123 @@
 
 package com.toasttab.expediter.gradle.config
 
+import com.toasttab.expediter.gradle.ArtifactSelector
+import com.toasttab.expediter.gradle.ExpediterTask
+import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import org.gradle.api.Action
-import org.slf4j.LoggerFactory
+import org.gradle.api.GradleException
+import org.gradle.api.Project
+import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.register
 
-abstract class ExpediterExtension {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(ExpediterExtension::class.java)
+abstract class ExpediterExtension(
+    private val project: Project,
+    private val sharedCache: Provider<ApplicationTypeCache>
+) {
+    private val selector = ArtifactSelector(project)
+
+    private val specs = mutableMapOf<CheckKey, ExpediterCheckSpec>()
+
+    private val defaultChecks by lazy {
+        check("default")
     }
 
-    var application: ApplicationSpec = ApplicationSpec(configuration = "runtimeClasspath", sourceSet = "main")
-    var platform: PlatformSpec = PlatformSpec()
-
-    val ignoreSpec = IgnoreSpec()
-
     var failOnIssues: Boolean = false
-
-    @Deprecated("use ignore closure instead")
-    var ignoreFile: Any? = null
         set(value) {
-            LOGGER.warn("ignoreFile property is deprecated and will be removed, use ignore { file = ... }")
-            ignoreSpec.file = value
+            defaultChecks.failOnIssues = value
         }
 
     fun application(configure: Action<ApplicationSpec>) {
-        application = ApplicationSpec()
-        configure.execute(application)
+        defaultChecks.application(configure)
     }
 
     fun platform(configure: Action<PlatformSpec>) {
-        configure.execute(platform)
+        defaultChecks.platform(configure)
     }
 
     fun ignore(configure: Action<IgnoreSpec>) {
-        configure.execute(ignoreSpec)
+        defaultChecks.ignore(configure)
+    }
+
+    private fun Project.sourceSet(sourceSet: String) = extensions.getByType<SourceSetContainer>().getByName(sourceSet)
+
+    fun check(name: String, configure: Action<ExpediterCheckSpec>) {
+        configure.execute(check(name))
+    }
+
+    private fun ExpediterTask.configureApplicationClasses(spec: ApplicationSpec) {
+        for (conf in spec.configurations) {
+            artifactCollection(selector.artifacts(conf))
+        }
+
+        for (file in spec.files) {
+            files.from(file)
+        }
+
+        for (sourceSet in spec.sourceSets) {
+            files.from(project.sourceSet(sourceSet).java.classesDirectory)
+        }
+    }
+
+    private fun ExpediterTask.configurePlatformClasses(spec: PlatformSpec) {
+        jvmVersion = spec.jvmVersion
+
+        val expediterConfigurations = spec.expediterConfigurations.toMutableList()
+
+        spec.android.run {
+            if (sdk != null) {
+                val config = project.configurations.create("_expediter_type_descriptors_")
+                project.dependencies.add(config.name, artifact())
+                expediterConfigurations.add(config.name)
+            }
+        }
+
+        for (conf in expediterConfigurations) {
+            typeDescriptors.from(project.configurations.getByName(conf))
+        }
+
+        for (conf in spec.animalSnifferConfigurations) {
+            animalSnifferSignatures.from(project.configurations.getByName(conf))
+        }
+
+        if (spec.jvmVersion != null && spec.android.sdk != null) {
+            throw GradleException("Both jvmVersion and android.sdk are set. Configure multiple checks instead.")
+        }
+
+        for (conf in spec.configurations) {
+            platformArtifactCollection(selector.artifacts(conf))
+        }
+    }
+
+    private fun check(name: String) = specs.computeIfAbsent(CheckKey(name)) { key ->
+        ExpediterCheckSpec().also { spec ->
+            project.tasks.register<ExpediterTask>(key.taskName) {
+                usesService(sharedCache)
+                cache.set(sharedCache)
+
+                configureApplicationClasses(spec.application.orDefaultIfEmpty())
+                configurePlatformClasses(spec.platform)
+
+                ignore = spec.ignoreSpec.buildIgnore()
+
+                ignoreFiles.from(spec.ignoreSpec.files)
+
+                report = project.layout.buildDirectory.file("${key.reportName}.json").get().asFile
+
+                failOnIssues = spec.failOnIssues
+            }
+        }
+    }
+
+    @JvmInline
+    private value class CheckKey(val check: String) {
+        val taskName: String get() = "expediter${check.capitalize()}"
+        val reportName: String get() = if (check == "default") {
+            "expediter"
+        } else {
+            "expediter-$check"
+        }
     }
 }

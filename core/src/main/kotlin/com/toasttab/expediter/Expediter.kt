@@ -21,6 +21,7 @@ import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.provider.ApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.types.ApplicationType
+import com.toasttab.expediter.types.ApplicationTypeContainer
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberType
@@ -37,11 +38,17 @@ import protokt.v1.toasttab.expediter.v1.TypeFlavor
 
 class Expediter(
     private val ignore: Ignore,
-    private val applicationTypesProvider: ApplicationTypesProvider,
+    private val appTypes: ApplicationTypeContainer,
     private val platformTypeProvider: PlatformTypeProvider
 ) {
+    constructor(
+        ignore: Ignore,
+        appTypes: ApplicationTypesProvider,
+        platformTypeProvider: PlatformTypeProvider
+    ) : this(ignore, ApplicationTypeContainer.create(appTypes.types()), platformTypeProvider)
+
     private val inspectedTypes: InspectedTypes by lazy {
-        InspectedTypes(applicationTypesProvider.types(), platformTypeProvider)
+        InspectedTypes(appTypes, platformTypeProvider)
     }
 
     private fun findIssues(appType: ApplicationType): Collection<Issue> {

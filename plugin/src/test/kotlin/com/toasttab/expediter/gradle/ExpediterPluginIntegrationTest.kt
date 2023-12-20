@@ -110,6 +110,36 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    fun `multi check`(project: TestProject) {
+        project.createRunner().withArguments("check").build()
+
+        val reportJvm = IssueReport.fromJson(project.dir.resolve("build/expediter-jvm.json").readText())
+        val reportAndroid = IssueReport.fromJson(project.dir.resolve("build/expediter-android.json").readText())
+
+        expectThat(reportJvm.issues).containsExactlyInAnyOrder(
+            Issue.MissingMember(
+                "test/Caller",
+                MemberAccess.MethodAccess(
+                    "java/lang/String",
+                    null,
+                    MemberSymbolicReference(
+                        "isBlank",
+                        "()Z"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+
+        expectThat(reportAndroid.issues).containsExactlyInAnyOrder(
+            Issue.MissingType(
+                "test/Caller",
+                "javax/management/Descriptor"
+            )
+        )
+    }
+
+    @Test
     fun multimodule(project: TestProject) {
         project.createRunner().withArguments("app:expedite").buildAndFail()
 

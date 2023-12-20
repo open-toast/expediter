@@ -16,74 +16,29 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.gradle.config.ExpediterExtension
+import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.registerIfAbsent
+import org.gradle.kotlin.dsl.withType
 
 class ExpediterPlugin : Plugin<Project> {
     private fun Project.sourceSet(sourceSet: String) = extensions.getByType<SourceSetContainer>().getByName(sourceSet)
 
     override fun apply(project: Project) {
-        val extension = project.extensions.create<ExpediterExtension>("expediter")
-        val selector = ArtifactSelector(project)
+        val cache = project.gradle.sharedServices.registerIfAbsent("expediterTypeCache", ApplicationTypeCache::class.java) { }
+        project.extensions.create<ExpediterExtension>("expediter", cache)
 
-        project.tasks.register<ExpediterTask>("expedite") {
-            for (conf in extension.application.configurations) {
-                artifactCollection(selector.artifacts(conf))
-            }
-
-            for (file in extension.application.files) {
-                files.from(file)
-            }
-
-            for (sourceSet in extension.application.sourceSets) {
-                files.from(project.sourceSet(sourceSet).java.classesDirectory)
-            }
-
-            jvmVersion = extension.platform.jvmVersion
-
-            val expediterConfigurations = extension.platform.expediterConfigurations.toMutableList()
-
-            extension.platform.android.run {
-                if (sdk != null) {
-                    val config = project.configurations.create("_expediter_type_descriptors_")
-                    project.dependencies.add(config.name, artifact())
-                    expediterConfigurations.add(config.name)
-                }
-            }
-
-            for (conf in expediterConfigurations) {
-                typeDescriptors.from(project.configurations.getByName(conf))
-            }
-
-            for (conf in extension.platform.animalSnifferConfigurations) {
-                animalSnifferSignatures.from(project.configurations.getByName(conf))
-            }
-
-            if (extension.platform.jvmVersion != null && extension.platform.android.sdk != null) {
-                logger.warn("Both JVM version and Android SDK are set.")
-            }
-
-            for (conf in extension.platform.configurations) {
-                platformArtifactCollection(selector.artifacts(conf))
-            }
-
-            ignore = extension.ignoreSpec.buildIgnore()
-
-            ignoreFiles.from(extension.ignoreSpec.files)
-
-            report = project.layout.buildDirectory.file("expediter.json").get().asFile
-
-            failOnIssues = extension.failOnIssues
+        project.tasks.register("expedite") {
+            dependsOn(project.tasks.withType<ExpediterTask>())
         }
 
         project.tasks.named("check") {
-            if (extension.failOnIssues) {
-                dependsOn("expedite")
-            }
+            dependsOn("expedite")
         }
     }
 }
