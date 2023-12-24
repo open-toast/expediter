@@ -28,6 +28,7 @@ import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformType
+import com.toasttab.expediter.types.PolymorphicMethods
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.expediter.types.Type
 import com.toasttab.expediter.types.members
@@ -151,7 +152,13 @@ class Expediter(
                 val member = chain.resolveMember(access)
 
                 if (member == null) {
-                    Issue.MissingMember(type.name, access)
+                    if (access.accessType == MethodAccessType.VIRTUAL && PolymorphicMethods.contains(access.targetType, access.ref.name)) {
+                        // if invoking a polymorphic method, assume the invocation is valid
+                        // because it's validated by the java compiler
+                        null
+                    } else {
+                        Issue.MissingMember(type.name, access)
+                    }
                 } else {
                     val resolvedAccess = access.withDeclaringType(member.declaringType.name)
 
