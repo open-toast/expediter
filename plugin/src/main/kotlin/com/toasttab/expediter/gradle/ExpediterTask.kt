@@ -155,7 +155,9 @@ abstract class ExpediterTask : DefaultTask() {
             logger.warn("{}", issue)
         }
 
-        val issueReport = IssueReport(project.name, issues.sortedBy { it.target })
+        val issueReport = IssueReport(project.name, issues.sortedWith(compareBy(
+            { it.caller }, { it.target }
+        )))
 
         report.outputStream().buffered().use {
             issueReport.toJson(it)
