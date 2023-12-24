@@ -24,7 +24,10 @@ import com.toasttab.expediter.test.Lambda;
 import com.toasttab.expediter.test.ParamParam;
 import com.toasttab.expediter.test.Var;
 
-import java.util.stream.Stream;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.invoke.VarHandle;
 
 public final class Caller extends Base {
     Foo foo;
@@ -104,5 +107,21 @@ public final class Caller extends Base {
 
     boolean missingTypeInstanceof(Object o) {
         return o instanceof ParamParam[];
+    }
+
+    void methodHandle() throws Throwable {
+        MethodHandle h1 = MethodHandles.publicLookup().findVirtual(String.class, "substring", MethodType.methodType(String.class, int.class, int.class));
+
+        h1.invokeExact("xxx", 1, 2);
+
+        MethodHandle h2 = MethodHandles.publicLookup().findStatic(String.class, "valueOf", MethodType.methodType(String.class, long.class));
+
+        h2.invokeExact(1L);
+    }
+
+    void varHandle() throws Throwable {
+        VarHandle vh = MethodHandles.publicLookup().findVarHandle(int[].class, "length", int.class);
+
+        vh.get(new int[0]);
     }
 }
