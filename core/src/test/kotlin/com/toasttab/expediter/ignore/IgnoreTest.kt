@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isFalse
 import strikt.assertions.isTrue
+import kotlin.math.exp
 
 class IgnoreTest {
     @Test
@@ -129,6 +130,15 @@ class IgnoreTest {
         expectThat(
             Ignore.TargetStartsWith("aaa/foo", "zzz/foo", "java/lang/StringX").ignore(
                 Issue.MissingType("foo/Zz", "java/lang/String")
+            )
+        ).isFalse()
+    }
+
+    @Test
+    fun `caller starts with null`() {
+        expectThat(
+            Ignore.CallerStartsWith("com/Foo").ignore(
+                Issue.DuplicateType("com/Foo", listOf("lib1.jar", "lib2.jar"))
             )
         ).isFalse()
     }
