@@ -1,6 +1,6 @@
 package com.toasttab.expediter.gradle.config
 
-class AndroidSpec {
+open class AndroidSpec {
     var sdk: Int? = null
     var coreLibraryDesugaring: Boolean = false
     var gummyBearsVersion: String = "0.8.0"

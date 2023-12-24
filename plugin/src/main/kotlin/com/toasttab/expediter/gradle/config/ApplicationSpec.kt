@@ -15,11 +15,11 @@
 
 package com.toasttab.expediter.gradle.config
 
-data class ApplicationSpec(
-    val configurations: MutableList<String> = mutableListOf(),
-    val files: MutableList<String> = mutableListOf(),
+open class ApplicationSpec {
+    val configurations: MutableList<String> = mutableListOf()
+    val files: MutableList<String> = mutableListOf()
     val sourceSets: MutableList<String> = mutableListOf()
-) {
+
     fun configuration(configuration: String) {
         configurations.add(configuration)
     }

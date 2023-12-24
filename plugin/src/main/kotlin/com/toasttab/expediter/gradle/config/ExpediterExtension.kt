@@ -24,6 +24,7 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.register
 
 abstract class ExpediterExtension(
@@ -80,7 +81,7 @@ abstract class ExpediterExtension(
 
         val expediterConfigurations = spec.expediterConfigurations.toMutableList()
 
-        spec.android.run {
+        spec.androidSpec.run {
             if (sdk != null) {
                 val config = project.configurations.create("_expediter_type_descriptors_")
                 project.dependencies.add(config.name, artifact())
@@ -96,7 +97,7 @@ abstract class ExpediterExtension(
             animalSnifferSignatures.from(project.configurations.getByName(conf))
         }
 
-        if (spec.jvmVersion != null && spec.android.sdk != null) {
+        if (spec.jvmVersion != null && spec.androidSpec.sdk != null) {
             throw GradleException("Both jvmVersion and android.sdk are set. Configure multiple checks instead.")
         }
 
@@ -106,7 +107,7 @@ abstract class ExpediterExtension(
     }
 
     private fun check(name: String) = specs.computeIfAbsent(CheckKey(name)) { key ->
-        ExpediterCheckSpec().also { spec ->
+        project.objects.newInstance<ExpediterCheckSpec>().also { spec ->
             project.tasks.register<ExpediterTask>(key.taskName) {
                 usesService(sharedCache)
                 cache.set(sharedCache)
