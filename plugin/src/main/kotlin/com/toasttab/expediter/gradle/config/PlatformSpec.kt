@@ -16,9 +16,14 @@
 package com.toasttab.expediter.gradle.config
 
 import org.gradle.api.Action
+import org.gradle.api.model.ObjectFactory
+import org.gradle.kotlin.dsl.newInstance
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class PlatformSpec {
+open class PlatformSpec @Inject constructor(
+    objectFactory: ObjectFactory
+) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(PlatformSpec::class.java)
     }
@@ -33,13 +38,13 @@ class PlatformSpec {
     var androidSdk: Int? = null
         set(value) {
             LOGGER.warn("androidSdk property is deprecated and will be removed, use android { sdk = ... }")
-            android.sdk = value
+            androidSpec.sdk = value
         }
 
-    val android: AndroidSpec = AndroidSpec()
+    val androidSpec: AndroidSpec = objectFactory.newInstance()
 
     fun android(configure: Action<AndroidSpec>) {
-        configure.execute(android)
+        configure.execute(androidSpec)
     }
 
     fun animalSnifferConfiguration(configuration: String) {

@@ -3,7 +3,7 @@ package com.toasttab.expediter.gradle.config
 import com.toasttab.expediter.ignore.Ignore
 import org.slf4j.LoggerFactory
 
-class IgnoreSpec {
+open class IgnoreSpec {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(PlatformSpec::class.java)
     }

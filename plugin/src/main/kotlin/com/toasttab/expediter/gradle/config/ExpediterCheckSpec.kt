@@ -1,12 +1,16 @@
 package com.toasttab.expediter.gradle.config
 
 import org.gradle.api.Action
+import org.gradle.api.model.ObjectFactory
+import org.gradle.kotlin.dsl.newInstance
+import javax.inject.Inject
 
-class ExpediterCheckSpec {
-    val application: ApplicationSpec = ApplicationSpec()
-    val platform: PlatformSpec = PlatformSpec()
-
-    val ignoreSpec = IgnoreSpec()
+open class ExpediterCheckSpec @Inject constructor(
+    objectFactory: ObjectFactory
+) {
+    val application: ApplicationSpec = objectFactory.newInstance()
+    val platform: PlatformSpec = objectFactory.newInstance()
+    val ignoreSpec: IgnoreSpec = objectFactory.newInstance()
 
     var failOnIssues: Boolean = false
 
