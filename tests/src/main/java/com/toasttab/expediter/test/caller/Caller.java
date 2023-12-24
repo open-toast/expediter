@@ -108,20 +108,4 @@ public final class Caller extends Base {
     boolean missingTypeInstanceof(Object o) {
         return o instanceof ParamParam[];
     }
-
-    void methodHandle() throws Throwable {
-        MethodHandle h1 = MethodHandles.publicLookup().findVirtual(String.class, "substring", MethodType.methodType(String.class, int.class, int.class));
-
-        h1.invokeExact("xxx", 1, 2);
-
-        MethodHandle h2 = MethodHandles.publicLookup().findStatic(String.class, "valueOf", MethodType.methodType(String.class, long.class));
-
-        h2.invokeExact(1L);
-    }
-
-    void varHandle() throws Throwable {
-        VarHandle vh = MethodHandles.publicLookup().findVarHandle(int[].class, "length", int.class);
-
-        vh.get(new int[0]);
-    }
 }
