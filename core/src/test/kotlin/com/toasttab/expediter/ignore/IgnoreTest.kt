@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isFalse
 import strikt.assertions.isTrue
-import kotlin.math.exp
 
 class IgnoreTest {
     @Test
