@@ -52,15 +52,19 @@ interface Ignore : Serializable {
     }
 
     class TargetStartsWith(
-        private vararg val partial: String
+        vararg partial: String
     ) : Ignore {
-        override fun ignore(issue: Issue) = partial.any { issue.target?.run { startsWith(it) } ?: false }
+        private val startsWith = partial.sorted()
+
+        override fun ignore(issue: Issue) = issue.target?.run { startsWithAny(startsWith) } ?: false
     }
 
     class CallerStartsWith(
-        private vararg val partial: String
+        vararg partial: String
     ) : Ignore {
-        override fun ignore(issue: Issue) = issue.caller?.run { partial.any { this.startsWith(it) } } ?: false
+        private val startsWith = partial.sorted()
+
+        override fun ignore(issue: Issue) = issue.caller?.run { startsWithAny(startsWith) } ?: false
     }
 
     class Signature(
@@ -71,6 +75,21 @@ interface Ignore : Serializable {
 
         companion object {
             val IS_BLANK = Signature("()V")
+        }
+    }
+}
+
+private fun String.startsWithAny(sortedPrefixList: List<String>): Boolean {
+    val idx = sortedPrefixList.binarySearch(this)
+
+    return if (idx >= 0) {
+        true
+    } else {
+        val before = -idx - 2
+        if (before >= 0) {
+            startsWith(sortedPrefixList[before])
+        } else {
+            false
         }
     }
 }
