@@ -15,6 +15,11 @@
 
 package com.toasttab.expediter.test.caller;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.invoke.VarHandle;
+
 public class CallerNegative {
     private int x;
 
@@ -44,5 +49,30 @@ public class CallerNegative {
         void privateAccessFromNestedIsOk() {
             x = 1;
         }
+    }
+
+    private enum NestedEnum {
+        DOUBLE_NESTED {
+            @Override
+            void foo() {}
+        };
+
+        void foo() {}
+    }
+
+    void methodHandle() throws Throwable {
+        MethodHandle h1 = MethodHandles.publicLookup().findVirtual(String.class, "substring", MethodType.methodType(String.class, int.class, int.class));
+
+        h1.invokeExact("xxx", 1, 2);
+
+        MethodHandle h2 = MethodHandles.publicLookup().findStatic(String.class, "valueOf", MethodType.methodType(String.class, long.class));
+
+        h2.invokeExact(1L);
+    }
+
+    void varHandle() throws Throwable {
+        VarHandle vh = MethodHandles.publicLookup().findVarHandle(int[].class, "length", int.class);
+
+        vh.get(new int[0]);
     }
 }

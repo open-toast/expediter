@@ -90,5 +90,5 @@ object AccessCheck {
 
     private fun samePackage(a: String, b: String) = a.substringBeforeLast('/') == b.substringBeforeLast('/')
 
-    private fun sameNest(a: String, b: String) = a.substringBeforeLast('$') == b.substringBeforeLast('$')
+    private fun sameNest(a: String, b: String) = a.substringBefore('$') == b.substringBefore('$')
 }
