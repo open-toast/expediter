@@ -151,10 +151,6 @@ abstract class ExpediterTask : DefaultTask() {
             PlatformTypeProviderChain(providers)
         ).findIssues().subtract(ignores)
 
-        for (issue in issues) {
-            logger.warn("{}", issue)
-        }
-
         val issueReport = IssueReport(
             project.name,
             issues.sortedWith(
@@ -164,6 +160,10 @@ abstract class ExpediterTask : DefaultTask() {
                 )
             )
         )
+
+        for (issue in issueReport.issues) {
+            logger.warn("{}", issue)
+        }
 
         report.outputStream().buffered().use {
             issueReport.toJson(it)
