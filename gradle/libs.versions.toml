@@ -10,7 +10,7 @@ protokt = "1.0.0-beta.1"
 protobuf = "3.25.2"
 
 # test
-junit = "5.10.1"
+junit = "5.10.2"
 strikt = "0.34.1"
 testkit-plugin = "0.0.4"
 
