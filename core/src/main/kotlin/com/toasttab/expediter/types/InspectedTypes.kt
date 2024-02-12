@@ -19,6 +19,7 @@ import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.parser.SignatureParser
 import com.toasttab.expediter.parser.TypeSignature
 import com.toasttab.expediter.provider.PlatformTypeProvider
+import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -28,7 +29,7 @@ class ApplicationTypeContainer(
 ) {
     companion object {
         fun create(all: List<ApplicationType>): ApplicationTypeContainer {
-            val duplicates = HashMap<String, MutableList<String>>()
+            val duplicates = HashMap<String, MutableList<TypeSource>>()
             val types = HashMap<String, ApplicationType>()
 
             for (type in all) {
@@ -48,7 +49,7 @@ class ApplicationTypeContainer(
                 }
             }
 
-            return ApplicationTypeContainer(types, duplicates.map { (k, v) -> Issue.DuplicateType(k, v) })
+            return ApplicationTypeContainer(types, duplicates.map { (k, v) -> Issue.DuplicateType(k, v.map { it.file.name }) })
         }
     }
 }
@@ -116,5 +117,35 @@ class InspectedTypes(
     }
 
     val classes: Collection<ApplicationType> get() = appTypes.appTypes.values
+
+    fun reachableClasses(): Collection<ApplicationType> {
+        val reachable = hashMapOf<String, ApplicationType>()
+
+        val todo = LinkedList(appTypes.appTypes.values.filter {
+            it.source.type == SourceType.SOURCE_SET || it.source.type == SourceType.PROJECT_DEPENDENCY
+        })
+
+        while (todo.isNotEmpty()) {
+            val next = todo.remove()
+
+            if (reachable.put(next.name, next) == null) {
+                for (ref in next.referencedTypes) {
+                    val refType = appTypes.appTypes[ref]
+                    if (refType != null) {
+                        todo.add(refType)
+                    }
+                }
+
+                val hierarchy = resolveHierarchy(next)
+
+                if (hierarchy is ResolvedTypeHierarchy.CompleteTypeHierarchy) {
+                    todo.addAll(hierarchy.superTypes.filterIsInstance<ApplicationType>())
+                }
+            }
+        }
+
+        return reachable.values
+    }
+
     val duplicateTypes: Collection<Issue.DuplicateType> get() = appTypes.duplicates
 }

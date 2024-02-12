@@ -16,6 +16,7 @@
 package com.toasttab.expediter.parser
 
 import com.toasttab.expediter.types.ApplicationType
+import com.toasttab.expediter.types.TypeSource
 import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
@@ -35,7 +36,7 @@ import protokt.v1.toasttab.expediter.v1.TypeDescriptor
 import java.io.InputStream
 
 object TypeParsers {
-    fun applicationType(stream: InputStream, source: String) = ApplicationTypeParser(source).apply {
+    fun applicationType(stream: InputStream, source: TypeSource) = ApplicationTypeParser(source).apply {
         ClassReader(stream).accept(this, SKIP_DEBUG)
     }.get()
 
@@ -44,7 +45,7 @@ object TypeParsers {
     }.get()
 }
 
-private class ApplicationTypeParser(private val source: String) : ClassVisitor(ASM9, TypeDescriptorParser()) {
+private class ApplicationTypeParser(private val source: TypeSource) : ClassVisitor(ASM9, TypeDescriptorParser()) {
     private val refs: MutableSet<MemberAccess<*>> = hashSetOf()
     private val referencedTypes: MutableSet<String> = hashSetOf()
 
@@ -99,6 +100,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                 )
 
                 referencedTypes.addAll(SignatureParser.parseMethod(descriptor).referencedTypes())
+                referencedTypes.add(owner)
             }
 
             override fun visitFieldInsn(opcode: Int, owner: String, name: String, descriptor: String) {
@@ -118,6 +120,7 @@ private class ApplicationTypeParser(private val source: String) : ClassVisitor(A
                 )
 
                 referencedTypes.addAll(SignatureParser.parseType(descriptor).referencedTypes())
+                referencedTypes.add(owner)
             }
 
             override fun visitInvokeDynamicInsn(

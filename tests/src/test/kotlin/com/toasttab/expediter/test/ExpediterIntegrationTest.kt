@@ -24,6 +24,8 @@ import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.expediter.types.SourceType
+import com.toasttab.expediter.types.TypeSource
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
@@ -36,7 +38,7 @@ class ExpediterIntegrationTest {
     @Test
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
-        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { File(it) })
+        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { TypeSource(File(it), SourceType.UNKNOWN, it) })
         val p = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
         expectThat(p).containsExactlyInAnyOrder(

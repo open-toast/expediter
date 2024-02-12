@@ -72,7 +72,7 @@ abstract class ExpediterExtension(
         }
 
         for (sourceSet in spec.sourceSets) {
-            files.from(project.sourceSet(sourceSet).java.classesDirectory)
+            sourceSet(project.sourceSet(sourceSet).java)
         }
     }
 

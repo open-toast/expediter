@@ -141,7 +141,9 @@ class ExpediterPluginIntegrationTest {
 
     @Test
     fun multimodule(project: TestProject) {
-        project.createRunner().withArguments("app:expedite").buildAndFail()
+        project.createRunner().withArguments("app:expedite").buildAndFail().also {
+            println(it.output)
+        }
 
         val report = IssueReport.fromJson(project.dir.resolve("app/build/expediter.json").readText())
 
@@ -176,7 +178,9 @@ class ExpediterPluginIntegrationTest {
 
     @Test
     fun `cross library`(project: TestProject) {
-        project.createRunner().withArguments("check").buildAndFail()
+        project.createRunner().withArguments("check").buildAndFail().also {
+            println(it.output)
+        }
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 

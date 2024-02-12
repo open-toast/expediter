@@ -17,10 +17,11 @@ package com.toasttab.expediter.provider
 
 import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.scanner.ClasspathScanner
+import com.toasttab.expediter.types.TypeSource
 import java.io.File
 
 class ClasspathApplicationTypesProvider(
-    elements: Iterable<File>
+    elements: Iterable<TypeSource>
 ) : ApplicationTypesProvider {
     private val scanner = ClasspathScanner(elements)
 

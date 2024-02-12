@@ -32,6 +32,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -41,6 +42,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
@@ -50,16 +52,19 @@ import java.util.zip.GZIPInputStream
 abstract class ExpediterTask : DefaultTask() {
     private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
     private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
+    private val applicationSourceSets: MutableSet<SourceDirectorySet> = mutableSetOf()
 
     @get:Internal
     abstract val cache: Property<ApplicationTypeCache>
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    @Suppress("UNUSED")
     val applicationArtifacts get() = applicationConfigurationArtifacts.asFileCollection()
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    @Suppress("UNUSED")
     val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
 
     private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
@@ -72,12 +77,22 @@ abstract class ExpediterTask : DefaultTask() {
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     abstract val files: ConfigurableFileCollection
 
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
+        setFrom(applicationSourceSets.map { it.classesDirectory })
+    }
+
     fun artifactCollection(artifactCollection: ArtifactCollection) {
         applicationConfigurationArtifacts.add(artifactCollection)
     }
 
     fun platformArtifactCollection(artifactCollection: ArtifactCollection) {
         platformConfigurationArtifacts.add(artifactCollection)
+    }
+
+    fun sourceSet(sourceDirectorySet: SourceDirectorySet) {
+        applicationSourceSets.add(sourceDirectorySet)
     }
 
     @OutputFile
@@ -113,10 +128,10 @@ abstract class ExpediterTask : DefaultTask() {
             providers.add(JvmTypeProvider.forTarget(it))
         }
 
-        if (!platformArtifacts.isEmpty) {
+        if (platformConfigurationArtifacts.isNotEmpty()) {
             providers.add(
                 InMemoryPlatformTypeProvider(
-                    ClasspathScanner(platformArtifacts).scan { i, _ -> TypeParsers.typeDescriptor(i) }
+                    ClasspathScanner(platformConfigurationArtifacts.flatMap { it.artifacts.map { it.source() } }).scan { i, _ -> TypeParsers.typeDescriptor(i) }
                 )
             )
         }
@@ -133,7 +148,7 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }
 
-        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformArtifacts.isEmpty) {
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformConfigurationArtifacts.isEmpty()) {
             logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
 
             providers.add(PlatformClassloaderTypeProvider)
@@ -145,9 +160,11 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }.toSet()
 
+        val typeSources = applicationConfigurationArtifacts.flatMap { it.artifacts.map { it.source() } } + files.map { it.source() } + applicationSourceSets.map { it.source() }
+
         val issues = Expediter(
             ignore,
-            cache.get().resolve(applicationArtifacts + files),
+            cache.get().resolve(typeSources),
             PlatformTypeProviderChain(providers)
         ).findIssues().subtract(ignores)
 

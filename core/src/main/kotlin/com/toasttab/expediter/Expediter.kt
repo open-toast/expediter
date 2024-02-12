@@ -119,7 +119,7 @@ class Expediter(
 
     fun findIssues(): Set<Issue> {
         return (
-            inspectedTypes.classes.flatMap { appType ->
+            inspectedTypes.reachableClasses().flatMap { appType ->
                 findIssues(appType)
             } + inspectedTypes.duplicateTypes
             ).filter { !ignore.ignore(it) }
