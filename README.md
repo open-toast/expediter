@@ -2,7 +2,7 @@
 
 [![Github Actions](https://github.com/open-toast/expediter/actions/workflows/ci.yml/badge.svg)](https://github.com/open-toast/expediter/actions/workflows/ci.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.toasttab.expediter/core)](https://search.maven.org/artifact/com.toasttab.expediter/core)
-[![Gradle Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/com/toasttab/expediter/plugin/maven-metadata.xml.svg?label=gradle-portal&color=yellowgreen)](https://plugins.gradle.org/plugin/com.toasttab.expediter)
+[![Gradle Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/com/toasttab/expediter/core/maven-metadata.xml.svg?label=gradle-portal&color=yellowgreen)](https://plugins.gradle.org/plugin/com.toasttab.expediter)
 
 Checks for binary incompatibilities between your application classes, application dependencies, and platform APIs at build time.
 
