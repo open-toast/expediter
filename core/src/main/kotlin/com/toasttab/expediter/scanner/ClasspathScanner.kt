@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.scanner
 
-import com.toasttab.expediter.types.TypeSource
+import com.toasttab.expediter.types.ClassfileSource
 import java.io.InputStream
 import java.lang.Exception
 import java.lang.RuntimeException
@@ -23,16 +23,16 @@ import java.util.jar.JarInputStream
 import java.util.zip.ZipFile
 
 class ClasspathScanner(
-    private val elements: Iterable<TypeSource>
+    private val elements: Iterable<ClassfileSource>
 ) {
-    fun <T> scan(parse: (stream: InputStream, source: TypeSource) -> T): List<T> = elements.flatMap { types(it, parse) }
+    fun <T> scan(parse: (stream: InputStream, source: ClassfileSource) -> T): List<T> = elements.flatMap { types(it, parse) }
 
     private fun isClassFile(name: String) = name.endsWith(".class") &&
         !name.startsWith("META-INF/versions") && // mrjars not supported yet
         !name.endsWith("package-info.class") &&
         !name.endsWith("module-info.class")
 
-    private fun <T> scanJarStream(stream: JarInputStream, source: TypeSource, parse: (stream: InputStream, source: TypeSource) -> T) = generateSequence { stream.nextJarEntry }
+    private fun <T> scanJarStream(stream: JarInputStream, source: ClassfileSource, parse: (stream: InputStream, source: ClassfileSource) -> T) = generateSequence { stream.nextJarEntry }
         .filter { isClassFile(it.name) }
         .map {
             try { parse(stream, source) } catch (e: Exception) {
@@ -41,11 +41,11 @@ class ClasspathScanner(
         }
         .toList()
 
-    fun <T> scanJar(source: TypeSource, parse: (stream: InputStream, source: TypeSource) -> T): List<T> = source.file.inputStream().use {
+    fun <T> scanJar(source: ClassfileSource, parse: (stream: InputStream, source: ClassfileSource) -> T): List<T> = source.file.inputStream().use {
         scanJarStream(JarInputStream(it), source, parse)
     }
 
-    fun <T> scanAar(source: TypeSource, parse: (stream: InputStream, source: TypeSource) -> T): List<T> =
+    fun <T> scanAar(source: ClassfileSource, parse: (stream: InputStream, source: ClassfileSource) -> T): List<T> =
         ZipFile(source.file).use { aar ->
             when (val classesEntry = aar.getEntry("classes.jar")) {
                 null -> emptyList()
@@ -57,14 +57,14 @@ class ClasspathScanner(
             }
         }
 
-    fun <T> scanClassDir(source: TypeSource, parse: (stream: InputStream, source: TypeSource) -> T): List<T> =
+    fun <T> scanClassDir(source: ClassfileSource, parse: (stream: InputStream, source: ClassfileSource) -> T): List<T> =
         source.file.walkTopDown().filter { isClassFile(it.name) }.map {
             it.inputStream().use { classStream ->
                 parse(classStream, source)
             }
         }.toList()
 
-    private fun <T> types(source: TypeSource, parse: (stream: InputStream, source: TypeSource) -> T) =
+    private fun <T> types(source: ClassfileSource, parse: (stream: InputStream, source: ClassfileSource) -> T) =
         when {
             source.file.isDirectory -> scanClassDir(source, parse)
             source.file.name.endsWith(".jar") -> scanJar(source, parse)

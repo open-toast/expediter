@@ -56,6 +56,10 @@ abstract class ExpediterExtension(
         defaultChecks.ignore(configure)
     }
 
+    fun roots(configure: Action<RootSpec>) {
+        defaultChecks.application.roots(configure)
+    }
+
     private fun Project.sourceSet(sourceSet: String) = extensions.getByType<SourceSetContainer>().getByName(sourceSet)
 
     fun check(name: String, configure: Action<ExpediterCheckSpec>) {
@@ -122,6 +126,8 @@ abstract class ExpediterExtension(
                 report = project.layout.buildDirectory.file("${key.reportName}.json").get().asFile
 
                 failOnIssues = spec.failOnIssues
+
+                roots = spec.application.rootSpec.type
             }
         }
     }

@@ -16,7 +16,7 @@
 package test;
 
 import java.util.concurrent.ConcurrentHashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 public class Caller {
     void f() {
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
@@ -26,5 +26,7 @@ public class Caller {
         map.computeIfAbsent("a", k -> "b");
 
         map.hashCode();
+
+        ObjectMapper mapper = new ObjectMapper();
     }
 }

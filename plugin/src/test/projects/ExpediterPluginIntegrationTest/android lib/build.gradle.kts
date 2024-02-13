@@ -10,6 +10,10 @@ expediter {
     failOnIssues = true
 
     application {
+        roots {
+            all()
+        }
+
         configuration("releaseRuntimeClasspath")
         configuration("debugRuntimeClasspath")
     }

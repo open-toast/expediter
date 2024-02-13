@@ -26,6 +26,8 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.contains
 import strikt.assertions.containsExactlyInAnyOrder
+import strikt.assertions.filterIsInstance
+import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
 @TestKit
@@ -209,6 +211,8 @@ class ExpediterPluginIntegrationTest {
         expectThat(report.issues).contains(
             Issue.MissingType("kotlin/io/path/DirectoryEntriesReader", "java/nio/file/Files")
         )
+
+        expectThat(report.issues).filterIsInstance<Issue.DuplicateType>().isEmpty()
     }
 
     @Test

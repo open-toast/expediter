@@ -1,7 +1,7 @@
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.types.SourceType
-import com.toasttab.expediter.types.TypeSource
+import com.toasttab.expediter.types.ClassfileSourceType
+import com.toasttab.expediter.types.ClassfileSource
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.artifacts.result.ResolvedArtifactResult
@@ -10,11 +10,11 @@ import java.io.File
 
 fun ResolvedArtifactResult.source() =
     when (val cid = id.componentIdentifier) {
-        is ModuleComponentIdentifier -> TypeSource(file, SourceType.DEPENDENCY, cid.displayName)
-        is ProjectComponentIdentifier -> TypeSource(file, SourceType.PROJECT_DEPENDENCY, cid.projectPath)
-        else -> TypeSource(file, SourceType.UNKNOWN, cid.displayName)
+        is ModuleComponentIdentifier -> ClassfileSource(file, ClassfileSourceType.EXTERNAL_DEPENDENCY, cid.displayName)
+        is ProjectComponentIdentifier -> ClassfileSource(file, ClassfileSourceType.SUBPROJECT_DEPENDENCY, cid.projectPath)
+        else -> ClassfileSource(file, ClassfileSourceType.UNKNOWN, cid.displayName)
     }
 
-fun File.source() = TypeSource(this, SourceType.UNKNOWN, name)
+fun File.source() = ClassfileSource(this, ClassfileSourceType.UNKNOWN, name)
 
-fun SourceDirectorySet.source() = TypeSource(classesDirectory.get().asFile, SourceType.SOURCE_SET, name)
+fun SourceDirectorySet.source() = ClassfileSource(classesDirectory.get().asFile, ClassfileSourceType.SOURCE_SET, name)

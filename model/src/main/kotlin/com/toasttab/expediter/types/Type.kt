@@ -35,7 +35,7 @@ class ApplicationType(
     override val descriptor: TypeDescriptor,
     val memberAccess: Set<MemberAccess<*>>,
     val referencedTypes: Set<String>,
-    val source: TypeSource
+    val source: ClassfileSource
 ) : Type {
     override fun toString() = "ApplicationType[$name]"
 }

@@ -16,6 +16,7 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.Expediter
+import com.toasttab.expediter.gradle.config.RootType
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
@@ -42,7 +43,6 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
@@ -120,6 +120,9 @@ abstract class ExpediterTask : DefaultTask() {
     @Input
     var failOnIssues: Boolean = false
 
+    @Input
+    var roots: RootType = RootType.ALL
+
     @TaskAction
     fun execute() {
         val providers = mutableListOf<PlatformTypeProvider>()
@@ -160,12 +163,13 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }.toSet()
 
-        val typeSources = applicationConfigurationArtifacts.flatMap { it.artifacts.map { it.source() } } + files.map { it.source() } + applicationSourceSets.map { it.source() }
+        val typeSources = applicationConfigurationArtifacts.flatMapTo(LinkedHashSet()) { it.artifacts.map { it.source() } } + files.map { it.source() } + applicationSourceSets.map { it.source() }
 
         val issues = Expediter(
             ignore,
             cache.get().resolve(typeSources),
-            PlatformTypeProviderChain(providers)
+            PlatformTypeProviderChain(providers),
+            roots.selector,
         ).findIssues().subtract(ignores)
 
         val issueReport = IssueReport(
