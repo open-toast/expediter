@@ -67,6 +67,13 @@ abstract class ExpediterTask : DefaultTask() {
     @Suppress("UNUSED")
     val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
 
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @Suppress("UNUSED")
+    val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
+        setFrom(applicationSourceSets.map { it.classesDirectory })
+    }
+
     private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
         project.objects.fileCollection()
     } else {
@@ -76,12 +83,6 @@ abstract class ExpediterTask : DefaultTask() {
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     abstract val files: ConfigurableFileCollection
-
-    @get:InputFiles
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
-        setFrom(applicationSourceSets.map { it.classesDirectory })
-    }
 
     fun artifactCollection(artifactCollection: ArtifactCollection) {
         applicationConfigurationArtifacts.add(artifactCollection)

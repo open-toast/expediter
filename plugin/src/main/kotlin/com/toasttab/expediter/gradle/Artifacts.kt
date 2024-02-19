@@ -1,7 +1,7 @@
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.types.ClassfileSourceType
 import com.toasttab.expediter.types.ClassfileSource
+import com.toasttab.expediter.types.ClassfileSourceType
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.artifacts.result.ResolvedArtifactResult

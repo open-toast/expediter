@@ -20,16 +20,20 @@ class TypeHierarchy(
     val superTypes: Set<OptionalType>
 ) {
     fun resolve(): ResolvedTypeHierarchy {
-        val missing = superTypes.filterIsInstance<OptionalType.MissingType>()
+        val missing = missingSuperTypes()
         return if (missing.isNotEmpty()) {
             ResolvedTypeHierarchy.IncompleteTypeHierarchy(type, missing.toSet())
         } else {
             ResolvedTypeHierarchy.CompleteTypeHierarchy(
                 type,
-                superTypes.asSequence().filterIsInstance<OptionalType.PresentType>().map { it.type }
+                presentSuperTypes()
             )
         }
     }
+
+    fun missingSuperTypes() = superTypes.filterIsInstance<OptionalType.MissingType>()
+
+    fun presentSuperTypes() = superTypes.filterIsInstance<OptionalType.PresentType>().map { it.type }
 }
 
 /**
@@ -67,7 +71,7 @@ sealed interface ResolvedTypeHierarchy : OptionalResolvedTypeHierarchy, Identifi
     override val name get() = type.name
 
     class IncompleteTypeHierarchy(override val type: Type, val missingType: Set<OptionalType.MissingType>) : ResolvedTypeHierarchy
-    class CompleteTypeHierarchy(override val type: Type, val superTypes: Sequence<Type>) : ResolvedTypeHierarchy {
+    class CompleteTypeHierarchy(override val type: Type, val superTypes: Iterable<Type>) : ResolvedTypeHierarchy {
         val allTypes: Sequence<Type> get() = sequenceOf(type) + superTypes
     }
 }

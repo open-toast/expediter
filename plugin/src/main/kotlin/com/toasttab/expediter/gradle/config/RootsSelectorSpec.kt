@@ -1,10 +1,10 @@
 package com.toasttab.expediter.gradle.config
 
-import com.toasttab.expediter.roots.RootSelector
+import com.toasttab.expediter.roots.RootsSelector
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.ClassfileSourceType
 
-open class RootSpec {
+open class RootsSelectorSpec {
     var type: RootType = RootType.PROJECT_CLASSES
 
     fun all() {
@@ -16,9 +16,9 @@ open class RootSpec {
     }
 }
 
-enum class RootType(val selector: RootSelector) {
-    ALL(RootSelector.All),
-    PROJECT_CLASSES(object : RootSelector {
+enum class RootType(val selector: RootsSelector) {
+    ALL(RootsSelector.All),
+    PROJECT_CLASSES(object : RootsSelector {
         override fun isRootType(type: ApplicationType) = type.source.type == ClassfileSourceType.SOURCE_SET || type.source.type == ClassfileSourceType.SUBPROJECT_DEPENDENCY
     })
 }

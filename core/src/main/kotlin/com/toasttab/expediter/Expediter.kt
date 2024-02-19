@@ -20,7 +20,7 @@ import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.provider.ApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
-import com.toasttab.expediter.roots.RootSelector
+import com.toasttab.expediter.roots.RootsSelector
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.ApplicationTypeContainer
 import com.toasttab.expediter.types.InspectedTypes
@@ -42,13 +42,13 @@ class Expediter(
     private val ignore: Ignore,
     private val appTypes: ApplicationTypeContainer,
     private val platformTypeProvider: PlatformTypeProvider,
-    private val rootSelector: RootSelector
+    private val rootSelector: RootsSelector
 ) {
     constructor(
         ignore: Ignore,
         appTypes: ApplicationTypesProvider,
         platformTypeProvider: PlatformTypeProvider,
-        rootSelector: RootSelector = RootSelector.All
+        rootSelector: RootsSelector = RootsSelector.All
     ) : this(ignore, ApplicationTypeContainer.create(appTypes.types()), platformTypeProvider, rootSelector)
 
     private val inspectedTypes: InspectedTypes by lazy {
@@ -122,7 +122,7 @@ class Expediter(
 
     fun findIssues(): Set<Issue> {
         return (
-            inspectedTypes.reachableClasses(rootSelector).flatMap { appType ->
+            inspectedTypes.reachableTypes(rootSelector).flatMap { appType ->
                 findIssues(appType)
             } + inspectedTypes.duplicateTypes
             ).filter { !ignore.ignore(it) }

@@ -26,9 +26,9 @@ open class ApplicationSpec @Inject constructor(
     val configurations: MutableList<String> = mutableListOf()
     val files: MutableList<String> = mutableListOf()
     val sourceSets: MutableList<String> = mutableListOf()
-    val rootSpec: RootSpec = objectFactory.newInstance()
+    val rootSpec: RootsSelectorSpec = objectFactory.newInstance()
 
-    fun roots(configure: Action<RootSpec>) {
+    fun roots(configure: Action<RootsSelectorSpec>) {
         configure.execute(rootSpec)
     }
 

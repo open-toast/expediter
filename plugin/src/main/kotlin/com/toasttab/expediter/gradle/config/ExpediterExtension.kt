@@ -56,7 +56,7 @@ abstract class ExpediterExtension(
         defaultChecks.ignore(configure)
     }
 
-    fun roots(configure: Action<RootSpec>) {
+    fun roots(configure: Action<RootsSelectorSpec>) {
         defaultChecks.application.roots(configure)
     }
 

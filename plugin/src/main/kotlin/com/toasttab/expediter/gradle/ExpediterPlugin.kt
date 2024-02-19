@@ -19,9 +19,7 @@ import com.toasttab.expediter.gradle.config.ExpediterExtension
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.registerIfAbsent
 import org.gradle.kotlin.dsl.withType
