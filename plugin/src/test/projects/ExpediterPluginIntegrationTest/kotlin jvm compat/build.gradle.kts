@@ -1,5 +1,5 @@
 plugins {
-    java
+    kotlin("jvm") version "@KOTLIN_VERSION@"
     id("com.toasttab.expediter")
     id("com.toasttab.testkit.coverage") version "@TESTKIT_PLUGIN_VERSION@"
 }
@@ -12,10 +12,6 @@ expediter {
     failOnIssues = true
 
     platform {
-        androidSdk = 19
+        jvmVersion = 8
     }
-}
-
-dependencies {
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 }

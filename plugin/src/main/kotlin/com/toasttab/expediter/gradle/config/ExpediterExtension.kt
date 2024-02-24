@@ -76,7 +76,9 @@ abstract class ExpediterExtension(
         }
 
         for (sourceSet in spec.sourceSets) {
-            sourceSet(project.sourceSet(sourceSet).java)
+            val set = project.sourceSet(sourceSet)
+            sourceSet(set)
+            dependsOn(set.classesTaskName)
         }
     }
 

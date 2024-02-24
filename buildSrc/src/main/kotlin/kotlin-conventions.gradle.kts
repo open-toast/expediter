@@ -1,5 +1,6 @@
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.repositories
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.Companion.kotlinNodeJsExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 repositories {
@@ -43,4 +44,8 @@ tasks {
 dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.strikt.core)
+}
+
+project.sourceSets.main {
+    this.kotlin
 }
