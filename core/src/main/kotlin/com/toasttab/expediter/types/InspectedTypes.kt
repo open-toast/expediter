@@ -19,7 +19,7 @@ import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.parser.SignatureParser
 import com.toasttab.expediter.parser.TypeSignature
 import com.toasttab.expediter.provider.PlatformTypeProvider
-import com.toasttab.expediter.roots.RootsSelector
+import com.toasttab.expediter.roots.RootSelector
 import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -119,12 +119,12 @@ class InspectedTypes(
 
     val classes: Collection<ApplicationType> get() = appTypes.appTypes.values
 
-    fun reachableTypes(rootSelector: RootsSelector): Collection<ApplicationType> {
-        if (rootSelector == RootsSelector.All) {
+    fun reachableTypes(rootSelector: RootSelector): Collection<ApplicationType> {
+        if (rootSelector == RootSelector.All) {
             return appTypes.appTypes.values
         } else {
             val reachable = hashMapOf<String, ApplicationType>()
-            val todo = LinkedList(appTypes.appTypes.values.filter(rootSelector::isRootType))
+            val todo = LinkedList(appTypes.appTypes.values.filter(rootSelector::isRoot))
 
             while (todo.isNotEmpty()) {
                 val next = todo.remove()

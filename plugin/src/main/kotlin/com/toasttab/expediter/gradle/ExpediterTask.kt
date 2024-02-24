@@ -158,13 +158,13 @@ abstract class ExpediterTask : DefaultTask() {
             providers.add(PlatformClassloaderTypeProvider)
         }
 
-        val ignores = ignoreFiles.flatMap {
-            it.inputStream().buffered().use {
-                IssueReport.fromJson(it).issues
+        val ignores = ignoreFiles.flatMap { f ->
+            f.inputStream().buffered().use { s ->
+                IssueReport.fromJson(s).issues
             }
         }.toSet()
 
-        val typeSources = applicationConfigurationArtifacts.flatMapTo(LinkedHashSet()) { it.artifacts.map { it.source() } } + files.map { it.source() } + applicationSourceSets.map { it.source() }
+        val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + applicationSourceSets.sources()
 
         val issues = Expediter(
             ignore,

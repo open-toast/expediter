@@ -20,7 +20,7 @@ import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.provider.ApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
-import com.toasttab.expediter.roots.RootsSelector
+import com.toasttab.expediter.roots.RootSelector
 import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.ApplicationTypeContainer
 import com.toasttab.expediter.types.InspectedTypes
@@ -42,13 +42,13 @@ class Expediter(
     private val ignore: Ignore,
     private val appTypes: ApplicationTypeContainer,
     private val platformTypeProvider: PlatformTypeProvider,
-    private val rootSelector: RootsSelector
+    private val rootSelector: RootSelector
 ) {
     constructor(
         ignore: Ignore,
         appTypes: ApplicationTypesProvider,
         platformTypeProvider: PlatformTypeProvider,
-        rootSelector: RootsSelector = RootsSelector.All
+        rootSelector: RootSelector = RootSelector.All
     ) : this(ignore, ApplicationTypeContainer.create(appTypes.types()), platformTypeProvider, rootSelector)
 
     private val inspectedTypes: InspectedTypes by lazy {
