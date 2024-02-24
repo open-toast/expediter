@@ -19,6 +19,8 @@ import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.parser.SignatureParser
 import com.toasttab.expediter.parser.TypeSignature
 import com.toasttab.expediter.provider.PlatformTypeProvider
+import com.toasttab.expediter.roots.RootSelector
+import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
@@ -28,7 +30,7 @@ class ApplicationTypeContainer(
 ) {
     companion object {
         fun create(all: List<ApplicationType>): ApplicationTypeContainer {
-            val duplicates = HashMap<String, MutableList<String>>()
+            val duplicates = HashMap<String, MutableList<ClassfileSource>>()
             val types = HashMap<String, ApplicationType>()
 
             for (type in all) {
@@ -48,7 +50,7 @@ class ApplicationTypeContainer(
                 }
             }
 
-            return ApplicationTypeContainer(types, duplicates.map { (k, v) -> Issue.DuplicateType(k, v) })
+            return ApplicationTypeContainer(types, duplicates.map { (k, v) -> Issue.DuplicateType(k, v.map { it.file.name }) })
         }
     }
 }
@@ -75,7 +77,7 @@ class InspectedTypes(
         }
     }
 
-    private fun traverse(type: Type): TypeHierarchy {
+    private fun hierarchy(type: Type): TypeHierarchy {
         val cached = hierarchyCache[type.name]
 
         if (cached == null) {
@@ -92,7 +94,7 @@ class InspectedTypes(
                 if (superType == null) {
                     superTypes.add(OptionalType.MissingType(signature.name))
                 } else {
-                    val hierarchy = traverse(superType)
+                    val hierarchy = hierarchy(superType)
                     superTypes.add(OptionalType.PresentType(superType))
                     superTypes.addAll(hierarchy.superTypes)
                 }
@@ -112,9 +114,30 @@ class InspectedTypes(
     }
 
     fun resolveHierarchy(type: Type): ResolvedTypeHierarchy {
-        return traverse(type).resolve()
+        return hierarchy(type).resolve()
     }
 
     val classes: Collection<ApplicationType> get() = appTypes.appTypes.values
+
+    fun reachableTypes(rootSelector: RootSelector): Collection<ApplicationType> {
+        if (rootSelector == RootSelector.All) {
+            return appTypes.appTypes.values
+        } else {
+            val reachable = hashMapOf<String, ApplicationType>()
+            val todo = LinkedList(appTypes.appTypes.values.filter(rootSelector::isRoot))
+
+            while (todo.isNotEmpty()) {
+                val next = todo.remove()
+
+                if (reachable.put(next.name, next) == null) {
+                    todo.addAll(next.referencedTypes.mapNotNull(appTypes.appTypes::get))
+                    todo.addAll(hierarchy(next).presentSuperTypes().filterIsInstance<ApplicationType>())
+                }
+            }
+
+            return reachable.values
+        }
+    }
+
     val duplicateTypes: Collection<Issue.DuplicateType> get() = appTypes.duplicates
 }

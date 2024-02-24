@@ -16,6 +16,7 @@
 package com.toasttab.expediter.gradle
 
 import com.toasttab.expediter.Expediter
+import com.toasttab.expediter.gradle.config.RootType
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
@@ -32,6 +33,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -50,17 +52,27 @@ import java.util.zip.GZIPInputStream
 abstract class ExpediterTask : DefaultTask() {
     private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
     private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
+    private val applicationSourceSets: MutableSet<SourceDirectorySet> = mutableSetOf()
 
     @get:Internal
     abstract val cache: Property<ApplicationTypeCache>
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    @Suppress("UNUSED")
     val applicationArtifacts get() = applicationConfigurationArtifacts.asFileCollection()
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    @Suppress("UNUSED")
     val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @Suppress("UNUSED")
+    val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
+        setFrom(applicationSourceSets.map { it.classesDirectory })
+    }
 
     private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
         project.objects.fileCollection()
@@ -78,6 +90,10 @@ abstract class ExpediterTask : DefaultTask() {
 
     fun platformArtifactCollection(artifactCollection: ArtifactCollection) {
         platformConfigurationArtifacts.add(artifactCollection)
+    }
+
+    fun sourceSet(sourceDirectorySet: SourceDirectorySet) {
+        applicationSourceSets.add(sourceDirectorySet)
     }
 
     @OutputFile
@@ -105,6 +121,9 @@ abstract class ExpediterTask : DefaultTask() {
     @Input
     var failOnIssues: Boolean = false
 
+    @Input
+    var roots: RootType = RootType.ALL
+
     @TaskAction
     fun execute() {
         val providers = mutableListOf<PlatformTypeProvider>()
@@ -113,10 +132,10 @@ abstract class ExpediterTask : DefaultTask() {
             providers.add(JvmTypeProvider.forTarget(it))
         }
 
-        if (!platformArtifacts.isEmpty) {
+        if (platformConfigurationArtifacts.isNotEmpty()) {
             providers.add(
                 InMemoryPlatformTypeProvider(
-                    ClasspathScanner(platformArtifacts).scan { i, _ -> TypeParsers.typeDescriptor(i) }
+                    ClasspathScanner(platformConfigurationArtifacts.flatMap { it.artifacts.map { it.source() } }).scan { i, _ -> TypeParsers.typeDescriptor(i) }
                 )
             )
         }
@@ -133,22 +152,25 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }
 
-        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformArtifacts.isEmpty) {
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformConfigurationArtifacts.isEmpty()) {
             logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
 
             providers.add(PlatformClassloaderTypeProvider)
         }
 
-        val ignores = ignoreFiles.flatMap {
-            it.inputStream().buffered().use {
-                IssueReport.fromJson(it).issues
+        val ignores = ignoreFiles.flatMap { f ->
+            f.inputStream().buffered().use { s ->
+                IssueReport.fromJson(s).issues
             }
         }.toSet()
 
+        val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + applicationSourceSets.sources()
+
         val issues = Expediter(
             ignore,
-            cache.get().resolve(applicationArtifacts + files),
-            PlatformTypeProviderChain(providers)
+            cache.get().resolve(typeSources),
+            PlatformTypeProviderChain(providers),
+            roots.selector,
         ).findIssues().subtract(ignores)
 
         val issueReport = IssueReport(

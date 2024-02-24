@@ -20,6 +20,8 @@ import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
+import com.toasttab.expediter.types.ClassfileSource
+import com.toasttab.expediter.types.ClassfileSourceType
 import com.toasttab.expediter.types.FieldAccessType
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
@@ -36,7 +38,7 @@ class ExpediterIntegrationTest {
     @Test
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
-        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { File(it) })
+        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN, it) })
         val p = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
         expectThat(p).containsExactlyInAnyOrder(

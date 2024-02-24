@@ -15,10 +15,22 @@
 
 package com.toasttab.expediter.gradle.config
 
-open class ApplicationSpec {
+import org.gradle.api.Action
+import org.gradle.api.model.ObjectFactory
+import org.gradle.kotlin.dsl.newInstance
+import javax.inject.Inject
+
+open class ApplicationSpec @Inject constructor(
+    private val objectFactory: ObjectFactory
+) {
     val configurations: MutableList<String> = mutableListOf()
     val files: MutableList<String> = mutableListOf()
     val sourceSets: MutableList<String> = mutableListOf()
+    val rootSelectorSpec: RootSelectorSpec = objectFactory.newInstance()
+
+    fun roots(configure: Action<RootSelectorSpec>) {
+        configure.execute(rootSelectorSpec)
+    }
 
     fun configuration(configuration: String) {
         configurations.add(configuration)
@@ -38,7 +50,7 @@ open class ApplicationSpec {
 
     fun orDefaultIfEmpty(): ApplicationSpec {
         return if (isEmpty()) {
-            ApplicationSpec().apply {
+            objectFactory.newInstance<ApplicationSpec>().apply {
                 configuration("runtimeClasspath")
                 sourceSet("main")
             }

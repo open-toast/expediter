@@ -19,7 +19,7 @@ to be using. In the ideal world, this would never happen, because you are enforc
 is using semver correctly. But in the real world, you have a runtime error on your hands and you won't catch it until 
 you exercise a specific code path in production or - hopefully - tests.
 
-This tool can detect _some_ binary incompatibilities at build time. Specifically, it can report
+This tool can detect certain binary incompatibilities at build time. Specifically, it will report
 
 * Missing classes
 * Duplicate classes
@@ -35,7 +35,9 @@ Conceptually, the inputs for running the tool are _application classes_ and _pla
 classes are the classes that need to be validated, and the platform APIs are the APIs provided by the runtime
 environment of the application, e.g. the JVM or the Android SDK.
 
-Typically, the application classes are the classes compiled directly by the project and its runtime dependencies.
+Typically, the application classes are the classes compiled directly by the project and the classes from the project's 
+runtime dependencies that they reference.
+
 The platform APIs can be specified by the JVM, a set of dependencies, or serialized type descriptors.
 
 ## Basic setup
@@ -50,7 +52,12 @@ plugins {
 
 ## Application classes
 
-By default, the application classes are the classes from the main source set and the runtime dependencies of the project.
+By default, the application classes are selected from the main source set and the runtime dependencies of the project.
+The classes compiled from the main source set and subproject dependencies are treated as _roots_. The roots and all
+classes from the external runtime dependencies reachable from the roots then form the set of application classes.
+
+The concept of roots makes it easier to filter out unused classes from third-party dependencies, which would otherwise
+produce noise.
 
 You can customize this behavior, e.g. change the Gradle configuration that describes the dependencies.
 
@@ -64,6 +71,33 @@ expediter {
 ```
 
 For example, in an Android project, you will want to use a different configuration, such as `productionReleaseRuntime`.
+
+You can also customize how the roots are chosen. This is the implicit default setup, where the roots are the classes
+compiled from the current project and other subprojects of the same projects.
+
+```kotlin
+expediter {
+    application {
+        roots {
+            project()
+        }
+    }
+}
+```
+
+This is a different setup, where the roots are all classes compiled from the current project and all classes in its
+runtime dependencies. Beware that with this setup, there will likely be a lot of noise from unused classes providig
+optional functionality.
+
+```kotlin
+expediter {
+    application {
+        roots {
+            all()
+        }
+    }
+}
+```
 
 ## Platform APIs
 
