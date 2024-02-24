@@ -115,9 +115,7 @@ class ExpediterPluginIntegrationTest {
     fun `kotlin jvm compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
-            .buildAndFail().also {
-                println(it.output)
-            }
+            .buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -141,9 +139,7 @@ class ExpediterPluginIntegrationTest {
     fun `protokt android compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
-            .buildAndFail().also {
-                println(it.output)
-            }
+            .buildAndFail()
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
