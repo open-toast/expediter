@@ -112,6 +112,54 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    fun `kotlin jvm compat`(project: TestProject) {
+        project.createRunner()
+            .withArguments("check")
+            .buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingMember(
+                "test/Caller",
+                MemberAccess.MethodAccess(
+                    "java/lang/String",
+                    null,
+                    MemberSymbolicReference(
+                        "isBlank",
+                        "()Z"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `protokt android compat`(project: TestProject) {
+        project.createRunner()
+            .withArguments("check")
+            .buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingMember(
+                "com/google/protobuf/UnsafeUtil\$JvmMemoryAccessor",
+                MemberAccess.MethodAccess(
+                    "sun/misc/Unsafe",
+                    null,
+                    MemberSymbolicReference(
+                        "getLong",
+                        "(J)J"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @Test
     fun `multi check`(project: TestProject) {
         project.createRunner().withArguments("check").build()
 

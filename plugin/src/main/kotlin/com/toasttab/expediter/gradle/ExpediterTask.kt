@@ -33,7 +33,6 @@ import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
-import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -43,6 +42,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
@@ -52,7 +52,7 @@ import java.util.zip.GZIPInputStream
 abstract class ExpediterTask : DefaultTask() {
     private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
     private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
-    private val applicationSourceSets: MutableSet<SourceDirectorySet> = mutableSetOf()
+    private val applicationSourceSets: MutableSet<SourceSet> = mutableSetOf()
 
     @get:Internal
     abstract val cache: Property<ApplicationTypeCache>
@@ -71,7 +71,7 @@ abstract class ExpediterTask : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @Suppress("UNUSED")
     val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
-        setFrom(applicationSourceSets.map { it.classesDirectory })
+        setFrom(applicationSourceSets.flatMap { it.output })
     }
 
     private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
@@ -92,7 +92,7 @@ abstract class ExpediterTask : DefaultTask() {
         platformConfigurationArtifacts.add(artifactCollection)
     }
 
-    fun sourceSet(sourceDirectorySet: SourceDirectorySet) {
+    fun sourceSet(sourceDirectorySet: SourceSet) {
         applicationSourceSets.add(sourceDirectorySet)
     }
 
@@ -165,6 +165,8 @@ abstract class ExpediterTask : DefaultTask() {
         }.toSet()
 
         val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + applicationSourceSets.sources()
+
+        logger.info("type sources = {}", typeSources)
 
         val issues = Expediter(
             ignore,
