@@ -75,10 +75,10 @@ abstract class ExpediterExtension(
             files.from(file)
         }
 
-        for (sourceSet in spec.sourceSets) {
-            val set = project.sourceSet(sourceSet)
-            sourceSet(set)
-            dependsOn(set.classesTaskName)
+        for (sourceSetName in spec.sourceSets) {
+            val sourceSet = project.sourceSet(sourceSetName)
+            sourceSet(sourceSet)
+            dependsOn(sourceSet.classesTaskName)
         }
     }
 
