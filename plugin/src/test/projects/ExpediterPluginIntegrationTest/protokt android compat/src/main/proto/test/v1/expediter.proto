@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package test.v1;
+
+message Foo {
+  string name = 1;
+}
