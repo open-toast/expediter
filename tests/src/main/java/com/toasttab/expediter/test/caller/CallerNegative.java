@@ -19,6 +19,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
+import java.util.Arrays;
+import java.util.List;
 
 public class CallerNegative {
     private int x;
@@ -37,6 +39,10 @@ public class CallerNegative {
     void arrayLengthIsOk() {
         int[] array = new int[0];
         int i = array.length;
+    }
+
+    String toStringOnInterfaceIsOk(List<String> list) {
+        return list.toString();
     }
 
     void privateAccessToNestedIsOk() {

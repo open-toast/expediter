@@ -36,7 +36,6 @@ import com.toasttab.expediter.types.members
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
 import protokt.v1.toasttab.expediter.v1.MemberDescriptor
 import protokt.v1.toasttab.expediter.v1.TypeExtensibility
-import protokt.v1.toasttab.expediter.v1.TypeFlavor
 
 class Expediter(
     private val ignore: Ignore,
@@ -190,12 +189,8 @@ private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterT
         access.accessType == MethodAccessType.STATIC ||
         (access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor())
     ) {
-        // fields and methods, except for constructors and methods invoked via invokeinterface
-        // can be declared on any type in the hierarchy
+        // fields and methods, except for constructors can be declared on any type in the hierarchy
         allTypes
-    } else if (access.accessType == MethodAccessType.INTERFACE) {
-        // methods invoked via invokeinterface must be declared on an interface
-        allTypes.filter { it.descriptor.flavor != TypeFlavor.CLASS }
     } else {
         // constructors must always be declared by the type being constructed
         sequenceOf(type)
