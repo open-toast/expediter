@@ -16,6 +16,7 @@ apply(plugin = "net.vivin.gradle-semantic-build-versioning")
 include(
     ":model",
     ":core",
+    ":cli",
     ":plugin",
     ":tests",
     ":tests:lib1",
