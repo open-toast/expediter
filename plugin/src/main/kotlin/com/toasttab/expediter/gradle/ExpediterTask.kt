@@ -19,6 +19,7 @@ import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.gradle.config.RootType
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
+import com.toasttab.expediter.issue.IssueOrder
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
@@ -173,16 +174,11 @@ abstract class ExpediterTask : DefaultTask() {
             cache.get().resolve(typeSources),
             PlatformTypeProviderChain(providers),
             roots.selector,
-        ).findIssues()
+        ).findIssues().sortedWith(IssueOrder.CALLER)
 
         val issueReport = IssueReport(
             project.name,
-            issues.sortedWith(
-                compareBy(
-                    { it.caller },
-                    { it.target }
-                )
-            )
+            issues
         )
 
         for (issue in issueReport.issues) {

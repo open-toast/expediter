@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Toast Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.toasttab.expediter.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
@@ -7,8 +22,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
+import com.toasttab.expediter.issue.IssueOrder
 import com.toasttab.expediter.issue.IssueReport
-import com.toasttab.expediter.issue.IssueSort
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
@@ -40,16 +55,19 @@ class ExpediterCliCommand : CliktCommand() {
     )
 
     fun platform(): PlatformTypeProvider {
-        return if (jvmPlatform != null) {
-            JvmTypeProvider.forTarget(jvmPlatform!!.toInt())
-        } else if (platformDescriptors != null) {
+        val jvm = jvmPlatform?.let(String::toInt)
+        val platformFile = platformDescriptors?.let(::File)
+
+        return if (jvm != null) {
+            JvmTypeProvider.forTarget(jvm)
+        } else if (platformFile != null) {
             InMemoryPlatformTypeProvider(
-                File(platformDescriptors!!).inputStream().use {
+                platformFile.inputStream().use {
                     TypeDescriptors.deserialize(it)
                 }.types
             )
         } else {
-            error("blerg")
+            error("Must specify either jvm version or platform descriptors")
         }
     }
     override fun run() {
@@ -62,7 +80,7 @@ class ExpediterCliCommand : CliktCommand() {
 
         val issueReport = IssueReport(
             projectName,
-            issues.sortedWith(IssueSort.DEFAULT)
+            issues.sortedWith(IssueOrder.TYPE)
         )
 
         issueReport.issues.forEach {
