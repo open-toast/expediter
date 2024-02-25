@@ -8,12 +8,12 @@ import com.github.ajalt.clikt.parameters.options.required
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueReport
+import com.toasttab.expediter.issue.IssueSort
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.roots.RootSelector
-import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.ClassfileSource
 import com.toasttab.expediter.types.ClassfileSourceType
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
@@ -54,24 +54,15 @@ class ExpediterCliCommand : CliktCommand() {
     }
     override fun run() {
         val issues = Expediter(
-            ignore = Ignore.NOTHING,
+            ignore = Ignore.SpecificIssues(ignores()),
             appTypes = appTypes(),
             platformTypeProvider = platform(),
-            rootSelector = object : RootSelector {
-                override fun isRoot(type: ApplicationType) = type.source.type == ClassfileSourceType.SOURCE_SET || type.source.type == ClassfileSourceType.SUBPROJECT_DEPENDENCY
-            }
-        ).findIssues().subtract(
-            ignores()
-        )
+            rootSelector = RootSelector.ProjectClasses
+        ).findIssues()
 
         val issueReport = IssueReport(
             projectName,
-            issues.sortedWith(
-                compareBy(
-                    { it.caller },
-                    { it.target }
-                )
-            )
+            issues.sortedWith(IssueSort.DEFAULT)
         )
 
         issueReport.issues.forEach {

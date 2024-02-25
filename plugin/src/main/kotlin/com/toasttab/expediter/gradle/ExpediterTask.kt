@@ -169,11 +169,11 @@ abstract class ExpediterTask : DefaultTask() {
         logger.info("type sources = {}", typeSources)
 
         val issues = Expediter(
-            ignore,
+            Ignore.Or(ignore, Ignore.SpecificIssues(ignores)),
             cache.get().resolve(typeSources),
             PlatformTypeProviderChain(providers),
             roots.selector,
-        ).findIssues().subtract(ignores)
+        ).findIssues()
 
         val issueReport = IssueReport(
             project.name,

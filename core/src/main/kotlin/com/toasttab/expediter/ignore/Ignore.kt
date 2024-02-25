@@ -77,6 +77,12 @@ interface Ignore : Serializable {
             val IS_BLANK = Signature("()V")
         }
     }
+
+    class SpecificIssues(
+        private val issues: Set<Issue>
+    ) : Ignore {
+        override fun ignore(issue: Issue) = issues.contains(issue)
+    }
 }
 
 @JvmInline
