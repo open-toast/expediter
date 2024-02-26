@@ -21,6 +21,7 @@ import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
 
 public class CallerNegative {
     private int x;
@@ -43,6 +44,10 @@ public class CallerNegative {
 
     String toStringOnInterfaceIsOk(List<String> list) {
         return list.toString();
+    }
+
+    int inheritedInterfaceMethodIsOk(SortedSet<String> set) {
+        return set.size();
     }
 
     void privateAccessToNestedIsOk() {
