@@ -184,16 +184,12 @@ private class MemberWithDeclaringType(
 )
 
 private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess<M>): Sequence<Type> {
-    return if (access !is MemberAccess.MethodAccess ||
-        access.accessType == MethodAccessType.VIRTUAL ||
-        access.accessType == MethodAccessType.STATIC ||
-        (access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor())
-    ) {
-        // fields and methods, except for constructors can be declared on any type in the hierarchy
-        allTypes
-    } else {
+    return if (access is MemberAccess.MethodAccess && access.accessType == MethodAccessType.SPECIAL && access.ref.isConstructor()) {
         // constructors must always be declared by the type being constructed
         sequenceOf(type)
+    } else {
+        // fields and methods, except for constructors can be declared on any type in the hierarchy
+        allTypes
     }
 }
 
