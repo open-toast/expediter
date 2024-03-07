@@ -1,7 +1,5 @@
 package com.toasttab.expediter.test;
 
-public class Base extends BaseBase {
-    public int w;
-
+public class BaseBase {
     public void supersuper() { }
 }

@@ -108,4 +108,8 @@ public final class Caller extends Base {
     boolean missingTypeInstanceof(Object o) {
         return o instanceof ParamParam[];
     }
+
+    void superMethodMoved() {
+        super.supersuper();
+    }
 }
