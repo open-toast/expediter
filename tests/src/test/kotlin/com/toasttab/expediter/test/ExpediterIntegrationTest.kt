@@ -52,6 +52,16 @@ class ExpediterIntegrationTest {
                 )
             ),
 
+            Issue.MissingMember(
+                "com/toasttab/expediter/test/caller/Caller",
+                MemberAccess.MethodAccess(
+                    "com/toasttab/expediter/test/Base",
+                    null,
+                    MemberSymbolicReference("supersuper", "()V"),
+                    MethodAccessType.SPECIAL
+                )
+            ),
+
             Issue.AccessInstanceMemberStatically(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
