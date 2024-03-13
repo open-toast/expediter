@@ -21,3 +21,9 @@ jobs:
         java-version: 17
     - name: Build
       run: ./gradlew check testCodeCoverageReport --stacktrace --no-daemon
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: open-toast/expediter
+        files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
