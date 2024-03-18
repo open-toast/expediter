@@ -62,6 +62,35 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    fun `android compat animal sniffer`(project: TestProject) {
+        project.createRunner()
+            .withArguments("check")
+            .buildAndFail()
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingMember(
+                "test/Caller",
+                MemberAccess.MethodAccess(
+                    "java/util/concurrent/ConcurrentHashMap",
+                    null,
+                    MemberSymbolicReference(
+                        "computeIfAbsent",
+                        "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            ),
+
+            Issue.MissingType(
+                "com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder",
+                "java/util/stream/Collectors"
+            )
+        )
+    }
+
+    @Test
     fun `android compat source only`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
