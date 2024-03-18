@@ -39,7 +39,7 @@ tasks {
         useJUnitPlatform()
 
         extensions.configure<JacocoTaskExtension> {
-            includes = listOf("com.toasttab.expediter.*")
+            includes = listOf("com.toasttab.expediter.*", "protokt.v1.toasttab.expediter.*")
         }
     }
 }
