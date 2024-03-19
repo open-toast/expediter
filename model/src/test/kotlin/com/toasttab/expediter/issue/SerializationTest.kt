@@ -1,10 +1,10 @@
 package com.toasttab.expediter.issue
 
+import com.toasttab.model.issue.Issue
+import com.toasttab.model.issue.IssueReport
 import com.toasttab.model.types.MemberAccess
 import com.toasttab.model.types.MemberSymbolicReference
 import com.toasttab.model.types.MethodAccessType
-import com.toasttab.model.issue.Issue
-import com.toasttab.model.issue.IssueReport
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactly

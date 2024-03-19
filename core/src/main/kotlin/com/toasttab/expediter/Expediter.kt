@@ -17,20 +17,20 @@ package com.toasttab.expediter
 
 import com.toasttab.expediter.access.AccessCheck
 import com.toasttab.expediter.ignore.Ignore
-import com.toasttab.model.issue.Issue
 import com.toasttab.expediter.provider.ApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.roots.RootSelector
-import com.toasttab.model.types.ApplicationType
 import com.toasttab.expediter.types.ApplicationTypeContainer
 import com.toasttab.expediter.types.InspectedTypes
+import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
+import com.toasttab.expediter.types.PolymorphicMethods
+import com.toasttab.expediter.types.ResolvedTypeHierarchy
+import com.toasttab.model.issue.Issue
+import com.toasttab.model.types.ApplicationType
 import com.toasttab.model.types.MemberAccess
 import com.toasttab.model.types.MemberType
 import com.toasttab.model.types.MethodAccessType
-import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.model.types.PlatformType
-import com.toasttab.expediter.types.PolymorphicMethods
-import com.toasttab.expediter.types.ResolvedTypeHierarchy
 import com.toasttab.model.types.Type
 import com.toasttab.model.types.members
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration

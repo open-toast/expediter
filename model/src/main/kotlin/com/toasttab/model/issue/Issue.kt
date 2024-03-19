@@ -67,7 +67,8 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("member-missing")
-    data class MissingMember(override val caller: String, override val member: MemberAccess<*>) : Issue,
+    data class MissingMember(override val caller: String, override val member: MemberAccess<*>) :
+        Issue,
         WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses missing $member"
@@ -75,7 +76,8 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("static-member")
-    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess<*>) : Issue,
+    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess<*>) :
+        Issue,
         WithMemberAccess {
         override val target: String get() = member.targetType
 
@@ -84,7 +86,8 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("instance-member")
-    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess<*>) : Issue,
+    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess<*>) :
+        Issue,
         WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses instance $member statically"
@@ -92,7 +95,8 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("member-inaccessible")
-    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess<*>) : Issue,
+    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess<*>) :
+        Issue,
         WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses inaccessible $member"

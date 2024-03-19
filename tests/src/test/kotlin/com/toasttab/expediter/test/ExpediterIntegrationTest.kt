@@ -17,9 +17,9 @@ package com.toasttab.expediter.test
 
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
-import com.toasttab.model.issue.Issue
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
+import com.toasttab.model.issue.Issue
 import com.toasttab.model.types.ClassfileSource
 import com.toasttab.model.types.ClassfileSourceType
 import com.toasttab.model.types.FieldAccessType

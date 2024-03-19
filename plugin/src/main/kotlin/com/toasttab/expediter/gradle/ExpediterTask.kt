@@ -20,7 +20,6 @@ import com.toasttab.expediter.gradle.config.RootType
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueOrder
-import com.toasttab.model.issue.IssueReport
 import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
@@ -29,6 +28,7 @@ import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProviderChain
 import com.toasttab.expediter.scanner.ClasspathScanner
 import com.toasttab.expediter.sniffer.AnimalSnifferParser
+import com.toasttab.model.issue.IssueReport
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
