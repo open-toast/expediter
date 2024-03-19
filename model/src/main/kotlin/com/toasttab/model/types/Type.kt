@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.model.types
 
 import protokt.v1.toasttab.expediter.v1.MemberDescriptor
 import protokt.v1.toasttab.expediter.v1.TypeDescriptor

@@ -15,11 +15,11 @@
 
 package com.toasttab.expediter.gradle
 
-import com.toasttab.expediter.issue.Issue
-import com.toasttab.expediter.issue.IssueReport
-import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberSymbolicReference
-import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.model.issue.Issue
+import com.toasttab.model.issue.IssueReport
+import com.toasttab.model.types.MemberAccess
+import com.toasttab.model.types.MemberSymbolicReference
+import com.toasttab.model.types.MethodAccessType
 import com.toasttab.gradle.testkit.TestKit
 import com.toasttab.gradle.testkit.TestProject
 import org.junit.jupiter.api.Test

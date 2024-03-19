@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.scanner
 
-import com.toasttab.expediter.types.ClassfileSource
+import com.toasttab.model.types.ClassfileSource
 import java.io.InputStream
 import java.lang.Exception
 import java.lang.RuntimeException

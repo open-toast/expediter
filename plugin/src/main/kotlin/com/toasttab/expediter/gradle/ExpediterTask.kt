@@ -20,7 +20,7 @@ import com.toasttab.expediter.gradle.config.RootType
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueOrder
-import com.toasttab.expediter.issue.IssueReport
+import com.toasttab.model.issue.IssueReport
 import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider

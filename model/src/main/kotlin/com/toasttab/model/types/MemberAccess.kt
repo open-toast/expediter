@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.model.types
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

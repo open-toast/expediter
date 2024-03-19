@@ -15,8 +15,8 @@
 
 package com.toasttab.expediter.cli
 
-import com.toasttab.expediter.issue.Issue
-import com.toasttab.expediter.issue.IssueReport
+import com.toasttab.model.issue.Issue
+import com.toasttab.model.issue.IssueReport
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import strikt.api.expectThat

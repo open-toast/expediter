@@ -1,6 +1,6 @@
 package com.toasttab.expediter.ignore
 
-import com.toasttab.expediter.issue.Issue
+import com.toasttab.model.issue.Issue
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isFalse

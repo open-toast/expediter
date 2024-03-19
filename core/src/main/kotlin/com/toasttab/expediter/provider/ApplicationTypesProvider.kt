@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.provider
 
-import com.toasttab.expediter.types.ApplicationType
+import com.toasttab.model.types.ApplicationType
 
 interface ApplicationTypesProvider {
     fun types(): List<ApplicationType>

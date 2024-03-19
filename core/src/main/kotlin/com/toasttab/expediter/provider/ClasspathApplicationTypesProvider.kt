@@ -17,7 +17,7 @@ package com.toasttab.expediter.provider
 
 import com.toasttab.expediter.parser.TypeParsers
 import com.toasttab.expediter.scanner.ClasspathScanner
-import com.toasttab.expediter.types.ClassfileSource
+import com.toasttab.model.types.ClassfileSource
 
 class ClasspathApplicationTypesProvider(
     elements: Iterable<ClassfileSource>

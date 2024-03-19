@@ -1,4 +1,4 @@
-package com.toasttab.expediter.types
+package com.toasttab.model.types
 
 import java.io.File
 

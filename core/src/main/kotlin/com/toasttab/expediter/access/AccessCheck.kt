@@ -1,7 +1,7 @@
 package com.toasttab.expediter.access
 
 import com.toasttab.expediter.types.ResolvedTypeHierarchy
-import com.toasttab.expediter.types.Type
+import com.toasttab.model.types.Type
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
 import protokt.v1.toasttab.expediter.v1.AccessProtection
 import protokt.v1.toasttab.expediter.v1.MemberDescriptor

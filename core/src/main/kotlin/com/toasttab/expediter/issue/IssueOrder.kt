@@ -15,6 +15,8 @@
 
 package com.toasttab.expediter.issue
 
+import com.toasttab.model.issue.Issue
+
 object IssueOrder {
     val CALLER: Comparator<Issue> = compareBy({
         it.caller

@@ -15,12 +15,12 @@
 
 package com.toasttab.expediter.parser
 
-import com.toasttab.expediter.types.ApplicationType
-import com.toasttab.expediter.types.ClassfileSource
-import com.toasttab.expediter.types.FieldAccessType
-import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberSymbolicReference
-import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.model.types.ApplicationType
+import com.toasttab.model.types.ClassfileSource
+import com.toasttab.model.types.FieldAccessType
+import com.toasttab.model.types.MemberAccess
+import com.toasttab.model.types.MemberSymbolicReference
+import com.toasttab.model.types.MethodAccessType
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassReader.SKIP_DEBUG
 import org.objectweb.asm.ClassVisitor

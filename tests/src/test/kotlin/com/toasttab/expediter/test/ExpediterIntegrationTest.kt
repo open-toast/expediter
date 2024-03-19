@@ -17,15 +17,15 @@ package com.toasttab.expediter.test
 
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
-import com.toasttab.expediter.issue.Issue
+import com.toasttab.model.issue.Issue
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.PlatformClassloaderTypeProvider
-import com.toasttab.expediter.types.ClassfileSource
-import com.toasttab.expediter.types.ClassfileSourceType
-import com.toasttab.expediter.types.FieldAccessType
-import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberSymbolicReference
-import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.model.types.ClassfileSource
+import com.toasttab.model.types.ClassfileSourceType
+import com.toasttab.model.types.FieldAccessType
+import com.toasttab.model.types.MemberAccess
+import com.toasttab.model.types.MemberSymbolicReference
+import com.toasttab.model.types.MethodAccessType
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder

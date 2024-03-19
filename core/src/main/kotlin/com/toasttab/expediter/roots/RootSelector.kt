@@ -1,7 +1,7 @@
 package com.toasttab.expediter.roots
 
-import com.toasttab.expediter.types.ApplicationType
-import com.toasttab.expediter.types.ClassfileSourceType
+import com.toasttab.model.types.ApplicationType
+import com.toasttab.model.types.ClassfileSourceType
 
 interface RootSelector {
     fun isRoot(type: ApplicationType): Boolean

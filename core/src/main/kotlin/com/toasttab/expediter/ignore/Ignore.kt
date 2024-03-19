@@ -15,7 +15,7 @@
 
 package com.toasttab.expediter.ignore
 
-import com.toasttab.expediter.issue.Issue
+import com.toasttab.model.issue.Issue
 import java.io.Serializable
 
 interface Ignore : Serializable {

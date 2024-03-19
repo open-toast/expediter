@@ -23,14 +23,14 @@ import com.github.ajalt.clikt.parameters.options.required
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueOrder
-import com.toasttab.expediter.issue.IssueReport
+import com.toasttab.model.issue.IssueReport
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.provider.InMemoryPlatformTypeProvider
 import com.toasttab.expediter.provider.JvmTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.roots.RootSelector
-import com.toasttab.expediter.types.ClassfileSource
-import com.toasttab.expediter.types.ClassfileSourceType
+import com.toasttab.model.types.ClassfileSource
+import com.toasttab.model.types.ClassfileSourceType
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
 

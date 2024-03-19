@@ -2,7 +2,7 @@ package com.toasttab.expediter.gradle.service
 
 import com.toasttab.expediter.provider.ClasspathApplicationTypesProvider
 import com.toasttab.expediter.types.ApplicationTypeContainer
-import com.toasttab.expediter.types.ClassfileSource
+import com.toasttab.model.types.ClassfileSource
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
 import java.util.concurrent.ConcurrentHashMap

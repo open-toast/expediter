@@ -15,11 +15,15 @@
 
 package com.toasttab.expediter.types
 
-import com.toasttab.expediter.issue.Issue
+import com.toasttab.model.issue.Issue
 import com.toasttab.expediter.parser.SignatureParser
 import com.toasttab.expediter.parser.TypeSignature
 import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.roots.RootSelector
+import com.toasttab.model.types.ApplicationType
+import com.toasttab.model.types.ClassfileSource
+import com.toasttab.model.types.PlatformType
+import com.toasttab.model.types.Type
 import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap

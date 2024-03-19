@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.issue
+package com.toasttab.model.issue
 
-import com.toasttab.expediter.types.MemberAccess
+import com.toasttab.model.types.MemberAccess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -56,7 +56,8 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("supertype-missing")
-    data class MissingSuperType(override val caller: String, override val target: String, val missing: Set<String>) : Issue {
+    data class MissingSuperType(override val caller: String, override val target: String, val missing: Set<String>) :
+        Issue {
         override fun toString() = "$caller refers to type $target with missing super${missing.readable}"
     }
 
@@ -66,14 +67,16 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("member-missing")
-    data class MissingMember(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class MissingMember(override val caller: String, override val member: MemberAccess<*>) : Issue,
+        WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses missing $member"
     }
 
     @Serializable
     @SerialName("static-member")
-    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess<*>) : Issue,
+        WithMemberAccess {
         override val target: String get() = member.targetType
 
         override fun toString() = "$caller accesses static $member non-statically"
@@ -81,14 +84,16 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("instance-member")
-    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess<*>) : Issue,
+        WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses instance $member statically"
     }
 
     @Serializable
     @SerialName("member-inaccessible")
-    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess<*>) : Issue,
+        WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses inaccessible $member"
     }

@@ -15,6 +15,9 @@
 
 package com.toasttab.expediter.types
 
+import com.toasttab.model.types.IdentifiesType
+import com.toasttab.model.types.Type
+
 class TypeHierarchy(
     val type: Type,
     val superTypes: Set<OptionalType>

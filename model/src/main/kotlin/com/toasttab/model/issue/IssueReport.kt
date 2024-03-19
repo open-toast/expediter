@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.issue
+package com.toasttab.model.issue
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable

@@ -13,19 +13,19 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.types
+package com.toasttab.model.types
 
 import kotlinx.serialization.Serializable
+import protokt.v1.toasttab.expediter.v1.SymbolicReference
 
 @Serializable
-sealed interface MemberType {
-    @Serializable
-    object Field : MemberType {
-        override fun toString() = "field"
-    }
+data class MemberSymbolicReference(
+    val name: String,
+    val signature: String
+) {
+    override fun toString() = "$name$signature"
 
-    @Serializable
-    object Method : MemberType {
-        override fun toString() = "method"
-    }
+    fun same(symbolicReference: SymbolicReference) = name == symbolicReference.name && signature == symbolicReference.signature
+
+    fun isConstructor() = name == "<init>"
 }
