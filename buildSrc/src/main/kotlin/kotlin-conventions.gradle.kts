@@ -40,6 +40,7 @@ tasks {
 
         extensions.configure<JacocoTaskExtension> {
             includes = listOf("com.toasttab.expediter.*", "protokt.v1.toasttab.expediter.*")
+            excludes = listOf("com.toasttab.expediter.test.*")
         }
     }
 }
