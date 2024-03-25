@@ -56,10 +56,6 @@ abstract class ExpediterExtension(
         defaultChecks.ignore(configure)
     }
 
-    fun roots(configure: Action<RootSelectorSpec>) {
-        defaultChecks.application.roots(configure)
-    }
-
     private fun Project.sourceSet(sourceSet: String) = extensions.getByType<SourceSetContainer>().getByName(sourceSet)
 
     fun check(name: String, configure: Action<ExpediterCheckSpec>) {
