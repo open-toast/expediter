@@ -1,5 +1,6 @@
 plugins {
     `kotlin-conventions`
+    `java-test-fixtures`
 }
 
 configurations.create("lib2") {
@@ -8,18 +9,18 @@ configurations.create("lib2") {
 
 tasks {
     test {
-        val files = configurations.getByName("lib2").files.map { it.path } + sourceSets.main.get().java.classesDirectory.get().asFile.path
+        val files = configurations.getByName("lib2").files.map { it.path } + sourceSets.testFixtures.get().java.classesDirectory.get().asFile.path
 
         systemProperty("test-classpath", files.joinToString(separator = ":"))
 
-        dependsOn("lib2:jar")
+        dependsOn("lib2:testFixturesJar")
     }
 }
 
 dependencies {
-    implementation(projects.tests.lib1)
+    testFixturesImplementation(testFixtures(projects.tests.lib1))
 
-    add("lib2", projects.tests.lib2)
+    add("lib2", testFixtures(projects.tests.lib2))
 
     testImplementation(projects.core)
 }

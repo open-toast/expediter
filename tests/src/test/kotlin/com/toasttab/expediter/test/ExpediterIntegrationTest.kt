@@ -159,7 +159,7 @@ class ExpediterIntegrationTest {
 
             Issue.DuplicateType(
                 "com/toasttab/expediter/test/Dupe",
-                listOf("main", "lib2.jar")
+                listOf("testFixtures", "lib2-test-fixtures.jar")
             ),
 
             Issue.FinalApplicationSuperType(

@@ -1,7 +1,8 @@
 plugins {
     `kotlin-conventions`
+    `java-test-fixtures`
 }
 
 dependencies {
-    api(projects.tests.base)
+    testFixturesApi(testFixtures(projects.tests.base))
 }
