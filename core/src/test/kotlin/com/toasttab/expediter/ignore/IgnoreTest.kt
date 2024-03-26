@@ -149,14 +149,18 @@ class IgnoreTest {
     fun `default constructor`() {
         expectThat(
             Ignore.And(
-                Ignore.IsConstructor, Ignore.Signature.IS_BLANK
+                Ignore.IsConstructor,
+                Ignore.Signature.IS_BLANK
             ).ignore(
-                Issue.MissingMember("com/Foo", MemberAccess.MethodAccess(
-                    "java/lang/String",
-                    null,
-                    MemberSymbolicReference("<init>", "()V"),
-                    MethodAccessType.SPECIAL
-                ))
+                Issue.MissingMember(
+                    "com/Foo",
+                    MemberAccess.MethodAccess(
+                        "java/lang/String",
+                        null,
+                        MemberSymbolicReference("<init>", "()V"),
+                        MethodAccessType.SPECIAL
+                    )
+                )
             )
         ).isTrue()
     }
