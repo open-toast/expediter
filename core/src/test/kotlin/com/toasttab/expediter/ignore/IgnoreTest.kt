@@ -1,6 +1,9 @@
 package com.toasttab.expediter.ignore
 
 import com.toasttab.expediter.issue.Issue
+import com.toasttab.expediter.types.MemberAccess
+import com.toasttab.expediter.types.MemberSymbolicReference
+import com.toasttab.expediter.types.MethodAccessType
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isFalse
@@ -140,5 +143,25 @@ class IgnoreTest {
                 Issue.DuplicateType("com/Foo", listOf("lib1.jar", "lib2.jar"))
             )
         ).isFalse()
+    }
+
+    @Test
+    fun `default constructor`() {
+        expectThat(
+            Ignore.And(
+                Ignore.IsConstructor,
+                Ignore.Signature.IS_BLANK
+            ).ignore(
+                Issue.MissingMember(
+                    "com/Foo",
+                    MemberAccess.MethodAccess(
+                        "java/lang/String",
+                        null,
+                        MemberSymbolicReference("<init>", "()V"),
+                        MethodAccessType.SPECIAL
+                    )
+                )
+            )
+        ).isTrue()
     }
 }
