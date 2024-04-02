@@ -20,6 +20,7 @@ import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
+import com.toasttab.gradle.testkit.ParameterizedWithGradleVersions
 import com.toasttab.gradle.testkit.TestKit
 import com.toasttab.gradle.testkit.TestProject
 import org.junit.jupiter.api.Test
@@ -30,9 +31,10 @@ import strikt.assertions.filterIsInstance
 import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
-@TestKit
+@TestKit(gradleVersions = ["8.6", "8.7"])
 class ExpediterPluginIntegrationTest {
     @Test
+    @ParameterizedWithGradleVersions
     fun `android compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -62,6 +64,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `android compat animal sniffer`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -91,6 +94,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `android compat source only`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -117,6 +121,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `jvm compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -141,6 +146,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `kotlin jvm compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -165,6 +171,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `protokt android compat`(project: TestProject) {
         project.createRunner()
             .withArguments("check")
@@ -189,6 +196,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `multi check`(project: TestProject) {
         project.createRunner().withArguments("check").build()
 
@@ -219,6 +227,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun multimodule(project: TestProject) {
         project.createRunner().withArguments("app:expedite").buildAndFail()
 
@@ -254,6 +263,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `cross library`(project: TestProject) {
         project.createRunner().withArguments("check").buildAndFail()
 
@@ -276,6 +286,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `android lib`(project: TestProject) {
         project.createRunner().withArguments("check").buildAndFail()
 
@@ -289,11 +300,13 @@ class ExpediterPluginIntegrationTest {
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `ignore`(project: TestProject) {
         project.createRunner().withArguments("check").build()
     }
 
     @Test
+    @ParameterizedWithGradleVersions
     fun `ignore file`(project: TestProject) {
         project.createRunner().withArguments("check").build()
     }
