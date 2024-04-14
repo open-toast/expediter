@@ -54,4 +54,31 @@ class ExpediterCliCommandIntegrationTest {
             )
         )
     }
+
+    @Test
+    fun `run on android library`() {
+        val output = dir.resolve("expediter.json")
+
+        ExpediterCliCommand().main(
+            listOf(
+                "--project-classes",
+                System.getProperty("android-libraries"),
+                "--output",
+                output.toString(),
+                "--jvm-platform",
+                "11"
+            )
+        )
+
+        val report = output.inputStream().use {
+            IssueReport.fromJson(it)
+        }
+
+        expectThat(report.issues).contains(
+            Issue.MissingType(
+                caller = "timber/log/Timber\$DebugTree",
+                target = "android/util/Log"
+            )
+        )
+    }
 }
