@@ -10,6 +10,7 @@ repositories {
 group = "com.toasttab.expediter"
 
 dependencies {
+    jacocoAggregation(projects.cli)
     jacocoAggregation(projects.core)
     jacocoAggregation(projects.tests)
     jacocoAggregation(projects.plugin)
