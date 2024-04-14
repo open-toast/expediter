@@ -14,7 +14,6 @@ dependencies {
 }
 
 testkitTests {
-    replaceToken("TESTKIT_PLUGIN_VERSION", libs.versions.testkit.plugin.get())
     replaceToken("KOTLIN_VERSION", libs.versions.kotlin.get())
     replaceToken("PROTOKT_VERSION", libs.versions.protokt.get())
     replaceToken("PROTOBUF_VERSION", libs.versions.protobuf.get())

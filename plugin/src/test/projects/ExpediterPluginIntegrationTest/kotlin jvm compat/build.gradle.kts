@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "@KOTLIN_VERSION@"
     id("com.toasttab.expediter")
-    id("com.toasttab.testkit.coverage") version "@TESTKIT_PLUGIN_VERSION@"
+    id("com.toasttab.testkit.coverage")
 }
 
 repositories {
