@@ -38,10 +38,11 @@ class ExpediterIntegrationTest {
     @Test
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
-        val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN, it) })
-        val p = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
+        val scanner = ClasspathApplicationTypesProvider(
+            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN, it) })
+        val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
-        expectThat(p).containsExactlyInAnyOrder(
+        expectThat(issues).containsExactlyInAnyOrder(
             Issue.MissingMember(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(
@@ -201,6 +202,30 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/caller/Caller",
                 "com/toasttab/expediter/test/Lambda"
             )
+        )
+
+        expectThat(issues.map { "$it" }).containsExactlyInAnyOrder(
+            "com/toasttab/expediter/test/Bar refers to missing type com/toasttab/expediter/test/Param",
+            "com/toasttab/expediter/test/caller/VarVar extends missing type com/toasttab/expediter/test/Var",
+            "com/toasttab/expediter/test/caller/Caller extends final type com/toasttab/expediter/test/Base",
+            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Ex",
+            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Param",
+            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/ParamParam",
+            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Var",
+            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Lambda",
+            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Bar.bar()V statically",
+            "com/toasttab/expediter/test/caller/Caller accesses static com/toasttab/expediter/test/Baz.yI non-statically",
+            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Baz.zI",
+            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/BaseBar.jI (via com/toasttab/expediter/test/Bar)",
+            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Baz.aLjava/lang/String;",
+            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Baz.xI statically",
+            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Base.supersuper()V",
+            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Bar.bar(Ljava/lang/String;)V",
+            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(F)V (via com/toasttab/expediter/test/Baz)",
+            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(I)V",
+            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(J)V",
+            "com/toasttab/expediter/test/Foo extends missing type com/toasttab/expediter/test/BaseFoo",
+            "duplicate class com/toasttab/expediter/test/Dupe in [testFixtures, lib2-test-fixtures.jar]"
         )
     }
 }
