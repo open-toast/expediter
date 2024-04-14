@@ -15,6 +15,7 @@ shadow = "8.1.1"
 junit = "5.10.2"
 strikt = "0.34.1"
 testkit-plugin = "0.0.11"
+timber = "5.0.1"
 
 [libraries]
 # main
@@ -34,6 +35,7 @@ protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "p
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
 testkit-junit5 = { module = "com.toasttab.gradle.testkit:junit5", version.ref = "testkit-plugin" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
