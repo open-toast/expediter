@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.utils.`is`
-
 plugins {
     `kotlin-conventions`
     `library-publishing-conventions`
