@@ -25,7 +25,6 @@ import com.toasttab.expediter.types.ApplicationType
 import com.toasttab.expediter.types.ApplicationTypeContainer
 import com.toasttab.expediter.types.InspectedTypes
 import com.toasttab.expediter.types.MemberAccess
-import com.toasttab.expediter.types.MemberType
 import com.toasttab.expediter.types.MethodAccessType
 import com.toasttab.expediter.types.OptionalResolvedTypeHierarchy
 import com.toasttab.expediter.types.PlatformType
@@ -128,10 +127,10 @@ class Expediter(
             .toSet()
     }
 
-    fun <M : MemberType> findIssue(
+    fun findIssue(
         type: ApplicationType,
         hierarchy: ResolvedTypeHierarchy,
-        access: MemberAccess<M>,
+        access: MemberAccess,
         chain: OptionalResolvedTypeHierarchy
     ): Issue? {
         return when (chain) {
@@ -183,7 +182,7 @@ private class MemberWithDeclaringType(
     val declaringType: Type
 )
 
-private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess<M>): Sequence<Type> {
+private fun ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess): Sequence<Type> {
     return if (access is MemberAccess.MethodAccess && access.accessType == MethodAccessType.SPECIAL) {
         // invokespecial dispatches statically, i.e. the method must be declared on the target type;
         // it is used to invoke constructors, super methods, and private methods
@@ -194,7 +193,7 @@ private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.filterT
     }
 }
 
-private fun <M : MemberType> ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess<M>): MemberWithDeclaringType? {
+private fun ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess): MemberWithDeclaringType? {
     for (cls in filterToAccessType(access)) {
         for (m in cls.descriptor.members) {
             if (access.ref.same(m.ref)) {

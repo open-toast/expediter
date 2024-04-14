@@ -24,7 +24,6 @@ import strikt.assertions.contains
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.inputStream
-import kotlin.io.path.readText
 
 class ExpediterCliCommandIntegrationTest {
     @TempDir

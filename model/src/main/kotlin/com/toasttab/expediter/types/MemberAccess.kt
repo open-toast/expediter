@@ -19,7 +19,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface MemberAccess<M : MemberType> {
+sealed interface MemberAccess {
     /**
      * The type via which the member is accessed. E.g. for `"a".hashCode()`, the target type is `String`.
      */
@@ -41,7 +41,7 @@ sealed interface MemberAccess<M : MemberType> {
      */
     val accessType: MemberAccessType
 
-    fun withDeclaringType(declaringType: String): MemberAccess<M>
+    fun withDeclaringType(declaringType: String): MemberAccess
 
     fun description(): String {
         return if (declaringType == null || declaringType == targetType) {
@@ -58,7 +58,7 @@ sealed interface MemberAccess<M : MemberType> {
         override val declaringType: String? = null,
         override val ref: MemberSymbolicReference,
         override val accessType: MethodAccessType
-    ) : MemberAccess<MemberType.Method> {
+    ) : MemberAccess {
         override fun toString() = description()
         override fun withDeclaringType(declaringType: String) = copy(declaringType = declaringType)
     }
@@ -70,7 +70,7 @@ sealed interface MemberAccess<M : MemberType> {
         override val declaringType: String? = null,
         override val ref: MemberSymbolicReference,
         override val accessType: FieldAccessType
-    ) : MemberAccess<MemberType.Field> {
+    ) : MemberAccess {
         override fun toString() = description()
         override fun withDeclaringType(declaringType: String) = copy(declaringType = declaringType)
     }
