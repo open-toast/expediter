@@ -39,9 +39,13 @@ class ExpediterIntegrationTest {
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
         val scanner = ClasspathApplicationTypesProvider(testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN, it) })
-        val p = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
+        val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
-        expectThat(p).containsExactlyInAnyOrder(
+        issues.forEach {
+            System.err.println(it)
+        }
+
+        expectThat(issues).containsExactlyInAnyOrder(
             Issue.MissingMember(
                 "com/toasttab/expediter/test/caller/Caller",
                 MemberAccess.MethodAccess(

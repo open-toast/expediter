@@ -15,17 +15,7 @@
 
 package com.toasttab.expediter.types
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 sealed interface MemberType {
-    @Serializable
-    object Field : MemberType {
-        override fun toString() = "field"
-    }
-
-    @Serializable
-    object Method : MemberType {
-        override fun toString() = "method"
-    }
+    object Field : MemberType
+    object Method : MemberType
 }

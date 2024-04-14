@@ -24,6 +24,7 @@ import strikt.assertions.contains
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.inputStream
+import kotlin.io.path.readText
 
 class ExpediterCliCommandIntegrationTest {
     @TempDir
@@ -51,6 +52,33 @@ class ExpediterCliCommandIntegrationTest {
             Issue.MissingType(
                 caller = "com/github/ajalt/mordant/internal/nativeimage/WinKernel32Lib",
                 target = "org/graalvm/word/PointerBase"
+            )
+        )
+    }
+
+    @Test
+    fun `run on android library`() {
+        val output = dir.resolve("expediter.json")
+
+        ExpediterCliCommand().main(
+            listOf(
+                "--project-classes",
+                System.getProperty("android-libraries"),
+                "--output",
+                output.toString(),
+                "--jvm-platform",
+                "11"
+            )
+        )
+
+        val report = output.inputStream().use {
+            IssueReport.fromJson(it)
+        }
+
+        expectThat(report.issues).contains(
+            Issue.MissingType(
+                caller = "timber/log/Timber\$DebugTree",
+                target = "android/util/Log"
             )
         )
     }
