@@ -1,5 +1,5 @@
 plugins {
-    id("com.toasttab.testkit.coverage") version "@TESTKIT_PLUGIN_VERSION@"
+    id("com.toasttab.testkit.coverage")
 }
 
 subprojects {
