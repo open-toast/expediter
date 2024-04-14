@@ -46,7 +46,7 @@ object TypeParsers {
 }
 
 private class ApplicationTypeParser(private val source: ClassfileSource) : ClassVisitor(ASM9, TypeDescriptorParser()) {
-    private val refs: MutableSet<MemberAccess<*>> = hashSetOf()
+    private val refs: MutableSet<MemberAccess> = hashSetOf()
     private val referencedTypes: MutableSet<String> = hashSetOf()
 
     fun get() = ApplicationType((cv as TypeDescriptorParser).get(), refs, referencedTypes, source)
