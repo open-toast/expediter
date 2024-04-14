@@ -61,19 +61,19 @@ sealed interface Issue {
     }
 
     interface WithMemberAccess {
-        val member: MemberAccess<*>
+        val member: MemberAccess
     }
 
     @Serializable
     @SerialName("member-missing")
-    data class MissingMember(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class MissingMember(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses missing $member"
     }
 
     @Serializable
     @SerialName("static-member")
-    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessStaticMemberNonStatically(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
 
         override fun toString() = "$caller accesses static $member non-statically"
@@ -81,14 +81,14 @@ sealed interface Issue {
 
     @Serializable
     @SerialName("instance-member")
-    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessInstanceMemberStatically(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses instance $member statically"
     }
 
     @Serializable
     @SerialName("member-inaccessible")
-    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess<*>) : Issue, WithMemberAccess {
+    data class AccessInaccessibleMember(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
         override fun toString() = "$caller accesses inaccessible $member"
     }
