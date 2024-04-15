@@ -17,6 +17,9 @@ package com.toasttab.expediter.cli
 
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.issue.IssueReport
+import com.toasttab.expediter.types.MemberAccess
+import com.toasttab.expediter.types.MemberSymbolicReference
+import com.toasttab.expediter.types.MethodAccessType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import strikt.api.expectThat
@@ -56,11 +59,46 @@ class ExpediterCliCommandIntegrationTest {
     }
 
     @Test
+    fun `run on self with descriptors`() {
+        val output = dir.resolve("expediter.json")
+
+        println(System.getProperty("android-descriptors"))
+
+        ExpediterCliCommand().main(
+            System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
+                listOf("--libraries", it)
+            } + listOf(
+                "--project-classes", System.getProperty("classes"),
+                "--output", output.toString(),
+                "--platform-descriptors", System.getProperty("android-descriptors")
+            )
+        )
+
+        val report = output.inputStream().use {
+            IssueReport.fromJson(it)
+        }
+
+        expectThat(report.issues).contains(
+            Issue.MissingMember(
+                "com/toasttab/expediter/types/InspectedTypes",
+                MemberAccess.MethodAccess(
+                    "java/util/concurrent/ConcurrentMap",
+                    ref = MemberSymbolicReference(
+                        "computeIfAbsent",
+                        "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+                    ),
+                    accessType = MethodAccessType.INTERFACE
+                )
+            )
+        )
+    }
+
+    @Test
     fun `run on android library`() {
         val output = dir.resolve("expediter.json")
 
-        ExpediterCliCommand().main(
-            listOf(
+        main(
+            arrayOf(
                 "--project-classes",
                 System.getProperty("android-libraries"),
                 "--output",
