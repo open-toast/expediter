@@ -10,6 +10,7 @@ spotless = "6.25.0"
 protokt = "1.0.0-beta.1"
 protobuf = "4.26.1"
 shadow = "8.1.1"
+gummy-bears = "0.8.0"
 
 # test
 junit = "5.10.2"
@@ -36,8 +37,10 @@ junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
 testkit-junit5 = { module = "com.toasttab.gradle.testkit:junit5", version.ref = "testkit-plugin" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+gummy-bears = { module = "com.toasttab.android:gummy-bears-api-21", version.ref = "gummy-bears" }
 
 [plugins]
+build-config = { id = "com.github.gmazzo.buildconfig", version = "5.3.5" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.1" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }

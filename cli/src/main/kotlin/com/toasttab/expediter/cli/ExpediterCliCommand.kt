@@ -33,6 +33,7 @@ import com.toasttab.expediter.types.ClassfileSource
 import com.toasttab.expediter.types.ClassfileSourceType
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
+import java.util.zip.GZIPInputStream
 
 class ExpediterCliCommand : CliktCommand() {
     val output: String by option().required()
@@ -43,13 +44,13 @@ class ExpediterCliCommand : CliktCommand() {
     val platformDescriptors: String? by option()
     val projectName: String by option().default("project")
 
-    fun ignores() = ignoresFiles.flatMap {
+    private fun ignores() = ignoresFiles.flatMap {
         File(it).inputStream().use {
             IssueReport.fromJson(it).issues
         }
     }.toSet()
 
-    fun appTypes() = ClasspathApplicationTypesProvider(
+    private fun appTypes() = ClasspathApplicationTypesProvider(
         projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.SOURCE_SET, it) } +
             libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY, it) }
     )
@@ -62,7 +63,7 @@ class ExpediterCliCommand : CliktCommand() {
             JvmTypeProvider.forTarget(jvm)
         } else if (platformFile != null) {
             InMemoryPlatformTypeProvider(
-                platformFile.inputStream().use {
+                GZIPInputStream(platformFile.inputStream().buffered()).use {
                     TypeDescriptors.deserialize(it)
                 }.types
             )

@@ -3,6 +3,7 @@ plugins {
     `kotlin-dsl`
     `plugin-publishing-conventions`
     alias(libs.plugins.testkit.plugin)
+    alias(libs.plugins.build.config)
 }
 
 dependencies {
@@ -17,6 +18,11 @@ testkitTests {
     replaceToken("KOTLIN_VERSION", libs.versions.kotlin.get())
     replaceToken("PROTOKT_VERSION", libs.versions.protokt.get())
     replaceToken("PROTOBUF_VERSION", libs.versions.protobuf.get())
+}
+
+buildConfig {
+    packageName.set("com.toasttab.expediter.gradle")
+    buildConfigField("String", "GUMMY_BEARS_VERSION", libs.versions.gummy.bears)
 }
 
 gradlePlugin {
