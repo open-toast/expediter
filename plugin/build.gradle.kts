@@ -22,7 +22,7 @@ testkitTests {
 
 buildConfig {
     packageName.set("com.toasttab.expediter.gradle")
-    buildConfigField("String", "GUMMY_BEARS_VERSION", libs.versions.gummy.bears)
+    buildConfigField("String", "GUMMY_BEARS_VERSION", "\"${libs.versions.gummy.bears.get()}\"")
 }
 
 gradlePlugin {
