@@ -20,10 +20,11 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.SortedSet;
 
-public class CallerNegative {
+public class CallerNegative extends LinkedHashMap {
     private int x;
 
     void arrayCloneIsOk() {
@@ -85,5 +86,10 @@ public class CallerNegative {
         VarHandle vh = MethodHandles.publicLookup().findVarHandle(int[].class, "length", int.class);
 
         vh.get(new int[0]);
+    }
+
+    void superSuperCallOk() {
+        // `invokespecial LinkedHashMap.remove(Object)` should be ok even though `remove` is declared on `HashMap`
+        super.remove(new Object());
     }
 }
