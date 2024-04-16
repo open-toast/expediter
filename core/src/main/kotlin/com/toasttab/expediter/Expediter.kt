@@ -183,9 +183,9 @@ private class MemberWithDeclaringType(
 )
 
 private fun ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(access: MemberAccess): Sequence<Type> {
-    return if (access is MemberAccess.MethodAccess && access.accessType == MethodAccessType.SPECIAL) {
-        // invokespecial dispatches statically, i.e. the method must be declared on the target type;
-        // it is used to invoke constructors, super methods, and private methods
+    return if (access is MemberAccess.MethodAccess && access.accessType == MethodAccessType.SPECIAL && access.ref.isConstructor()) {
+        // when invoking constructors, invokespecial dispatches statically
+        // when invoking super methods, invokespecial dispatches mostly dynamically
         sequenceOf(type)
     } else {
         // fields and methods, except for constructors can be declared on any type in the hierarchy
