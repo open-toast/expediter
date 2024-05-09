@@ -35,6 +35,7 @@ import com.toasttab.expediter.types.members
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
 import protokt.v1.toasttab.expediter.v1.MemberDescriptor
 import protokt.v1.toasttab.expediter.v1.TypeExtensibility
+import protokt.v1.toasttab.expediter.v1.TypeFlavor
 
 class Expediter(
     private val ignore: Ignore,
@@ -167,6 +168,12 @@ class Expediter(
                         Issue.AccessStaticMemberNonStatically(type.name, resolvedAccess)
                     } else if (member.member.declaration == AccessDeclaration.INSTANCE && access.accessType.isStatic()) {
                         Issue.AccessInstanceMemberStatically(type.name, resolvedAccess)
+                    } else if (access.accessType == MethodAccessType.INTERFACE && chain.type.descriptor.flavor == TypeFlavor.CLASS) {
+                        Issue.InterfaceCallToClass(type.name, resolvedAccess)
+                    } else if (access.accessType == MethodAccessType.VIRTUAL && chain.type.descriptor.flavor == TypeFlavor.INTERFACE) {
+                        Issue.VirtualCallToInterface(type.name, resolvedAccess)
+                    } else if (access.accessType == MethodAccessType.SPECIAL && !access.ref.isConstructor() && hierarchy is ResolvedTypeHierarchy.CompleteTypeHierarchy && !hierarchy.allTypes.contains(chain.type)) {
+                        Issue.SpecialCallOutOfHierarchy(type.name, resolvedAccess)
                     } else if (!AccessCheck.allowedAccess(hierarchy, chain, member.member, member.declaringType)) {
                         Issue.AccessInaccessibleMember(type.name, resolvedAccess)
                     } else {

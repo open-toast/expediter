@@ -23,6 +23,8 @@ import com.toasttab.expediter.test.Foo;
 import com.toasttab.expediter.test.Lambda;
 import com.toasttab.expediter.test.ParamParam;
 import com.toasttab.expediter.test.Var;
+import com.toasttab.expediter.test.WasClass;
+import com.toasttab.expediter.test.WasInterface;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -111,5 +113,13 @@ public final class Caller extends Base {
 
     void superMethodMoved() {
         super.supersuper();
+    }
+
+    void interfaceToClass(WasInterface o) {
+        o.foo();
+    }
+
+    void virtualToInterface(WasClass o) {
+        o.foo();
     }
 }
