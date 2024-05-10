@@ -97,14 +97,14 @@ sealed interface Issue {
     @SerialName("virtual-call-to-interface")
     data class VirtualCallToInterface(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
-        override fun toString() = "$caller accesses $member virtually"
+        override fun toString() = "$caller accesses interface method $member virtually"
     }
 
     @Serializable
     @SerialName("interface-call-to-class")
     data class InterfaceCallToClass(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
         override val target: String get() = member.targetType
-        override fun toString() = "$caller accesses $member interfacely"
+        override fun toString() = "$caller accesses class method $member interfacely"
     }
 
     @Serializable

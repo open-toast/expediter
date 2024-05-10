@@ -245,8 +245,8 @@ class ExpediterIntegrationTest {
             "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(F)V (via com/toasttab/expediter/test/Baz)",
             "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(I)V",
             "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(J)V",
-            "com/toasttab/expediter/test/caller/Caller accesses com/toasttab/expediter/test/WasClass.foo()V virtually",
-            "com/toasttab/expediter/test/caller/Caller accesses com/toasttab/expediter/test/WasInterface.foo()V interfacely",
+            "com/toasttab/expediter/test/caller/Caller accesses interface method com/toasttab/expediter/test/WasClass.foo()V virtually",
+            "com/toasttab/expediter/test/caller/Caller accesses class method com/toasttab/expediter/test/WasInterface.foo()V interfacely",
             "com/toasttab/expediter/test/Foo extends missing type com/toasttab/expediter/test/BaseFoo",
             "duplicate class com/toasttab/expediter/test/Dupe in [testFixtures, lib2-test-fixtures.jar]"
         )
