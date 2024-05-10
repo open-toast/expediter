@@ -94,6 +94,27 @@ sealed interface Issue {
     }
 
     @Serializable
+    @SerialName("virtual-call-to-interface")
+    data class VirtualCallToInterface(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
+        override val target: String get() = member.targetType
+        override fun toString() = "$caller accesses interface method $member virtually"
+    }
+
+    @Serializable
+    @SerialName("interface-call-to-class")
+    data class InterfaceCallToClass(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
+        override val target: String get() = member.targetType
+        override fun toString() = "$caller accesses class method $member interfacely"
+    }
+
+    @Serializable
+    @SerialName("special-call-out-of-hierarchy")
+    data class SpecialCallOutOfHierarchy(override val caller: String, override val member: MemberAccess) : Issue, WithMemberAccess {
+        override val target: String get() = member.targetType
+        override fun toString() = "$caller makes a special call to non-contructor $member which is not in its hierarchy"
+    }
+
+    @Serializable
     data class UnknownIssue internal constructor(
         val type: String,
         override val caller: String? = null,
