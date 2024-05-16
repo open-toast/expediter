@@ -2,8 +2,14 @@ plugins {
     `kotlin-conventions`
     `kotlin-dsl`
     `plugin-publishing-conventions`
+    //`plugin-test-integration-conventions`
     alias(libs.plugins.testkit.plugin)
     alias(libs.plugins.build.config)
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -11,7 +17,9 @@ dependencies {
     implementation(projects.animalSnifferFormat)
     implementation(libs.protobuf.java)
 
-   testImplementation(libs.testkit.junit5)
+    compileOnly(libs.agp)
+
+    testImplementation(libs.testkit.junit5)
 }
 
 testkitTests {
@@ -36,3 +44,5 @@ gradlePlugin {
         }
     }
 }
+
+

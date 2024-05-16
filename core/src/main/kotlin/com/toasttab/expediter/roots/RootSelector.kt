@@ -11,6 +11,6 @@ interface RootSelector {
     }
 
     object ProjectClasses : RootSelector {
-        override fun isRoot(type: ApplicationType) = type.source.type == ClassfileSourceType.SOURCE_SET || type.source.type == ClassfileSourceType.SUBPROJECT_DEPENDENCY
+        override fun isRoot(type: ApplicationType) = type.source.type == ClassfileSourceType.PROJECT || type.source.type == ClassfileSourceType.SUBPROJECT_DEPENDENCY
     }
 }

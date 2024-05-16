@@ -27,6 +27,13 @@ open class ApplicationSpec @Inject constructor(
     val files: MutableList<String> = mutableListOf()
     val sourceSets: MutableList<String> = mutableListOf()
     val rootSelectorSpec: RootSelectorSpec = objectFactory.newInstance()
+    var androidSpec: AndroidApplicationSpec? = null
+
+    fun android(configure: Action<AndroidApplicationSpec>) {
+        androidSpec = objectFactory.newInstance<AndroidApplicationSpec>().apply {
+            configure.execute(this)
+        }
+    }
 
     fun roots(configure: Action<RootSelectorSpec>) {
         configure.execute(rootSelectorSpec)
@@ -45,7 +52,7 @@ open class ApplicationSpec @Inject constructor(
     }
 
     fun isEmpty(): Boolean {
-        return configurations.isEmpty() && sourceSets.isEmpty() && files.isEmpty()
+        return configurations.isEmpty() && sourceSets.isEmpty() && files.isEmpty() && androidSpec == null
     }
 
     fun orDefaultIfEmpty(): ApplicationSpec {

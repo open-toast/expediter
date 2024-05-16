@@ -8,7 +8,6 @@ import java.io.File
 data class ClassfileSource(
     val file: File,
     val type: ClassfileSourceType,
-    val name: String
 )
 
 enum class ClassfileSourceType {
@@ -16,7 +15,7 @@ enum class ClassfileSourceType {
     UNKNOWN,
 
     /** compiled from source in the current project/subproject */
-    SOURCE_SET,
+    PROJECT,
 
     /** a different subproject within the same project */
     SUBPROJECT_DEPENDENCY,

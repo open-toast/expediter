@@ -17,6 +17,7 @@ package com.toasttab.expediter.gradle.config
 
 import com.toasttab.expediter.gradle.ArtifactSelector
 import com.toasttab.expediter.gradle.ExpediterTask
+import com.toasttab.expediter.gradle.android.configureAndroidOutputs
 import com.toasttab.expediter.gradle.service.ApplicationTypeCache
 import org.gradle.api.Action
 import org.gradle.api.GradleException
@@ -73,7 +74,12 @@ abstract class ExpediterExtension(
 
         for (sourceSetName in spec.sourceSets) {
             val sourceSet = project.sourceSet(sourceSetName)
-            sourceSet(sourceSet)
+//            sourceSet(sourceSet)
+
+            for (dir in sourceSet.output.classesDirs.files) {
+                projectOutputDirs.add(project.layout.projectDirectory.dir(dir.path))
+            }
+
             dependsOn(sourceSet.classesTaskName)
         }
     }
@@ -110,7 +116,7 @@ abstract class ExpediterExtension(
 
     private fun check(name: String) = specs.computeIfAbsent(CheckKey(name)) { key ->
         project.objects.newInstance<ExpediterCheckSpec>().also { spec ->
-            project.tasks.register<ExpediterTask>(key.taskName) {
+            val task = project.tasks.register<ExpediterTask>(key.taskName) {
                 usesService(sharedCache)
                 cache.set(sharedCache)
 
@@ -127,6 +133,8 @@ abstract class ExpediterExtension(
 
                 roots = spec.application.rootSelectorSpec.type
             }
+
+            project.configureAndroidOutputs(task, selector) { spec.application.androidSpec }
         }
     }
 

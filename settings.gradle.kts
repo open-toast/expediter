@@ -1,5 +1,13 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+// todo delete
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenLocal()
+    }
+}
+
 buildscript {
     repositories {
         gradlePluginPortal()
@@ -8,6 +16,7 @@ buildscript {
         classpath("gradle.plugin.net.vivin:gradle-semantic-build-versioning:4.0.0")
     }
 }
+
 
 rootProject.name = "expediter"
 
