@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 serialization = "1.6.3"
 asm = "9.7"
 clikt = "4.4.0"
