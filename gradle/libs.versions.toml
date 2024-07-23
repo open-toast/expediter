@@ -40,7 +40,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 gummy-bears = { module = "com.toasttab.android:gummy-bears-api-21", version.ref = "gummy-bears" }
 
 [plugins]
-build-config = { id = "com.github.gmazzo.buildconfig", version = "5.3.5" }
+build-config = { id = "com.github.gmazzo.buildconfig", version = "5.4.0" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.1" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
