@@ -10,7 +10,7 @@ spotless = "6.25.0"
 protokt = "1.0.0-beta.2"
 protobuf = "4.27.2"
 shadow = "8.1.1"
-gummy-bears = "0.8.0"
+gummy-bears = "0.9.0"
 
 # test
 junit = "5.10.3"
