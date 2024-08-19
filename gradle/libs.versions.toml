@@ -13,7 +13,7 @@ shadow = "8.1.1"
 gummy-bears = "0.9.0"
 
 # test
-junit = "5.10.3"
+junit = "5.11.0"
 strikt = "0.34.1"
 testkit-plugin = "0.0.11"
 timber = "5.0.1"
