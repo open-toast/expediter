@@ -42,7 +42,7 @@ gummy-bears = { module = "com.toasttab.android:gummy-bears-api-21", version.ref 
 [plugins]
 build-config = { id = "com.github.gmazzo.buildconfig", version = "5.4.0" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-gradle-publish = { id = "com.gradle.plugin-publish", version = "1.2.2" }
+gradle-publish = { id = "com.gradle.plugin-publish", version = "1.3.0" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
 protokt = { id = "com.toasttab.protokt", version.ref = "protokt" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
