@@ -74,7 +74,6 @@ abstract class ExpediterExtension(
 
         for (sourceSetName in spec.sourceSets) {
             val sourceSet = project.sourceSet(sourceSetName)
-//            sourceSet(sourceSet)
 
             for (dir in sourceSet.output.classesDirs.files) {
                 projectOutputDirs.add(project.layout.projectDirectory.dir(dir.path))

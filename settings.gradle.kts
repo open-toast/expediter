@@ -1,13 +1,5 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-// todo delete
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenLocal()
-    }
-}
-
 buildscript {
     repositories {
         gradlePluginPortal()

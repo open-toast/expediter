@@ -6,11 +6,6 @@ plugins {
     alias(libs.plugins.build.config)
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 dependencies {
     implementation(projects.core)
     implementation(projects.animalSnifferFormat)
@@ -43,5 +38,3 @@ gradlePlugin {
         }
     }
 }
-
-
