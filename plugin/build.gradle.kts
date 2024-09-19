@@ -2,7 +2,6 @@ plugins {
     `kotlin-conventions`
     `kotlin-dsl`
     `plugin-publishing-conventions`
-    //`plugin-test-integration-conventions`
     alias(libs.plugins.testkit.plugin)
     alias(libs.plugins.build.config)
 }
