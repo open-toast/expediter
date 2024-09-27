@@ -10,12 +10,13 @@ spotless = "6.25.0"
 protokt = "1.0.0-beta.2"
 protobuf = "4.28.1"
 shadow = "8.1.1"
+agp = "8.4.0"
 gummy-bears = "0.9.0"
 
 # test
 junit = "5.11.0"
 strikt = "0.34.1"
-testkit-plugin = "0.0.11"
+testkit-plugin = "0.0.13"
 timber = "5.0.1"
 
 [libraries]
@@ -38,6 +39,7 @@ strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
 testkit-junit5 = { module = "com.toasttab.gradle.testkit:junit5", version.ref = "testkit-plugin" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 gummy-bears = { module = "com.toasttab.android:gummy-bears-api-21", version.ref = "gummy-bears" }
+agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
 [plugins]
 build-config = { id = "com.github.gmazzo.buildconfig", version = "5.5.0" }

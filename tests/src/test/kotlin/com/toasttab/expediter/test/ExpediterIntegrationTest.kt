@@ -39,7 +39,7 @@ class ExpediterIntegrationTest {
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath")
         val scanner = ClasspathApplicationTypesProvider(
-            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN, it) }
+            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN) }
         )
         val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 

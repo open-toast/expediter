@@ -9,6 +9,7 @@ buildscript {
     }
 }
 
+
 rootProject.name = "expediter"
 
 apply(plugin = "net.vivin.gradle-semantic-build-versioning")

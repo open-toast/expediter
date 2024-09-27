@@ -30,13 +30,11 @@ import strikt.assertions.filterIsInstance
 import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
-@TestKit(gradleVersions = ["8.6", "8.7"])
+@TestKit(gradleVersions = ["8.6", "8.10.1"])
 class ExpediterPluginIntegrationTest {
     @ParameterizedWithGradleVersions
     fun `android compat`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -63,9 +61,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `android compat animal sniffer`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -92,9 +88,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `android compat source only`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -118,9 +112,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `jvm compat`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -142,9 +134,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `kotlin jvm compat`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -166,9 +156,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `protokt android compat`(project: TestProject) {
-        project.createRunner()
-            .withArguments("check")
-            .buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -190,7 +178,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `multi check`(project: TestProject) {
-        project.createRunner().withArguments("check").build()
+        project.build("check")
 
         val reportJvm = IssueReport.fromJson(project.dir.resolve("build/expediter-jvm.json").readText())
         val reportAndroid = IssueReport.fromJson(project.dir.resolve("build/expediter-android.json").readText())
@@ -220,7 +208,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun multimodule(project: TestProject) {
-        project.createRunner().withArguments("app:expedite").buildAndFail()
+        project.buildAndFail("app:expedite")
 
         val report = IssueReport.fromJson(project.dir.resolve("app/build/expediter.json").readText())
 
@@ -255,7 +243,7 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `cross library`(project: TestProject) {
-        project.createRunner().withArguments("check").buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
@@ -277,12 +265,12 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `android lib`(project: TestProject) {
-        project.createRunner().withArguments("check").buildAndFail()
+        project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).contains(
-            Issue.MissingType("kotlin/io/path/DirectoryEntriesReader", "java/nio/file/Files")
+            Issue.MissingType("kotlin/io/path/CopyActionContext", "java/nio/file/Path")
         )
 
         expectThat(report.issues).filterIsInstance<Issue.DuplicateType>().isEmpty()
@@ -290,11 +278,11 @@ class ExpediterPluginIntegrationTest {
 
     @ParameterizedWithGradleVersions
     fun `ignore`(project: TestProject) {
-        project.createRunner().withArguments("check").build()
+        project.build("check")
     }
 
     @ParameterizedWithGradleVersions
     fun `ignore file`(project: TestProject) {
-        project.createRunner().withArguments("check").build()
+        project.build("check")
     }
 }

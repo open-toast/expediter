@@ -51,8 +51,8 @@ class ExpediterCliCommand : CliktCommand() {
     }.toSet()
 
     private fun appTypes() = ClasspathApplicationTypesProvider(
-        projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.SOURCE_SET, it) } +
-            libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY, it) }
+        projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.PROJECT) } +
+            libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY) }
     )
 
     fun platform(): PlatformTypeProvider {

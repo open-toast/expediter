@@ -15,8 +15,10 @@
 
 package com.toasttab.expediter.gradle
 
+import com.toasttab.expediter.gradle.android.whenAndroidPluginApplied
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ArtifactCollection
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.attributes.Attribute
 import org.gradle.kotlin.dsl.artifacts
 
@@ -26,22 +28,18 @@ class ArtifactSelector(
     private val project: Project,
     private var artifactType: String = "jar"
 ) {
-    private fun android() {
-        artifactType = "android-classes"
-    }
-
     init {
-        project.pluginManager.withPlugin("com.android.library") {
-            android()
-        }
-
-        project.pluginManager.withPlugin("com.android.application") {
-            android()
+        project.whenAndroidPluginApplied {
+            artifactType = "android-classes"
         }
     }
 
     fun artifacts(configuration: String): ArtifactCollection {
-        return project.configurations.getByName(configuration).incoming.artifactView {
+        return artifacts(project.configurations.getByName(configuration))
+    }
+
+    fun artifacts(configuration: Configuration): ArtifactCollection {
+        return configuration.incoming.artifactView {
             lenient(true)
             attributes.attribute(ARTIFACT_TYPE_ATTR, artifactType)
         }.artifacts

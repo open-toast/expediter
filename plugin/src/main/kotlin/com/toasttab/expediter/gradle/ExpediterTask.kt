@@ -33,7 +33,10 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.RegularFile
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -43,17 +46,23 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import java.io.File
 import java.util.zip.GZIPInputStream
 
 @CacheableTask
-abstract class ExpediterTask : DefaultTask() {
+abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
     private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
     private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
-    private val applicationSourceSets: MutableSet<SourceSet> = mutableSetOf()
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    abstract override val projectOutputFiles: ListProperty<RegularFile>
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    abstract override val projectOutputDirs: ListProperty<Directory>
 
     @get:Internal
     abstract val cache: Property<ApplicationTypeCache>
@@ -67,13 +76,6 @@ abstract class ExpediterTask : DefaultTask() {
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     @Suppress("UNUSED")
     val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
-
-    @get:InputFiles
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    @Suppress("UNUSED")
-    val sourceSets: FileCollection get() = project.objects.fileCollection().apply {
-        setFrom(applicationSourceSets.flatMap { it.output })
-    }
 
     private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
         project.objects.fileCollection()
@@ -91,10 +93,6 @@ abstract class ExpediterTask : DefaultTask() {
 
     fun platformArtifactCollection(artifactCollection: ArtifactCollection) {
         platformConfigurationArtifacts.add(artifactCollection)
-    }
-
-    fun sourceSet(sourceDirectorySet: SourceSet) {
-        applicationSourceSets.add(sourceDirectorySet)
     }
 
     @OutputFile
@@ -165,7 +163,7 @@ abstract class ExpediterTask : DefaultTask() {
             }
         }.toSet()
 
-        val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + applicationSourceSets.sources()
+        val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + projectOutputDirs.sources() + projectOutputFiles.sources()
 
         logger.info("type sources = {}", typeSources)
 

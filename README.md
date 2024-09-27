@@ -53,6 +53,8 @@ plugins {
 
 ## Application classes
 
+### Plain Kotlin/Java projects
+
 By default, the application classes are selected from the main source set and the runtime dependencies of the project.
 The classes compiled from the main source set and subproject dependencies are treated as _roots_. The roots and all
 classes from the external runtime dependencies reachable from the roots then form the set of application classes.
@@ -71,7 +73,39 @@ expediter {
 }
 ```
 
-For example, in an Android project, you will want to use a different configuration, such as `productionReleaseRuntime`.
+### Android projects
+
+Expediter provides experimental support for Android library and application projects, but the application class configuration
+is different and relies on variant selection.
+
+```kotlin
+expediter {
+    application {
+        android {
+            variant("release")
+        }
+    }
+}
+```
+
+The above will include the project classes from the source sets associated with the variants and the runtime 
+dependencies of said variants. Runtime dependencies can be excluded from the application classes like below.
+
+```kotlin
+expediter {
+    application {
+        android {
+            variant("release")
+            withoutRuntimeConfiguration()
+        }
+    }
+}
+```
+
+Note that Expediter does not understand `Build.VERSION.SDK_INT` conditionals or `@RequiredApi`, so application classes
+that use them will likely produce false positives.
+
+### Roots
 
 You can also customize how the roots are chosen. This is the implicit default setup, where the roots are the classes
 compiled from the current project and other subprojects of the same projects.

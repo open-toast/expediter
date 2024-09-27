@@ -11,7 +11,9 @@ dependencies {
     implementation(projects.animalSnifferFormat)
     implementation(libs.protobuf.java)
 
-   testImplementation(libs.testkit.junit5)
+    compileOnly(libs.agp)
+
+    testImplementation(libs.testkit.junit5)
 }
 
 testkitTests {
