@@ -70,8 +70,6 @@ class ExpediterCliCommandIntegrationTest {
     fun `run on self with descriptors`() {
         val output = dir.resolve("expediter.json")
 
-        println(System.getProperty("android-descriptors"))
-
         ExpediterCliCommand().main(
             System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
                 listOf("--libraries", it)

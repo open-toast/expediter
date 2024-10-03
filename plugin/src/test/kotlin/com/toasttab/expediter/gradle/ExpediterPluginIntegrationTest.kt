@@ -264,6 +264,28 @@ class ExpediterPluginIntegrationTest {
     }
 
     @ParameterizedWithGradleVersions
+    fun `cross library all roots`(project: TestProject) {
+        project.buildAndFail("check")
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingMember(
+                "com/fasterxml/jackson/databind/deser/BeanDeserializer",
+                MemberAccess.MethodAccess(
+                    "com/fasterxml/jackson/core/JsonParser",
+                    null,
+                    MemberSymbolicReference(
+                        "streamReadConstraints",
+                        "()Lcom/fasterxml/jackson/core/StreamReadConstraints;"
+                    ),
+                    MethodAccessType.VIRTUAL
+                )
+            )
+        )
+    }
+
+    @ParameterizedWithGradleVersions
     fun `android lib`(project: TestProject) {
         project.buildAndFail("check")
 
