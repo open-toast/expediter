@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.cli
 
+import com.github.ajalt.clikt.core.main
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.types.MemberAccess
@@ -42,7 +43,7 @@ class ExpediterCliCommandIntegrationTest {
             } + listOf(
                 "--project-classes", System.getProperty("classes"),
                 "--output", output.toString(),
-                "--jvm-platform", "11"
+                "--jvm-platform", "8"
             )
         )
 
@@ -51,9 +52,16 @@ class ExpediterCliCommandIntegrationTest {
         }
 
         expectThat(report.issues).contains(
-            Issue.MissingType(
-                caller = "com/github/ajalt/mordant/internal/nativeimage/WinKernel32Lib",
-                target = "org/graalvm/word/PointerBase"
+            Issue.MissingMember(
+                caller = "com/toasttab/expediter/provider/PlatformClassloaderTypeProvider",
+                member = MemberAccess.MethodAccess(
+                    "java/lang/ClassLoader",
+                    ref = MemberSymbolicReference(
+                        "getPlatformClassLoader",
+                        "()Ljava/lang/ClassLoader;"
+                    ),
+                    accessType = MethodAccessType.STATIC
+                )
             )
         )
     }
