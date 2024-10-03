@@ -139,7 +139,7 @@ abstract class ExpediterExtension(
 
     @JvmInline
     private value class CheckKey(val check: String) {
-        val taskName: String get() = "expediter${check.capitalize()}"
+        val taskName: String get() = "expediter" + check.replaceFirstChar(Char::titlecase)
         val reportName: String get() = if (check == "default") {
             "expediter"
         } else {

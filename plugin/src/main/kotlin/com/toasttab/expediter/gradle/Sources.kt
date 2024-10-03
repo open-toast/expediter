@@ -12,7 +12,7 @@ import org.gradle.api.provider.ListProperty
 import java.io.File
 
 fun ResolvedArtifactResult.source() =
-    when (val cid = id.componentIdentifier) {
+    when (id.componentIdentifier) {
         is ModuleComponentIdentifier -> ClassfileSource(file, ClassfileSourceType.EXTERNAL_DEPENDENCY)
         is ProjectComponentIdentifier -> ClassfileSource(file, ClassfileSourceType.SUBPROJECT_DEPENDENCY)
         else -> ClassfileSource(file, ClassfileSourceType.UNKNOWN)
