@@ -1,5 +1,7 @@
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.repositories
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 repositories {
@@ -27,11 +29,11 @@ java {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "11"
-        languageVersion = "1.6"
-        apiVersion = "1.6"
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        languageVersion = KotlinVersion.KOTLIN_1_8
+        apiVersion = KotlinVersion.KOTLIN_1_8
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
 }
 
@@ -46,6 +48,7 @@ tasks {
 }
 
 dependencies {
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
     testImplementation(libs.strikt.core)
 }
