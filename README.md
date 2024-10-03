@@ -41,9 +41,9 @@ runtime dependencies that they reference.
 
 The platform APIs can be specified by the JVM, a set of dependencies, or serialized type descriptors.
 
-## Basic setup
+## Basic Gradle setup
 
-The most convenient way to run this tool is via the provided Gradle plugin.
+The preferred mechanism to run Expediter is the provided Gradle plugin.
 
 ```kotlin
 plugins {
@@ -300,3 +300,16 @@ expediter {
 
 The output of the `jvm` check will be written into `build/expediter-jvm.json`, and the output of the
 `android` check will be written into `build/expediter-android.json`.
+
+## CLI
+
+Expediter ships a simple CLI packaged as an uberjar. 
+
+```
+java -jar cli-<version>-all.jar \
+  --project-classes=classes/ \
+  --libraries=lib/lib1.jar \
+  --libraries=lib/lib2.jar \
+  --jvm-platform=17 \
+  --output=expediter.json
+```
