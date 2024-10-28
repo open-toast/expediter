@@ -14,7 +14,7 @@ agp = "8.4.0"
 gummy-bears = "0.10.0"
 
 # test
-junit = "5.11.2"
+junit = "5.11.3"
 strikt = "0.34.1"
 testkit-plugin = "0.0.13"
 timber = "5.0.1"
