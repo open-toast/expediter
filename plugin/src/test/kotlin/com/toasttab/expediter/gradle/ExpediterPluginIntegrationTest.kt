@@ -30,7 +30,7 @@ import strikt.assertions.filterIsInstance
 import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
-@TestKit(gradleVersions = ["8.6", "8.10.1"], cleanup = false)
+@TestKit(gradleVersions = ["8.6", "8.10.1"])
 class ExpediterPluginIntegrationTest {
     @ParameterizedWithGradleVersions
     fun `android compat`(project: TestProject) {
@@ -289,7 +289,7 @@ class ExpediterPluginIntegrationTest {
     fun `android lib`(project: TestProject) {
         project.buildAndFail("check")
 
-        val report = IssueReport.fromJson(project.dir.resolve("lib/build/expediter.json").readText())
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
 
         expectThat(report.issues).contains(
             Issue.MissingType("kotlin/io/path/CopyActionContext", "java/nio/file/Path")
