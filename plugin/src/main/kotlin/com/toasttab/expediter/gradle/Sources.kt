@@ -26,8 +26,8 @@ fun ResolvableArtifact.source() = when (id.componentIdentifier) {
     else -> ClassfileSource(file, ClassfileSourceType.UNKNOWN)
 }
 
-private fun ArtifactCollectionInternal.sources(): Set<ClassfileSource> {
-    val sources = mutableSetOf<ClassfileSource>()
+private fun ArtifactCollectionInternal.sources(): Collection<ClassfileSource> {
+    val sources = mutableListOf<ClassfileSource>()
 
     // Note that ArtifactCollection.artifactFiles coalesces multiple files associated
     // with the same artifact; for example, when a project dependency has multiple outputs
@@ -55,7 +55,7 @@ private fun ArtifactCollectionInternal.sources(): Set<ClassfileSource> {
     return sources
 }
 
-fun Collection<ArtifactCollection>.sources() = flatMapTo(mutableListOf()) {
+fun Collection<ArtifactCollection>.sources() = flatMapTo(LinkedHashSet()) {
     (it as ArtifactCollectionInternal).sources()
 }
 
