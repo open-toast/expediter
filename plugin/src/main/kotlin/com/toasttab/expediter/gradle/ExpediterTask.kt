@@ -134,7 +134,7 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
         if (platformConfigurationArtifacts.isNotEmpty()) {
             providers.add(
                 InMemoryPlatformTypeProvider(
-                    ClasspathScanner(platformConfigurationArtifacts.flatMap { it.artifacts.map { it.source() } }).scan { i, _ -> TypeParsers.typeDescriptor(i) }
+                    ClasspathScanner(platformConfigurationArtifacts.sources()).scan { i, _ -> TypeParsers.typeDescriptor(i) }
                 )
             )
         }

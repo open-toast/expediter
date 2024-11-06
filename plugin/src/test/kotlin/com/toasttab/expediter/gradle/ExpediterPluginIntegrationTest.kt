@@ -299,6 +299,11 @@ class ExpediterPluginIntegrationTest {
     }
 
     @ParameterizedWithGradleVersions
+    fun `multiple outputs`(project: TestProject) {
+        project.build("check")
+    }
+
+    @ParameterizedWithGradleVersions
     fun `ignore`(project: TestProject) {
         project.build("check")
     }
