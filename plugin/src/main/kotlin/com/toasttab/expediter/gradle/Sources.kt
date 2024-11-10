@@ -34,7 +34,7 @@ fun ResolvableArtifact.source() = when (id.componentIdentifier) {
 //
 // To deal with that, we visit all artifacts, similarly to the implementation
 // of ArtifactCollection.artifactFiles, but we don't coalesce the files.
-class ArtifactCollectingVisitor: ArtifactVisitor {
+class ArtifactCollectingVisitor : ArtifactVisitor {
     private val sources = mutableListOf<ClassfileSource>()
 
     override fun visitArtifact(
