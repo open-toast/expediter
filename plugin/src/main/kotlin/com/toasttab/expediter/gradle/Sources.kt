@@ -6,6 +6,7 @@ import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.AttributeContainer
+import org.gradle.api.capabilities.Capability
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.internal.artifacts.configurations.ArtifactCollectionInternal
@@ -26,33 +27,48 @@ fun ResolvableArtifact.source() = when (id.componentIdentifier) {
     else -> ClassfileSource(file, ClassfileSourceType.UNKNOWN)
 }
 
+// Note that ArtifactCollection.artifactFiles coalesces multiple files associated
+// with the same artifact; for example, when a project dependency has multiple outputs
+// (e.g. build/classes/kotlin/main and build/classes/java/main), only one of those
+// outputs will be present in ArtifactCollection.artifactFiles.
+//
+// To deal with that, we visit all artifacts, similarly to the implementation
+// of ArtifactCollection.artifactFiles, but we don't coalesce the files.
+class ArtifactCollectingVisitor : ArtifactVisitor {
+    private val sources = mutableListOf<ClassfileSource>()
+
+    override fun visitArtifact(
+        variantName: DisplayName,
+        variantAttributes: AttributeContainer,
+        capabilities: ImmutableCapabilities,
+        artifact: ResolvableArtifact
+    ) {
+        sources.add(artifact.source())
+    }
+
+    // the ArtifactVisitor API changed in Gradle 8.6
+    // we also implement the old method for compatibility with Gradle < 8.6
+    fun visitArtifact(
+        variantName: DisplayName,
+        variantAttributes: AttributeContainer,
+        capabilities: List<Capability>,
+        artifact: ResolvableArtifact
+    ) {
+        sources.add(artifact.source())
+    }
+
+    override fun requireArtifactFiles() = true
+
+    override fun visitFailure(failure: Throwable) {
+    }
+
+    fun sources() = sources
+}
+
 private fun ArtifactCollectionInternal.sources(): Collection<ClassfileSource> {
-    val sources = mutableListOf<ClassfileSource>()
-
-    // Note that ArtifactCollection.artifactFiles coalesces multiple files associated
-    // with the same artifact; for example, when a project dependency has multiple outputs
-    // (e.g. build/classes/kotlin/main and build/classes/java/main), only one of those
-    // outputs will be present in ArtifactCollection.artifactFiles.
-    //
-    // To deal with that, we visit all artifacts, similarly to the implementation
-    // of ArtifactCollection.artifactFiles, but we don't coalesce the files.
-    visitArtifacts(object : ArtifactVisitor {
-        override fun visitArtifact(
-            variantName: DisplayName,
-            variantAttributes: AttributeContainer,
-            capabilities: ImmutableCapabilities,
-            artifact: ResolvableArtifact
-        ) {
-            sources.add(artifact.source())
-        }
-
-        override fun requireArtifactFiles() = true
-
-        override fun visitFailure(failure: Throwable) {
-        }
-    })
-
-    return sources
+    val visitor = ArtifactCollectingVisitor()
+    visitArtifacts(visitor)
+    return visitor.sources()
 }
 
 fun Collection<ArtifactCollection>.sources() = flatMapTo(LinkedHashSet()) {

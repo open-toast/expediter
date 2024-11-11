@@ -30,7 +30,7 @@ import strikt.assertions.filterIsInstance
 import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
-@TestKit(gradleVersions = ["8.6", "8.10.1"])
+@TestKit(gradleVersions = ["8.6", "8.10.2"])
 class ExpediterPluginIntegrationTest {
     @ParameterizedWithGradleVersions
     fun `android compat`(project: TestProject) {
@@ -298,7 +298,7 @@ class ExpediterPluginIntegrationTest {
         expectThat(report.issues).filterIsInstance<Issue.DuplicateType>().isEmpty()
     }
 
-    @ParameterizedWithGradleVersions
+    @ParameterizedWithGradleVersions(["8.5", "8.10.2"])
     fun `multiple outputs`(project: TestProject) {
         project.build("check")
     }
