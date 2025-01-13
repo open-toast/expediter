@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.0"
-serialization = "1.7.3"
+serialization = "1.8.0"
 asm = "9.7.1"
 clikt = "5.0.2"
 
