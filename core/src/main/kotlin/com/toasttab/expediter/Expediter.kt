@@ -203,7 +203,7 @@ private fun ResolvedTypeHierarchy.CompleteTypeHierarchy.filterToAccessType(acces
 private fun ResolvedTypeHierarchy.CompleteTypeHierarchy.resolveMember(access: MemberAccess): MemberWithDeclaringType? {
     for (cls in filterToAccessType(access)) {
         for (m in cls.descriptor.members) {
-            if (access.ref.same(m.ref)) {
+            if (access.ref.same(m.requireRef)) {
                 return MemberWithDeclaringType(m, cls)
             }
         }
