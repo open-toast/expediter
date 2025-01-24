@@ -1,7 +1,7 @@
 plugins {
     java
-    id("com.toasttab.expediter") version "@VERSION@"
-    id("com.toasttab.testkit.coverage") version "@TESTKIT_PLUGIN_VERSION@"
+    id("com.toasttab.expediter")
+    id("com.toasttab.testkit.coverage")
 }
 
 repositories {

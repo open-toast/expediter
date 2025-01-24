@@ -2,8 +2,8 @@
 plugins {
     id("com.android.library") version "8.4.1"
     id("org.jetbrains.kotlin.android") version "@KOTLIN_VERSION@"
-    id("com.toasttab.expediter") version "@VERSION@"
-    id("com.toasttab.testkit.coverage") version "@TESTKIT_PLUGIN_VERSION@"
+    id("com.toasttab.expediter")
+    id("com.toasttab.testkit.coverage")
 }
 
 expediter {

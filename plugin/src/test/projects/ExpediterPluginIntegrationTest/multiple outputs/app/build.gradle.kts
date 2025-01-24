@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.toasttab.expediter") version "@VERSION@"
+    id("com.toasttab.expediter")
 }
 
 expediter {
