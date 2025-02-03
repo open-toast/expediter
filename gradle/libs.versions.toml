@@ -45,7 +45,7 @@ agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 [plugins]
 build-config = { id = "com.github.gmazzo.buildconfig", version = "5.5.1" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-gradle-publish = { id = "com.gradle.plugin-publish", version = "1.3.0" }
+gradle-publish = { id = "com.gradle.plugin-publish", version = "1.3.1" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
 protokt = { id = "com.toasttab.protokt", version.ref = "protokt" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
