@@ -12,7 +12,9 @@ expediter {
     failOnIssues = true
 
     platform {
-        androidSdk = 19
+        android {
+            sdk = 19
+        }
     }
 }
 
