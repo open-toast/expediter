@@ -23,6 +23,10 @@ spotless {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.13"
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11

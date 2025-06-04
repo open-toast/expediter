@@ -1,1 +1,7 @@
-rootProject.name = "test"
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = "test-protokt"
