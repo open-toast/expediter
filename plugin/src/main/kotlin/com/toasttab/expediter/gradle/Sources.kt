@@ -12,6 +12,7 @@ import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.internal.artifacts.configurations.ArtifactCollectionInternal
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ArtifactVisitor
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvableArtifact
+import org.gradle.api.internal.attributes.ImmutableAttributes
 import org.gradle.api.provider.ListProperty
 import org.gradle.internal.DisplayName
 import org.gradle.internal.component.external.model.ImmutableCapabilities
@@ -34,10 +35,25 @@ fun ResolvableArtifact.source() = when (id.componentIdentifier) {
 //
 // To deal with that, we visit all artifacts, similarly to the implementation
 // of ArtifactCollection.artifactFiles, but we don't coalesce the files.
+//
+// The ArtifactVisitor#visitArtifact API is internal and differs across Gradle versions,
+// so we have to "override" multiple versions of this method.
 class ArtifactCollectingVisitor : ArtifactVisitor {
     private val sources = mutableListOf<ClassfileSource>()
 
+    // Gradle >= 8.14
     override fun visitArtifact(
+        variantName: DisplayName,
+        variantAttributes: ImmutableAttributes,
+        capabilities: ImmutableCapabilities,
+        artifact: ResolvableArtifact
+    ) {
+        sources.add(artifact.source())
+    }
+
+    // Gradle >= 8.6 < 8.14
+    @Suppress("unused", "unused_parameter")
+    fun visitArtifact(
         variantName: DisplayName,
         variantAttributes: AttributeContainer,
         capabilities: ImmutableCapabilities,
@@ -46,8 +62,8 @@ class ArtifactCollectingVisitor : ArtifactVisitor {
         sources.add(artifact.source())
     }
 
-    // the ArtifactVisitor API changed in Gradle 8.6
-    // we also implement the old method for compatibility with Gradle < 8.6
+    // Gradle < 8.6
+    @Suppress("unused", "unused_parameter")
     fun visitArtifact(
         variantName: DisplayName,
         variantAttributes: AttributeContainer,
