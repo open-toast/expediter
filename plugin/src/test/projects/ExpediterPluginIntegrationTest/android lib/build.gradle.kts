@@ -17,7 +17,9 @@ expediter {
     }
 
     platform {
-        androidSdk = 21
+        android {
+            sdk = 21
+        }
     }
 }
 

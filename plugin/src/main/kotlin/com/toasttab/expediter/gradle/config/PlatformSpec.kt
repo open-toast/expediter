@@ -24,22 +24,11 @@ import javax.inject.Inject
 open class PlatformSpec @Inject constructor(
     objectFactory: ObjectFactory
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(PlatformSpec::class.java)
-    }
-
     val animalSnifferConfigurations: MutableList<String> = mutableListOf()
     val expediterConfigurations: MutableList<String> = mutableListOf()
     val configurations: MutableList<String> = mutableListOf()
 
     var jvmVersion: Int? = null
-
-    @Deprecated("use android closure instead")
-    var androidSdk: Int? = null
-        set(value) {
-            LOGGER.warn("androidSdk property is deprecated and will be removed, use android { sdk = ... }")
-            androidSpec.sdk = value
-        }
 
     val androidSpec: AndroidSpec = objectFactory.newInstance()
 

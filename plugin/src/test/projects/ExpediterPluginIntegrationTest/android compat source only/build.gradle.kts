@@ -16,7 +16,9 @@ expediter {
     }
 
     platform {
-        androidSdk = 19
+        android {
+            sdk = 19
+        }
 
         configuration("runtimeClasspath")
     }
