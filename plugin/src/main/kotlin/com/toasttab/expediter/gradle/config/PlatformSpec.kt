@@ -18,7 +18,6 @@ package com.toasttab.expediter.gradle.config
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.newInstance
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 open class PlatformSpec @Inject constructor(
