@@ -31,7 +31,7 @@ enum TypeExtensibility {
 }
 
 message MemberDescriptor {
-  SymbolicReference ref = 1 [(protokt.v1.property).non_null = true];
+  SymbolicReference ref = 1 [(protokt.v1.property).generate_non_null_accessor = true];
   AccessProtection protection = 2;
   AccessDeclaration declaration = 3;
 }
