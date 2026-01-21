@@ -16,6 +16,7 @@ import org.gradle.api.internal.attributes.ImmutableAttributes
 import org.gradle.api.provider.ListProperty
 import org.gradle.internal.DisplayName
 import org.gradle.internal.component.external.model.ImmutableCapabilities
+import org.gradle.internal.component.model.VariantIdentifier
 import java.io.File
 
 fun File.source() = ClassfileSource(this, ClassfileSourceType.UNKNOWN)
@@ -41,8 +42,20 @@ fun ResolvableArtifact.source() = when (id.componentIdentifier) {
 class ArtifactCollectingVisitor : ArtifactVisitor {
     private val sources = mutableListOf<ClassfileSource>()
 
-    // Gradle >= 8.14
+    // Gradle >= 9
     override fun visitArtifact(
+        artifactSetName: DisplayName,
+        sourceVariantId: VariantIdentifier,
+        attributes: ImmutableAttributes,
+        capabilities: ImmutableCapabilities,
+        artifact: ResolvableArtifact
+    ) {
+        sources.add(artifact.source())
+    }
+
+    // Gradle >= 8.14 < 9
+    @Suppress("unused", "unused_parameter")
+    fun visitArtifact(
         variantName: DisplayName,
         variantAttributes: ImmutableAttributes,
         capabilities: ImmutableCapabilities,
