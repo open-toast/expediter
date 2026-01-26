@@ -48,4 +48,4 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 gradle-publish = { id = "com.gradle.plugin-publish", version = "2.0.0" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
 protokt = { id = "com.toasttab.protokt", version.ref = "protokt" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
