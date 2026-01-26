@@ -286,7 +286,7 @@ class ExpediterPluginIntegrationTest {
     }
 
     @ParameterizedWithGradleVersions
-    fun `android lib`(project: TestProject) {
+    fun `android lib agp8`(project: TestProject) {
         project.buildAndFail("check")
 
         val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
@@ -298,7 +298,20 @@ class ExpediterPluginIntegrationTest {
         expectThat(report.issues).filterIsInstance<Issue.DuplicateType>().isEmpty()
     }
 
-    @ParameterizedWithGradleVersions(["8.5", "8.13", "8.14.1", "9.2.1"])
+    @ParameterizedWithGradleVersions(["9.3.0"])
+    fun `android lib agp9`(project: TestProject) {
+        project.buildAndFail("check")
+
+        val report = IssueReport.fromJson(project.dir.resolve("build/expediter.json").readText())
+
+        expectThat(report.issues).contains(
+            Issue.MissingType("kotlin/io/path/CopyActionContext", "java/nio/file/Path")
+        )
+
+        expectThat(report.issues).filterIsInstance<Issue.DuplicateType>().isEmpty()
+    }
+
+    @ParameterizedWithGradleVersions(["8.5", "8.13", "8.14.1", "9.3.0"])
     fun `multiple outputs`(project: TestProject) {
         project.build("check")
     }
