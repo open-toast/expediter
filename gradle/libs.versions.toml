@@ -9,7 +9,7 @@ ktlint = "0.50.0"
 spotless = "7.2.1"
 protokt = "1.0.0-beta.5"
 protobuf = "4.33.4"
-shadow = "8.1.1"
+shadow = "9.3.1"
 agp = "9.0.0"
 gummy-bears = "0.12.0"
 
@@ -48,4 +48,4 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 gradle-publish = { id = "com.gradle.plugin-publish", version = "2.0.0" }
 testkit-plugin = { id = "com.toasttab.testkit" , version.ref = "testkit-plugin" }
 protokt = { id = "com.toasttab.protokt", version.ref = "protokt" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
