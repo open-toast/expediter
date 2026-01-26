@@ -38,8 +38,6 @@ object Remote {
     val password by lazy {
         System.getenv("OSSRH_PASSWORD")
     }
-
-    val url = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 }
 
 object ProjectInfo {

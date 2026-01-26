@@ -30,7 +30,7 @@ import strikt.assertions.filterIsInstance
 import strikt.assertions.isEmpty
 import kotlin.io.path.readText
 
-@TestKit(gradleVersions = ["8.6", "8.14.1", "9.2.1"])
+@TestKit(gradleVersions = ["8.6", "8.14.1", "9.3.0"])
 class ExpediterPluginIntegrationTest {
     @ParameterizedWithGradleVersions
     fun `android compat`(project: TestProject) {
