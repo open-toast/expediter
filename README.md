@@ -108,7 +108,7 @@ that use them will likely produce false positives.
 ### Roots
 
 You can also customize how the roots are chosen. This is the implicit default setup, where the roots are the classes
-compiled from the current project and other subprojects of the same projects.
+compiled from the current project and other subprojects of the same project.
 
 ```kotlin
 expediter {
@@ -121,7 +121,7 @@ expediter {
 ```
 
 This is a different setup, where the roots are all classes compiled from the current project and all classes in its
-runtime dependencies. Beware that with this setup, there will likely be a lot of noise from unused classes providig
+runtime dependencies. Beware that with this setup, there will likely be a lot of noise from unused classes providing
 optional functionality.
 
 ```kotlin
@@ -187,7 +187,7 @@ dependencies {
 }
 ```
 
-Expediter can also consume Animal Sniffer signatures
+Expediter can also consume Animal Sniffer signatures.
 
 ```kotlin
 expediter {
