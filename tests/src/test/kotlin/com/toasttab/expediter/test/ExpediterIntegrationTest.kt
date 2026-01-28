@@ -29,6 +29,8 @@ import com.toasttab.expediter.types.MethodAccessType
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.io.File
 
 /**
@@ -250,5 +252,48 @@ class ExpediterIntegrationTest {
             "com/toasttab/expediter/test/Foo extends missing type com/toasttab/expediter/test/BaseFoo",
             "duplicate class com/toasttab/expediter/test/Dupe in [testFixtures, lib2-test-fixtures.jar]"
         )
+    }
+
+    @Test
+    fun detectMissingSuperclass() {
+        // Test that a class with a missing superclass is detected
+        val testClasspath = System.getProperty("test-classpath")
+        val scanner = ClasspathApplicationTypesProvider(
+            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN) }
+        )
+        val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
+
+        // VarVar extends Var, but Var is not available at runtime (only in lib1)
+        val missingSuperclassIssue = issues.filterIsInstance<Issue.MissingApplicationSuperType>()
+            .find { it.caller == "com/toasttab/expediter/test/caller/VarVar" }
+
+        expectThat(missingSuperclassIssue).isNotNull()
+        expectThat(missingSuperclassIssue!!.missing).containsExactlyInAnyOrder("com/toasttab/expediter/test/Var")
+    }
+
+    @Test
+    fun detectMissingSuperSuperMethod() {
+        // Test that calling a super method that exists on a super-super class that is no longer on the classpath is detected
+        val testClasspath = System.getProperty("test-classpath")
+        val scanner = ClasspathApplicationTypesProvider(
+            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN) }
+        )
+        val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
+
+        // Caller extends Base and calls super.supersuper()
+        // In lib1: Base extends BaseBase, and supersuper() is defined in Base
+        // In lib2: Base no longer extends BaseBase and supersuper() is not in Base
+        // At runtime, the call to super.supersuper() from Caller should fail
+        val missingSuperMethodIssue = issues.filterIsInstance<Issue.MissingMember>()
+            .find {
+                it.caller == "com/toasttab/expediter/test/caller/Caller" &&
+                it.member is MemberAccess.MethodAccess &&
+                (it.member as MemberAccess.MethodAccess).ref.name == "supersuper"
+            }
+
+        expectThat(missingSuperMethodIssue).isNotNull()
+        val methodAccess = missingSuperMethodIssue!!.member as MemberAccess.MethodAccess
+        expectThat(methodAccess.targetType).isEqualTo("com/toasttab/expediter/test/Base")
+        expectThat(methodAccess.accessType).isEqualTo(MethodAccessType.SPECIAL)
     }
 }
