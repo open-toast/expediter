@@ -224,6 +224,5 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/Lambda"
             )
         )
-
     }
 }
