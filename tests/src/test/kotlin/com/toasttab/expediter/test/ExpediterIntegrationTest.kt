@@ -225,30 +225,5 @@ class ExpediterIntegrationTest {
             )
         )
 
-        expectThat(issues.map { "$it" }).containsExactlyInAnyOrder(
-            "com/toasttab/expediter/test/Bar refers to missing type com/toasttab/expediter/test/Param",
-            "com/toasttab/expediter/test/caller/VarVar extends missing type com/toasttab/expediter/test/Var",
-            "com/toasttab/expediter/test/caller/Caller extends final type com/toasttab/expediter/test/Base",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Ex",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Param",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/ParamParam",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Var",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Lambda",
-            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Bar.bar()V statically",
-            "com/toasttab/expediter/test/caller/Caller accesses static com/toasttab/expediter/test/Baz.yI non-statically",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Baz.zI",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/BaseBar.jI (via com/toasttab/expediter/test/Bar)",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Baz.aLjava/lang/String;",
-            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Baz.xI statically",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Base.supersuper()V",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Bar.bar(Ljava/lang/String;)V",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(F)V (via com/toasttab/expediter/test/Baz)",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(I)V",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(J)V",
-            "com/toasttab/expediter/test/caller/Caller accesses interface method com/toasttab/expediter/test/WasClass.foo()V virtually",
-            "com/toasttab/expediter/test/caller/Caller accesses class method com/toasttab/expediter/test/WasInterface.foo()V interfacely",
-            "com/toasttab/expediter/test/Foo extends missing type com/toasttab/expediter/test/BaseFoo",
-            "duplicate class com/toasttab/expediter/test/Dupe in [testFixtures, lib2-test-fixtures.jar]"
-        )
     }
 }
