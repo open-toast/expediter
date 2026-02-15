@@ -35,8 +35,8 @@ java {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11
-        languageVersion = KotlinVersion.KOTLIN_1_8
-        apiVersion = KotlinVersion.KOTLIN_1_8
+        languageVersion = KotlinVersion.KOTLIN_2_0
+        apiVersion = KotlinVersion.KOTLIN_2_0
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
 }
