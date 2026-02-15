@@ -136,4 +136,10 @@ class IssueToStringTest {
             ).toString()
         ).isEqualTo("com/foo/Caller makes a special call to non-contructor com/foo/Other.foo()V which is not in its hierarchy")
     }
+
+    @Test
+    fun `UnknownIssue`() {
+        expectThat(Issue.UnknownIssue("test-issue", "com/foo/Caller", "com/foo/Target").toString())
+            .isEqualTo("UnknownIssue(type=test-issue, caller=com/foo/Caller, target=com/foo/Target)")
+    }
 }
