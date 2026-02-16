@@ -15,23 +15,23 @@
 
 package com.toasttab.expediter.test;
 
-public class Bar extends BaseBar {
+public class MethodAccessChange extends MethodAccessChangeParent {
     // changes from static to instance
-    public void bar() { }
+    public void staticToInstance() { }
 
     // changes return type from void to String
-    public String bar(String x) {
+    public String voidToNonVoidReturnType(String x) {
         return x;
     }
 
     // changes from public to private
-    private void bar(int x) { }
+    private void publicToPrivate(int x) { }
 
     // changes from public to package-private
-    void bar(long x) { }
+    void publicToPackagePrivate(long x) { }
 
     // changes from public to protected
-    protected void bar(float x) { }
+    protected void publicToProtected(float x) { }
 
-    public void arg(Param[][] param) { }
+    public void usesRemovedParamType(RemovedParamType[][] param) { }
 }

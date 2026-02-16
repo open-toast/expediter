@@ -15,11 +15,4 @@
 
 package com.toasttab.expediter.test;
 
-public class Baz extends Bar {
-    public static int x;
-    public int y;
-
-    public int z;
-
-    public String a;
-}
+public class DuplicateClass {  }

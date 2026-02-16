@@ -15,6 +15,5 @@
 
 package com.toasttab.expediter.test;
 
-public interface BaseFoo {
-    default void base() { }
+public class ImplementsRemovedInterface implements RemovedSuperInterface {
 }

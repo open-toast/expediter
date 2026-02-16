@@ -15,13 +15,5 @@
 
 package com.toasttab.expediter.test;
 
-public class Baz extends Bar {
-    public int i;
-
-    public int x;
-    public static int y;
-
-    private int z;
-
-    public int a;
+public class ImplementsRemovedInterface implements RemovedSuperInterface {
 }

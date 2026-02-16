@@ -15,4 +15,19 @@
 
 package com.toasttab.expediter.test;
 
-public class Dupe {  }
+public class MethodAccessChange extends MethodAccessChangeParent {
+    public int accessibleViaSubclass;
+    public int publicToPackagePrivateField;
+
+    public static void staticToInstance() { }
+
+    public void voidToNonVoidReturnType(String x) { }
+
+    public void publicToPrivate(int x) { }
+
+    public void publicToPackagePrivate(long x) { }
+
+    public void publicToProtected(float x) { }
+
+    public void usesRemovedParamType(RemovedParamType[][] param) { }
+}

@@ -15,5 +15,11 @@
 
 package com.toasttab.expediter.test;
 
-public class Foo implements BaseFoo {
+public class FieldAccessChange extends MethodAccessChange {
+    public static int staticToInstanceField;
+    public int instanceToStaticField;
+
+    public int publicToPrivateField;
+
+    public String typeChangedField;
 }

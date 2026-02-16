@@ -15,19 +15,6 @@
 
 package com.toasttab.expediter.test;
 
-public class Bar extends BaseBar {
-    public int i;
-    public int j;
-
-    public static void bar() { }
-
-    public void bar(String x) { }
-
-    public void bar(int x) { }
-
-    public void bar(long x) { }
-
-    public void bar(float x) { }
-
-    public void arg(Param[][] param) { }
+public interface RemovedSuperInterface {
+    default void defaultMethod() { }
 }

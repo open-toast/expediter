@@ -15,5 +15,4 @@
 
 package com.toasttab.expediter.test;
 
-public class Foo implements BaseFoo {
-}
+public class DuplicateClass {  }

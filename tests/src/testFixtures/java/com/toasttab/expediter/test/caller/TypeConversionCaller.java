@@ -13,6 +13,17 @@
  * limitations under the License.
  */
 
-package com.toasttab.expediter.test;
+package com.toasttab.expediter.test.caller;
 
-public class Dupe {  }
+import com.toasttab.expediter.test.ClassToInterface;
+import com.toasttab.expediter.test.InterfaceToClass;
+
+public class TypeConversionCaller {
+    void callInterfaceConvertedToClass(InterfaceToClass o) {
+        o.formerlyInterfaceMethod();
+    }
+
+    void callClassConvertedToInterface(ClassToInterface o) {
+        o.formerlyClassMethod();
+    }
+}

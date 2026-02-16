@@ -15,17 +15,33 @@
 
 package com.toasttab.expediter.test.caller;
 
+import com.toasttab.expediter.test.FieldAccessChange;
+import com.toasttab.expediter.test.ImplementsRemovedInterface;
+import com.toasttab.expediter.test.MethodAccessChange;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.SortedSet;
 
-public class CallerNegative extends LinkedHashMap {
+public class NoIssueCaller extends LinkedHashMap {
     private int x;
+
+    ImplementsRemovedInterface implementsRemovedInterface;
+    MethodAccessChange methodAccessChange;
+
+    void callDefaultMethodOfMissingSupertype() {
+        implementsRemovedInterface.defaultMethod();
+    }
+
+    void accessFieldViaPublicSubclass() { methodAccessChange.accessibleViaSubclass = 1; }
+
+    void accessFieldMovedToSubclass() {
+        new FieldAccessChange().accessibleViaSubclass = 1;
+    }
 
     void arrayCloneIsOk() {
         Object[] array = new Object[0];
@@ -33,7 +49,7 @@ public class CallerNegative extends LinkedHashMap {
     }
 
     void subclassCloneIsOk() throws Exception {
-        Clones.C xx = new Clones.C();
+        CloneableHierarchy.CloneableGrandchild xx = new CloneableHierarchy.CloneableGrandchild();
 
         xx.clone();
     }
