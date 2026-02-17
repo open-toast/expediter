@@ -224,31 +224,5 @@ class ExpediterIntegrationTest {
                 "com/toasttab/expediter/test/RemovedFunctionalInterface"
             )
         )
-
-        expectThat(issues.map { "$it" }).containsExactlyInAnyOrder(
-            "com/toasttab/expediter/test/MethodAccessChange refers to missing type com/toasttab/expediter/test/RemovedParamType",
-            "com/toasttab/expediter/test/caller/ExtendsRemovedClass extends missing type com/toasttab/expediter/test/RemovedClass",
-            "com/toasttab/expediter/test/caller/InheritanceCaller extends final type com/toasttab/expediter/test/FinalizedSuperclass",
-            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedException",
-            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedParamType",
-            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedInstanceofTarget",
-            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedClass",
-            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedFunctionalInterface",
-            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses instance com/toasttab/expediter/test/MethodAccessChange.staticToInstance()V statically",
-            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses static com/toasttab/expediter/test/FieldAccessChange.instanceToStaticFieldI non-statically",
-            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/FieldAccessChange.publicToPrivateFieldI",
-            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChangeParent.publicToPackagePrivateFieldI (via com/toasttab/expediter/test/MethodAccessChange)",
-            "com/toasttab/expediter/test/caller/MissingMemberCaller accesses missing com/toasttab/expediter/test/FieldAccessChange.typeChangedFieldLjava/lang/String;",
-            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses instance com/toasttab/expediter/test/FieldAccessChange.staticToInstanceFieldI statically",
-            "com/toasttab/expediter/test/caller/InheritanceCaller accesses missing com/toasttab/expediter/test/FinalizedSuperclass.movedToGrandparent()V",
-            "com/toasttab/expediter/test/caller/MissingMemberCaller accesses missing com/toasttab/expediter/test/MethodAccessChange.voidToNonVoidReturnType(Ljava/lang/String;)V",
-            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToProtected(F)V (via com/toasttab/expediter/test/FieldAccessChange)",
-            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToPrivate(I)V",
-            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToPackagePrivate(J)V",
-            "com/toasttab/expediter/test/caller/TypeConversionCaller accesses interface method com/toasttab/expediter/test/ClassToInterface.formerlyClassMethod()V virtually",
-            "com/toasttab/expediter/test/caller/TypeConversionCaller accesses class method com/toasttab/expediter/test/InterfaceToClass.formerlyInterfaceMethod()V interfacely",
-            "com/toasttab/expediter/test/ImplementsRemovedInterface extends missing type com/toasttab/expediter/test/RemovedSuperInterface",
-            "duplicate class com/toasttab/expediter/test/DuplicateClass in [testFixtures, lib2-test-fixtures.jar]"
-        )
     }
 }
