@@ -97,6 +97,15 @@ class MethodSignature(
     val argumentTypes: List<TypeSignature>
 ) {
     fun referencedTypes() = (argumentTypes + returnType).filter { !it.primitive }.map { it.scalarName }
+
+    fun toDescriptor() = buildString {
+        append('(')
+        for (arg in argumentTypes) {
+            append(arg.toDescriptor())
+        }
+        append(')')
+        append(returnType.toDescriptor())
+    }
 }
 
 class TypeSignature(
@@ -109,4 +118,15 @@ class TypeSignature(
 
     fun scalarSignature() = TypeSignature(scalarName, 0, primitive)
     val name get() = scalarName + "[]".repeat(dimensions)
+
+    fun toDescriptor() = buildString {
+        repeat(dimensions) { append('[') }
+        if (primitive) {
+            append(scalarName)
+        } else {
+            append('L')
+            append(scalarName)
+            append(';')
+        }
+    }
 }
