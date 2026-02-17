@@ -6,7 +6,7 @@ clikt = "5.1.0"
 
 nexus = "2.0.0"
 ktlint = "0.50.0"
-spotless = "7.2.1"
+spotless = "8.2.1"
 protokt = "1.0.0-beta.5"
 protobuf = "4.33.5"
 shadow = "9.3.1"
