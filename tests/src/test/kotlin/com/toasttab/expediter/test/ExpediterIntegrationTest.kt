@@ -45,210 +45,210 @@ class ExpediterIntegrationTest {
 
         expectThat(issues).containsExactlyInAnyOrder(
             Issue.MissingMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/MissingMemberCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Bar",
+                    "com/toasttab/expediter/test/MethodAccessChange",
                     null,
-                    MemberSymbolicReference("bar", "(Ljava/lang/String;)V"),
+                    MemberSymbolicReference("voidToNonVoidReturnType", "(Ljava/lang/String;)V"),
                     MethodAccessType.VIRTUAL
                 )
             ),
 
             Issue.MissingMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/InheritanceCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Base",
+                    "com/toasttab/expediter/test/FinalizedSuperclass",
                     null,
-                    MemberSymbolicReference("supersuper", "()V"),
+                    MemberSymbolicReference("movedToGrandparent", "()V"),
                     MethodAccessType.SPECIAL
                 )
             ),
 
             Issue.AccessInstanceMemberStatically(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/StaticMismatchCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Bar",
-                    "com/toasttab/expediter/test/Bar",
-                    MemberSymbolicReference("bar", "()V"),
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    MemberSymbolicReference("staticToInstance", "()V"),
                     MethodAccessType.STATIC
                 )
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/AccessPermissionCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Bar",
-                    "com/toasttab/expediter/test/Bar",
-                    MemberSymbolicReference("bar", "(I)V"),
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    MemberSymbolicReference("publicToPrivate", "(I)V"),
                     MethodAccessType.VIRTUAL
                 )
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/AccessPermissionCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Bar",
-                    "com/toasttab/expediter/test/Bar",
-                    MemberSymbolicReference("bar", "(J)V"),
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    MemberSymbolicReference("publicToPackagePrivate", "(J)V"),
                     MethodAccessType.VIRTUAL
                 )
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/AccessPermissionCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/Baz",
-                    "com/toasttab/expediter/test/Bar",
-                    MemberSymbolicReference("bar", "(F)V"),
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    MemberSymbolicReference("publicToProtected", "(F)V"),
                     MethodAccessType.VIRTUAL
                 )
             ),
 
             Issue.MissingMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/MissingMemberCaller",
                 MemberAccess.FieldAccess(
-                    "com/toasttab/expediter/test/Baz",
+                    "com/toasttab/expediter/test/FieldAccessChange",
                     null,
-                    MemberSymbolicReference("a", "Ljava/lang/String;"),
+                    MemberSymbolicReference("typeChangedField", "Ljava/lang/String;"),
                     FieldAccessType.INSTANCE
                 )
             ),
 
             Issue.AccessInstanceMemberStatically(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/StaticMismatchCaller",
                 MemberAccess.FieldAccess(
-                    "com/toasttab/expediter/test/Baz",
-                    "com/toasttab/expediter/test/Baz",
-                    MemberSymbolicReference("x", "I"),
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    MemberSymbolicReference("staticToInstanceField", "I"),
                     FieldAccessType.STATIC
                 )
             ),
 
             Issue.AccessStaticMemberNonStatically(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/StaticMismatchCaller",
                 MemberAccess.FieldAccess(
-                    "com/toasttab/expediter/test/Baz",
-                    "com/toasttab/expediter/test/Baz",
-                    MemberSymbolicReference("y", "I"),
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    MemberSymbolicReference("instanceToStaticField", "I"),
                     FieldAccessType.INSTANCE
                 )
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/AccessPermissionCaller",
                 MemberAccess.FieldAccess(
-                    "com/toasttab/expediter/test/Baz",
-                    "com/toasttab/expediter/test/Baz",
-                    MemberSymbolicReference("z", "I"),
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    "com/toasttab/expediter/test/FieldAccessChange",
+                    MemberSymbolicReference("publicToPrivateField", "I"),
                     FieldAccessType.INSTANCE
                 )
             ),
 
             Issue.AccessInaccessibleMember(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/AccessPermissionCaller",
                 MemberAccess.FieldAccess(
-                    "com/toasttab/expediter/test/Bar",
-                    "com/toasttab/expediter/test/BaseBar",
-                    MemberSymbolicReference("j", "I"),
+                    "com/toasttab/expediter/test/MethodAccessChange",
+                    "com/toasttab/expediter/test/MethodAccessChangeParent",
+                    MemberSymbolicReference("publicToPackagePrivateField", "I"),
                     FieldAccessType.INSTANCE
                 )
             ),
 
             Issue.VirtualCallToInterface(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/TypeConversionCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/WasClass",
-                    "com/toasttab/expediter/test/WasClass",
-                    MemberSymbolicReference("foo", "()V"),
+                    "com/toasttab/expediter/test/ClassToInterface",
+                    "com/toasttab/expediter/test/ClassToInterface",
+                    MemberSymbolicReference("formerlyClassMethod", "()V"),
                     MethodAccessType.VIRTUAL
                 )
             ),
 
             Issue.InterfaceCallToClass(
-                "com/toasttab/expediter/test/caller/Caller",
+                "com/toasttab/expediter/test/caller/TypeConversionCaller",
                 MemberAccess.MethodAccess(
-                    "com/toasttab/expediter/test/WasInterface",
-                    "com/toasttab/expediter/test/WasInterface",
-                    MemberSymbolicReference("foo", "()V"),
+                    "com/toasttab/expediter/test/InterfaceToClass",
+                    "com/toasttab/expediter/test/InterfaceToClass",
+                    MemberSymbolicReference("formerlyInterfaceMethod", "()V"),
                     MethodAccessType.INTERFACE
                 )
             ),
 
             Issue.MissingApplicationSuperType(
-                "com/toasttab/expediter/test/Foo",
-                setOf("com/toasttab/expediter/test/BaseFoo")
+                "com/toasttab/expediter/test/ImplementsRemovedInterface",
+                setOf("com/toasttab/expediter/test/RemovedSuperInterface")
             ),
 
             Issue.DuplicateType(
-                "com/toasttab/expediter/test/Dupe",
+                "com/toasttab/expediter/test/DuplicateClass",
                 listOf("testFixtures", "lib2-test-fixtures.jar")
             ),
 
             Issue.FinalApplicationSuperType(
-                "com/toasttab/expediter/test/caller/Caller",
-                setOf("com/toasttab/expediter/test/Base")
+                "com/toasttab/expediter/test/caller/InheritanceCaller",
+                setOf("com/toasttab/expediter/test/FinalizedSuperclass")
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Var"
+                "com/toasttab/expediter/test/caller/MissingTypeCaller",
+                "com/toasttab/expediter/test/RemovedClass"
             ),
 
             Issue.MissingApplicationSuperType(
-                "com/toasttab/expediter/test/caller/VarVar",
-                setOf("com/toasttab/expediter/test/Var")
+                "com/toasttab/expediter/test/caller/ExtendsRemovedClass",
+                setOf("com/toasttab/expediter/test/RemovedClass")
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Ex"
+                "com/toasttab/expediter/test/caller/MissingTypeCaller",
+                "com/toasttab/expediter/test/RemovedException"
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Param"
+                "com/toasttab/expediter/test/caller/MissingTypeCaller",
+                "com/toasttab/expediter/test/RemovedParamType"
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/ParamParam"
+                "com/toasttab/expediter/test/caller/MissingTypeCaller",
+                "com/toasttab/expediter/test/RemovedInstanceofTarget"
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/Bar",
-                "com/toasttab/expediter/test/Param"
+                "com/toasttab/expediter/test/MethodAccessChange",
+                "com/toasttab/expediter/test/RemovedParamType"
             ),
 
             Issue.MissingType(
-                "com/toasttab/expediter/test/caller/Caller",
-                "com/toasttab/expediter/test/Lambda"
+                "com/toasttab/expediter/test/caller/MissingTypeCaller",
+                "com/toasttab/expediter/test/RemovedFunctionalInterface"
             )
         )
 
         expectThat(issues.map { "$it" }).containsExactlyInAnyOrder(
-            "com/toasttab/expediter/test/Bar refers to missing type com/toasttab/expediter/test/Param",
-            "com/toasttab/expediter/test/caller/VarVar extends missing type com/toasttab/expediter/test/Var",
-            "com/toasttab/expediter/test/caller/Caller extends final type com/toasttab/expediter/test/Base",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Ex",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Param",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/ParamParam",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Var",
-            "com/toasttab/expediter/test/caller/Caller refers to missing type com/toasttab/expediter/test/Lambda",
-            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Bar.bar()V statically",
-            "com/toasttab/expediter/test/caller/Caller accesses static com/toasttab/expediter/test/Baz.yI non-statically",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Baz.zI",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/BaseBar.jI (via com/toasttab/expediter/test/Bar)",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Baz.aLjava/lang/String;",
-            "com/toasttab/expediter/test/caller/Caller accesses instance com/toasttab/expediter/test/Baz.xI statically",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Base.supersuper()V",
-            "com/toasttab/expediter/test/caller/Caller accesses missing com/toasttab/expediter/test/Bar.bar(Ljava/lang/String;)V",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(F)V (via com/toasttab/expediter/test/Baz)",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(I)V",
-            "com/toasttab/expediter/test/caller/Caller accesses inaccessible com/toasttab/expediter/test/Bar.bar(J)V",
-            "com/toasttab/expediter/test/caller/Caller accesses interface method com/toasttab/expediter/test/WasClass.foo()V virtually",
-            "com/toasttab/expediter/test/caller/Caller accesses class method com/toasttab/expediter/test/WasInterface.foo()V interfacely",
-            "com/toasttab/expediter/test/Foo extends missing type com/toasttab/expediter/test/BaseFoo",
-            "duplicate class com/toasttab/expediter/test/Dupe in [testFixtures, lib2-test-fixtures.jar]"
+            "com/toasttab/expediter/test/MethodAccessChange refers to missing type com/toasttab/expediter/test/RemovedParamType",
+            "com/toasttab/expediter/test/caller/ExtendsRemovedClass extends missing type com/toasttab/expediter/test/RemovedClass",
+            "com/toasttab/expediter/test/caller/InheritanceCaller extends final type com/toasttab/expediter/test/FinalizedSuperclass",
+            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedException",
+            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedParamType",
+            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedInstanceofTarget",
+            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedClass",
+            "com/toasttab/expediter/test/caller/MissingTypeCaller refers to missing type com/toasttab/expediter/test/RemovedFunctionalInterface",
+            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses instance com/toasttab/expediter/test/MethodAccessChange.staticToInstance()V statically",
+            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses static com/toasttab/expediter/test/FieldAccessChange.instanceToStaticFieldI non-statically",
+            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/FieldAccessChange.publicToPrivateFieldI",
+            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChangeParent.publicToPackagePrivateFieldI (via com/toasttab/expediter/test/MethodAccessChange)",
+            "com/toasttab/expediter/test/caller/MissingMemberCaller accesses missing com/toasttab/expediter/test/FieldAccessChange.typeChangedFieldLjava/lang/String;",
+            "com/toasttab/expediter/test/caller/StaticMismatchCaller accesses instance com/toasttab/expediter/test/FieldAccessChange.staticToInstanceFieldI statically",
+            "com/toasttab/expediter/test/caller/InheritanceCaller accesses missing com/toasttab/expediter/test/FinalizedSuperclass.movedToGrandparent()V",
+            "com/toasttab/expediter/test/caller/MissingMemberCaller accesses missing com/toasttab/expediter/test/MethodAccessChange.voidToNonVoidReturnType(Ljava/lang/String;)V",
+            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToProtected(F)V (via com/toasttab/expediter/test/FieldAccessChange)",
+            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToPrivate(I)V",
+            "com/toasttab/expediter/test/caller/AccessPermissionCaller accesses inaccessible com/toasttab/expediter/test/MethodAccessChange.publicToPackagePrivate(J)V",
+            "com/toasttab/expediter/test/caller/TypeConversionCaller accesses interface method com/toasttab/expediter/test/ClassToInterface.formerlyClassMethod()V virtually",
+            "com/toasttab/expediter/test/caller/TypeConversionCaller accesses class method com/toasttab/expediter/test/InterfaceToClass.formerlyInterfaceMethod()V interfacely",
+            "com/toasttab/expediter/test/ImplementsRemovedInterface extends missing type com/toasttab/expediter/test/RemovedSuperInterface",
+            "duplicate class com/toasttab/expediter/test/DuplicateClass in [testFixtures, lib2-test-fixtures.jar]"
         )
     }
 }

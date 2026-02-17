@@ -1,4 +1,4 @@
 package com.toasttab.expediter.test;
 
-public class ParamParam {
+public class RemovedClass {
 }
