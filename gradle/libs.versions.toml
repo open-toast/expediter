@@ -9,7 +9,7 @@ ktlint = "0.50.0"
 spotless = "7.2.1"
 protokt = "1.0.0-beta.5"
 protobuf = "4.34.0"
-shadow = "9.3.2"
+shadow = "9.4.0"
 agp = "9.0.0"
 gummy-bears = "0.12.0"
 
