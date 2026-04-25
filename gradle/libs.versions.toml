@@ -11,7 +11,7 @@ protokt = "1.0.0-beta.5"
 protobuf = "4.34.0"
 shadow = "9.4.1"
 agp = "9.0.0"
-gummy-bears = "0.12.0"
+gummy-bears = "0.13.0"
 
 # test
 junit = "5.13.4"
