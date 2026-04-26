@@ -139,8 +139,10 @@ class ExpediterCliCommandIntegrationTest {
 
         ExpediterCliCommand(stdout = PrintStream(captured)).main(
             arrayOf(
-                "--mode", "print",
-                "--platform-descriptors", System.getProperty("android-descriptors")
+                "--mode",
+                "print",
+                "--platform-descriptors",
+                System.getProperty("android-descriptors")
             )
         )
 
@@ -156,10 +158,14 @@ class ExpediterCliCommandIntegrationTest {
 
         main(
             arrayOf(
-                "--mode", "describe",
-                "--project-classes", System.getProperty("classes"),
-                "--output", output.toString(),
-                "--project-name", "self"
+                "--mode",
+                "describe",
+                "--project-classes",
+                System.getProperty("classes"),
+                "--output",
+                output.toString(),
+                "--project-name",
+                "self"
             )
         )
 
@@ -177,8 +183,10 @@ class ExpediterCliCommandIntegrationTest {
 
         ExpediterCliCommand(stdout = PrintStream(captured)).main(
             arrayOf(
-                "--mode", "print",
-                "--platform-descriptors", output.toString()
+                "--mode",
+                "print",
+                "--platform-descriptors",
+                output.toString()
             )
         )
 

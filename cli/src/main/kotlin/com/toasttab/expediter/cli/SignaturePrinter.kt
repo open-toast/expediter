@@ -15,7 +15,6 @@
 
 package com.toasttab.expediter.cli
 
-import com.toasttab.expediter.parser.MethodSignature
 import com.toasttab.expediter.parser.SignatureParser
 import com.toasttab.expediter.parser.TypeSignature
 import protokt.v1.toasttab.expediter.v1.AccessDeclaration
