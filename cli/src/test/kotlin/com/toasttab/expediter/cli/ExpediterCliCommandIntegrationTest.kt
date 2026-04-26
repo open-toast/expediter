@@ -23,10 +23,17 @@ import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import strikt.api.expectThat
+import strikt.assertions.any
 import strikt.assertions.contains
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotEmpty
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.PrintStream
 import java.nio.file.Path
+import java.util.zip.GZIPInputStream
 import kotlin.io.path.inputStream
 
 class ExpediterCliCommandIntegrationTest {
@@ -124,5 +131,58 @@ class ExpediterCliCommandIntegrationTest {
                 target = "android/util/Log"
             )
         )
+    }
+
+    @Test
+    fun `print descriptors`() {
+        val captured = ByteArrayOutputStream()
+
+        ExpediterCliCommand(stdout = PrintStream(captured)).main(
+            arrayOf(
+                "--mode", "print",
+                "--platform-descriptors", System.getProperty("android-descriptors")
+            )
+        )
+
+        val printed = captured.toString(Charsets.UTF_8)
+
+        expectThat(printed).contains("public final class android.Manifest")
+        expectThat(printed).contains("public void <init>()")
+    }
+
+    @Test
+    fun `describe project`() {
+        val output = dir.resolve("descriptors.bin.gz")
+
+        main(
+            arrayOf(
+                "--mode", "describe",
+                "--project-classes", System.getProperty("classes"),
+                "--output", output.toString(),
+                "--project-name", "self"
+            )
+        )
+
+        val descriptors = GZIPInputStream(output.inputStream().buffered()).use {
+            TypeDescriptors.deserialize(it)
+        }
+
+        expectThat(descriptors.description).isEqualTo("self")
+        expectThat(descriptors.types).isNotEmpty()
+        expectThat(descriptors.types).any {
+            get { name }.isEqualTo("com/toasttab/expediter/cli/ExpediterCliCommand")
+        }
+
+        val captured = ByteArrayOutputStream()
+
+        ExpediterCliCommand(stdout = PrintStream(captured)).main(
+            arrayOf(
+                "--mode", "print",
+                "--platform-descriptors", output.toString()
+            )
+        )
+
+        expectThat(captured.toString(Charsets.UTF_8))
+            .contains("class com.toasttab.expediter.cli.ExpediterCliCommand")
     }
 }
