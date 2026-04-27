@@ -17,10 +17,13 @@ package com.toasttab.expediter.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.subcommands
+import com.github.ajalt.clikt.parameters.groups.OptionGroup
+import com.github.ajalt.clikt.parameters.groups.provideDelegate
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.multiple
 import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.types.enum
+import com.github.ajalt.clikt.parameters.options.required
 import com.toasttab.expediter.Expediter
 import com.toasttab.expediter.ignore.Ignore
 import com.toasttab.expediter.issue.IssueOrder
@@ -40,23 +43,37 @@ import java.io.PrintStream
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-enum class CliMode {
-    CHECK,
-    PRINT,
-    DESCRIBE
-}
-
-class ExpediterCliCommand(
-    private val stdout: PrintStream = System.out
-) : CliktCommand() {
-    val mode: CliMode by option(help = "Mode of operation").enum<CliMode>(ignoreCase = true).default(CliMode.CHECK)
-    val output: String? by option(help = "Output file for the issue report (check mode)")
+class SourcesOptions : OptionGroup("Source Options") {
     val projectClasses: List<String> by option().multiple()
     val libraries: List<String> by option().multiple()
-    val ignoresFiles: List<String> by option().multiple()
-    val jvmPlatform: String? by option()
-    val platformDescriptors: String? by option(help = "Gzipped TypeDescriptors proto file; also the input for print mode")
-    val projectName: String by option().default("project")
+
+    fun sources(): List<ClassfileSource> =
+        projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.PROJECT) } +
+            libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY) }
+}
+
+private fun readPlatformDescriptors(file: File): TypeDescriptors =
+    GZIPInputStream(file.inputStream().buffered()).use {
+        TypeDescriptors.deserialize(it)
+    }
+
+class ExpediterCliCommand(
+    stdout: PrintStream = System.out
+) : CliktCommand() {
+    init {
+        subcommands(CheckCommand(), PrintCommand(stdout), DescribeCommand())
+    }
+
+    override fun run() = Unit
+}
+
+class CheckCommand : CliktCommand(name = "check") {
+    private val sources by SourcesOptions()
+    private val output: String by option(help = "Output file for the issue report").required()
+    private val ignoresFiles: List<String> by option().multiple()
+    private val jvmPlatform: String? by option()
+    private val platformDescriptors: String? by option(help = "Gzipped TypeDescriptors proto file")
+    private val projectName: String by option().default("project")
 
     private fun ignores() = ignoresFiles.flatMap {
         File(it).inputStream().use {
@@ -64,17 +81,7 @@ class ExpediterCliCommand(
         }
     }.toSet()
 
-    private fun appTypes() = ClasspathApplicationTypesProvider(
-        projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.PROJECT) } +
-            libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY) }
-    )
-
-    private fun readPlatformDescriptors(file: File): TypeDescriptors =
-        GZIPInputStream(file.inputStream().buffered()).use {
-            TypeDescriptors.deserialize(it)
-        }
-
-    fun platform(): PlatformTypeProvider {
+    private fun platform(): PlatformTypeProvider {
         val jvm = jvmPlatform?.let(String::toInt)
         val platformFile = platformDescriptors?.let(::File)
 
@@ -87,12 +94,10 @@ class ExpediterCliCommand(
         }
     }
 
-    private fun runCheck() {
-        val outputPath = output ?: error("--output is required in check mode")
-
+    override fun run() {
         val issues = Expediter(
             ignore = Ignore.SpecificIssues(ignores()),
-            appTypes = appTypes(),
+            appTypes = ClasspathApplicationTypesProvider(sources.sources()),
             platformTypeProvider = platform(),
             rootSelector = RootSelector.ProjectClasses
         ).findIssues()
@@ -106,31 +111,34 @@ class ExpediterCliCommand(
             System.err.println(it)
         }
 
-        File(outputPath).outputStream().buffered().use {
+        File(output).outputStream().buffered().use {
             issueReport.toJson(it)
         }
     }
+}
 
-    private fun runPrint() {
-        val file = platformDescriptors?.let(::File)
-            ?: error("--platform-descriptors is required in print mode")
+class PrintCommand(private val stdout: PrintStream) : CliktCommand(name = "print") {
+    private val platformDescriptors: String by option(help = "Gzipped TypeDescriptors proto file").required()
 
-        val descriptors = readPlatformDescriptors(file)
-
+    override fun run() {
+        val descriptors = readPlatformDescriptors(File(platformDescriptors))
         SignaturePrinter.print(descriptors, stdout)
     }
+}
 
-    private fun runDescribe() {
-        val outputPath = output ?: error("--output is required in describe mode")
+class DescribeCommand : CliktCommand(name = "describe") {
+    private val sources by SourcesOptions()
+    private val output: String by option(help = "Output file for the type descriptors").required()
+    private val projectName: String by option().default("project")
 
-        val sources = projectClasses.map { ClassfileSource(File(it), ClassfileSourceType.PROJECT) } +
-            libraries.map { ClassfileSource(File(it), ClassfileSourceType.EXTERNAL_DEPENDENCY) }
+    override fun run() {
+        val classfileSources = sources.sources()
 
-        if (sources.isEmpty()) {
-            error("Must specify at least one --project-classes or --libraries in describe mode")
+        if (classfileSources.isEmpty()) {
+            error("Must specify at least one --project-classes or --libraries")
         }
 
-        val types = ClasspathScanner(sources)
+        val types = ClasspathScanner(classfileSources)
             .scan { stream, _ -> TypeParsers.typeDescriptor(stream) }
             .sortedBy { it.name }
 
@@ -139,18 +147,10 @@ class ExpediterCliCommand(
             this.types = types
         }
 
-        File(outputPath).outputStream().buffered().use { fileOut ->
+        File(output).outputStream().buffered().use { fileOut ->
             GZIPOutputStream(fileOut).use { gzip ->
                 descriptors.serialize(gzip)
             }
-        }
-    }
-
-    override fun run() {
-        when (mode) {
-            CliMode.CHECK -> runCheck()
-            CliMode.PRINT -> runPrint()
-            CliMode.DESCRIBE -> runDescribe()
         }
     }
 }

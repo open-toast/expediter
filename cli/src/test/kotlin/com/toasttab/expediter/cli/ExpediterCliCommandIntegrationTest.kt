@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.cli
 
+import com.github.ajalt.clikt.core.CliktError
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.parse
 import com.toasttab.expediter.issue.Issue
@@ -47,10 +48,12 @@ class ExpediterCliCommandIntegrationTest {
     fun `run on self`() {
         val output = dir.resolve("expediter.json")
 
+        val libraryArgs = System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
+            listOf("--libraries", it)
+        }
+
         ExpediterCliCommand().main(
-            System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
-                listOf("--libraries", it)
-            } + listOf(
+            listOf("check") + libraryArgs + listOf(
                 "--project-classes", System.getProperty("classes"),
                 "--output", output.toString(),
                 "--jvm-platform", "8"
@@ -80,10 +83,12 @@ class ExpediterCliCommandIntegrationTest {
     fun `run on self with descriptors`() {
         val output = dir.resolve("expediter.json")
 
+        val libraryArgs = System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
+            listOf("--libraries", it)
+        }
+
         ExpediterCliCommand().main(
-            System.getProperty("libraries").split(File.pathSeparatorChar).flatMap {
-                listOf("--libraries", it)
-            } + listOf(
+            listOf("check") + libraryArgs + listOf(
                 "--project-classes", System.getProperty("classes"),
                 "--output", output.toString(),
                 "--platform-descriptors", System.getProperty("android-descriptors")
@@ -115,6 +120,7 @@ class ExpediterCliCommandIntegrationTest {
 
         main(
             arrayOf(
+                "check",
                 "--project-classes",
                 System.getProperty("android-libraries"),
                 "--output",
@@ -142,7 +148,6 @@ class ExpediterCliCommandIntegrationTest {
 
         ExpediterCliCommand(stdout = PrintStream(captured)).main(
             arrayOf(
-                "--mode",
                 "print",
                 "--platform-descriptors",
                 System.getProperty("android-descriptors")
@@ -161,7 +166,6 @@ class ExpediterCliCommandIntegrationTest {
 
         main(
             arrayOf(
-                "--mode",
                 "describe",
                 "--project-classes",
                 System.getProperty("classes"),
@@ -186,7 +190,6 @@ class ExpediterCliCommandIntegrationTest {
 
         ExpediterCliCommand(stdout = PrintStream(captured)).main(
             arrayOf(
-                "--mode",
                 "print",
                 "--platform-descriptors",
                 output.toString()
@@ -215,6 +218,7 @@ class ExpediterCliCommandIntegrationTest {
 
         main(
             arrayOf(
+                "check",
                 "--project-classes",
                 System.getProperty("android-libraries"),
                 "--output",
@@ -238,27 +242,22 @@ class ExpediterCliCommandIntegrationTest {
 
     @Test
     fun `print mode requires platform-descriptors`() {
-        val error = assertThrows<IllegalStateException> {
-            ExpediterCliCommand().parse(arrayOf("--mode", "print"))
+        assertThrows<CliktError> {
+            ExpediterCliCommand().parse(arrayOf("print"))
         }
-
-        expectThat(error.message!!).contains("--platform-descriptors is required in print mode")
     }
 
     @Test
     fun `describe mode requires output`() {
-        val error = assertThrows<IllegalStateException> {
+        assertThrows<CliktError> {
             ExpediterCliCommand().parse(
                 arrayOf(
-                    "--mode",
                     "describe",
                     "--project-classes",
                     System.getProperty("classes")
                 )
             )
         }
-
-        expectThat(error.message!!).contains("--output is required in describe mode")
     }
 
     @Test
@@ -268,7 +267,6 @@ class ExpediterCliCommandIntegrationTest {
         val error = assertThrows<IllegalStateException> {
             ExpediterCliCommand().parse(
                 arrayOf(
-                    "--mode",
                     "describe",
                     "--output",
                     output.toString()
@@ -281,9 +279,10 @@ class ExpediterCliCommandIntegrationTest {
 
     @Test
     fun `check mode requires output`() {
-        val error = assertThrows<IllegalStateException> {
+        assertThrows<CliktError> {
             ExpediterCliCommand().parse(
                 arrayOf(
+                    "check",
                     "--project-classes",
                     System.getProperty("classes"),
                     "--jvm-platform",
@@ -291,8 +290,6 @@ class ExpediterCliCommandIntegrationTest {
                 )
             )
         }
-
-        expectThat(error.message!!).contains("--output is required in check mode")
     }
 
     @Test
@@ -302,6 +299,7 @@ class ExpediterCliCommandIntegrationTest {
         val error = assertThrows<IllegalStateException> {
             ExpediterCliCommand().parse(
                 arrayOf(
+                    "check",
                     "--project-classes",
                     System.getProperty("classes"),
                     "--output",
