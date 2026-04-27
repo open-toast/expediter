@@ -16,17 +16,27 @@
 package com.toasttab.expediter.cli
 
 import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.parse
 import com.toasttab.expediter.issue.Issue
 import com.toasttab.expediter.issue.IssueReport
 import com.toasttab.expediter.types.MemberAccess
 import com.toasttab.expediter.types.MemberSymbolicReference
 import com.toasttab.expediter.types.MethodAccessType
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
+import protokt.v1.toasttab.expediter.v1.TypeDescriptors
 import strikt.api.expectThat
+import strikt.assertions.any
 import strikt.assertions.contains
+import strikt.assertions.doesNotContain
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotEmpty
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.PrintStream
 import java.nio.file.Path
+import java.util.zip.GZIPInputStream
 import kotlin.io.path.inputStream
 
 class ExpediterCliCommandIntegrationTest {
@@ -124,5 +134,182 @@ class ExpediterCliCommandIntegrationTest {
                 target = "android/util/Log"
             )
         )
+    }
+
+    @Test
+    fun `print descriptors`() {
+        val captured = ByteArrayOutputStream()
+
+        ExpediterCliCommand(stdout = PrintStream(captured)).main(
+            arrayOf(
+                "--mode",
+                "print",
+                "--platform-descriptors",
+                System.getProperty("android-descriptors")
+            )
+        )
+
+        val printed = captured.toString(Charsets.UTF_8)
+
+        expectThat(printed).contains("public final class android.Manifest")
+        expectThat(printed).contains("public void <init>()")
+    }
+
+    @Test
+    fun `describe project`() {
+        val output = dir.resolve("descriptors.bin.gz")
+
+        main(
+            arrayOf(
+                "--mode",
+                "describe",
+                "--project-classes",
+                System.getProperty("classes"),
+                "--output",
+                output.toString(),
+                "--project-name",
+                "self"
+            )
+        )
+
+        val descriptors = GZIPInputStream(output.inputStream().buffered()).use {
+            TypeDescriptors.deserialize(it)
+        }
+
+        expectThat(descriptors.description).isEqualTo("self")
+        expectThat(descriptors.types).isNotEmpty()
+        expectThat(descriptors.types).any {
+            get { name }.isEqualTo("com/toasttab/expediter/cli/ExpediterCliCommand")
+        }
+
+        val captured = ByteArrayOutputStream()
+
+        ExpediterCliCommand(stdout = PrintStream(captured)).main(
+            arrayOf(
+                "--mode",
+                "print",
+                "--platform-descriptors",
+                output.toString()
+            )
+        )
+
+        expectThat(captured.toString(Charsets.UTF_8))
+            .contains("class com.toasttab.expediter.cli.ExpediterCliCommand")
+    }
+
+    @Test
+    fun `check mode honours ignores file`() {
+        val ignoresFile = dir.resolve("ignores.json").toFile()
+        val ignoredReport = IssueReport(
+            "project",
+            listOf(
+                Issue.MissingType(
+                    caller = "timber/log/Timber\$DebugTree",
+                    target = "android/util/Log"
+                )
+            )
+        )
+        ignoresFile.outputStream().buffered().use { ignoredReport.toJson(it) }
+
+        val output = dir.resolve("expediter.json")
+
+        main(
+            arrayOf(
+                "--project-classes",
+                System.getProperty("android-libraries"),
+                "--output",
+                output.toString(),
+                "--jvm-platform",
+                "11",
+                "--ignores-files",
+                ignoresFile.absolutePath
+            )
+        )
+
+        val report = output.inputStream().use { IssueReport.fromJson(it) }
+
+        expectThat(report.issues).doesNotContain(
+            Issue.MissingType(
+                caller = "timber/log/Timber\$DebugTree",
+                target = "android/util/Log"
+            )
+        )
+    }
+
+    @Test
+    fun `print mode requires platform-descriptors`() {
+        val error = assertThrows<IllegalStateException> {
+            ExpediterCliCommand().parse(arrayOf("--mode", "print"))
+        }
+
+        expectThat(error.message!!).contains("--platform-descriptors is required in print mode")
+    }
+
+    @Test
+    fun `describe mode requires output`() {
+        val error = assertThrows<IllegalStateException> {
+            ExpediterCliCommand().parse(
+                arrayOf(
+                    "--mode",
+                    "describe",
+                    "--project-classes",
+                    System.getProperty("classes")
+                )
+            )
+        }
+
+        expectThat(error.message!!).contains("--output is required in describe mode")
+    }
+
+    @Test
+    fun `describe mode requires at least one source`() {
+        val output = dir.resolve("descriptors.bin.gz")
+
+        val error = assertThrows<IllegalStateException> {
+            ExpediterCliCommand().parse(
+                arrayOf(
+                    "--mode",
+                    "describe",
+                    "--output",
+                    output.toString()
+                )
+            )
+        }
+
+        expectThat(error.message!!).contains("Must specify at least one")
+    }
+
+    @Test
+    fun `check mode requires output`() {
+        val error = assertThrows<IllegalStateException> {
+            ExpediterCliCommand().parse(
+                arrayOf(
+                    "--project-classes",
+                    System.getProperty("classes"),
+                    "--jvm-platform",
+                    "8"
+                )
+            )
+        }
+
+        expectThat(error.message!!).contains("--output is required in check mode")
+    }
+
+    @Test
+    fun `check mode requires a platform`() {
+        val output = dir.resolve("expediter.json")
+
+        val error = assertThrows<IllegalStateException> {
+            ExpediterCliCommand().parse(
+                arrayOf(
+                    "--project-classes",
+                    System.getProperty("classes"),
+                    "--output",
+                    output.toString()
+                )
+            )
+        }
+
+        expectThat(error.message!!).contains("jvm version or platform descriptors")
     }
 }
