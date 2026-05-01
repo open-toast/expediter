@@ -24,10 +24,6 @@ repositories {
 
 group = "com.toasttab.expediter"
 
-subprojects {
-    version = Project.DEFAULT_VERSION
-}
-
 dependencies {
     jacocoAggregation(projects.cli)
     jacocoAggregation(projects.core)

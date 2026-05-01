@@ -37,9 +37,10 @@ import java.io.File
 class ExpediterIntegrationTest {
     @Test
     fun integrate() {
-        val testClasspath = System.getProperty("test-classpath")
+        val testClasspath = System.getProperty("test-classpath").split(':').map { File(it) }
+        val lib2Jar = testClasspath.first { it.name.startsWith("lib2-") && it.name.endsWith(".jar") }.name
         val scanner = ClasspathApplicationTypesProvider(
-            testClasspath.split(':').map { ClassfileSource(File(it), ClassfileSourceType.UNKNOWN) }
+            testClasspath.map { ClassfileSource(it, ClassfileSourceType.UNKNOWN) }
         )
         val issues = Expediter(Ignore.NOTHING, scanner, PlatformClassloaderTypeProvider).findIssues()
 
@@ -181,7 +182,7 @@ class ExpediterIntegrationTest {
 
             Issue.DuplicateType(
                 "com/toasttab/expediter/test/DuplicateClass",
-                listOf("testFixtures", "lib2-test-fixtures.jar")
+                listOf("testFixtures", lib2Jar)
             ),
 
             Issue.FinalApplicationSuperType(
