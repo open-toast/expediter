@@ -38,7 +38,7 @@ class ExpediterIntegrationTest {
     @Test
     fun integrate() {
         val testClasspath = System.getProperty("test-classpath").split(':').map { File(it) }
-        val lib2Jar = testClasspath.first { it.name.startsWith("lib2-") && it.name.endsWith(".jar") }.name
+        val lib2Jar = testClasspath.first { it.name.matches(Regex("lib2-.*test-fixtures.jar")) }.name
         val scanner = ClasspathApplicationTypesProvider(
             testClasspath.map { ClassfileSource(it, ClassfileSourceType.UNKNOWN) }
         )
