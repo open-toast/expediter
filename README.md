@@ -303,13 +303,39 @@ The output of the `jvm` check will be written into `build/expediter-jvm.json`, a
 
 ## CLI
 
-Expediter ships a simple CLI packaged as an uberjar. 
+Expediter ships a simple CLI packaged as an uberjar. It exposes three subcommands: `check`, `describe`, and `print`.
+
+### `check`
+
+Scan application classes and report binary incompatibilities against a platform, writing the issue report to `--output` as JSON.
 
 ```
-java -jar cli-<version>-all.jar \
+java -jar cli-<version>-all.jar check \
   --project-classes=classes/ \
   --libraries=lib/lib1.jar \
   --libraries=lib/lib2.jar \
   --jvm-platform=17 \
   --output=expediter.json
+```
+
+The platform can be provided either as `--jvm-platform=<version>` or as `--platform-descriptors=<file>` pointing to a gzipped `TypeDescriptors` proto file (the same format produced by `describe`). Known issues can be suppressed with one or more `--ignores-files` arguments.
+
+### `describe`
+
+Scan application classes and write their signatures to a gzipped `TypeDescriptors` proto file that is format-compatible with `--platform-descriptors` in `check`. Useful for publishing a custom platform descriptor.
+
+```
+java -jar cli-<version>-all.jar describe \
+  --project-classes=classes/ \
+  --libraries=lib/lib1.jar \
+  --output=descriptors.pb.gz
+```
+
+### `print`
+
+Read a gzipped `TypeDescriptors` proto file and emit a human-readable signature listing to stdout.
+
+```
+java -jar cli-<version>-all.jar print \
+  --platform-descriptors=descriptors.pb.gz
 ```
