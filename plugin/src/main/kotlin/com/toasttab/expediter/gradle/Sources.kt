@@ -29,6 +29,7 @@ import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.Artif
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvableArtifact
 import org.gradle.api.internal.attributes.ImmutableAttributes
 import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Provider
 import org.gradle.internal.DisplayName
 import org.gradle.internal.component.external.model.ImmutableCapabilities
 import org.gradle.internal.component.model.VariantIdentifier
@@ -109,14 +110,15 @@ class ArtifactCollectingVisitor : ArtifactVisitor {
     fun sources() = sources
 }
 
-private fun ArtifactCollectionInternal.sources(): Collection<ClassfileSource> {
-    val visitor = ArtifactCollectingVisitor()
-    visitArtifacts(visitor)
-    return visitor.sources()
-}
-
-fun Collection<ArtifactCollection>.sources() = flatMapTo(LinkedHashSet()) {
-    (it as ArtifactCollectionInternal).sources()
-}
+// Returns a provider that, when realized, visits all artifacts of the given
+// collection (without coalescing — see note above) and classifies them by
+// component identifier. The resulting List<ClassfileSource> is serializable
+// and safe to hold as task state under the configuration cache.
+fun ArtifactCollection.toClassfileSources(): Provider<List<ClassfileSource>> =
+    artifactFiles.elements.map {
+        val visitor = ArtifactCollectingVisitor()
+        (this as ArtifactCollectionInternal).visitArtifacts(visitor)
+        visitor.sources().toList()
+    }
 
 fun ListProperty<out FileSystemLocation>.sources() = get().map { ClassfileSource(it.asFile, ClassfileSourceType.PROJECT) }
