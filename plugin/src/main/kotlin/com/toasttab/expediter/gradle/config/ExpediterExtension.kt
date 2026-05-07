@@ -126,11 +126,13 @@ abstract class ExpediterExtension(
 
                 ignoreFiles.from(spec.ignoreSpec.files)
 
-                report = project.layout.buildDirectory.file("${key.reportName}.json").get().asFile
+                report.set(project.layout.buildDirectory.file("${key.reportName}.json"))
 
                 failOnIssues = spec.failOnIssues
 
                 roots = spec.application.rootSelectorSpec.type
+
+                projectName.set(project.name)
             }
 
             project.configureAndroidOutputs(task, selector) { spec.application.androidSpec }

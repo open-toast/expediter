@@ -16,7 +16,7 @@ gummy-bears = "0.14.0"
 # test
 junit = "5.13.4"
 strikt = "0.34.1"
-testkit-plugin = "0.0.16"
+testkit-plugin = "0.1.2"
 timber = "5.0.1"
 
 [libraries]

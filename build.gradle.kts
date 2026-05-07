@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+
 plugins {
     `nexus-staging-conventions`
     `jacoco-report-aggregation`
@@ -20,6 +22,33 @@ plugins {
 
 repositories {
     mavenCentral()
+}
+
+// Work around a config-cache bug in testkit-plugin 0.0.18: its publishOnlyIf captures
+// the PublishToMavenRepository task and reads task.publication at execution time,
+// which Gradle discards after storing the configuration cache. Replace the onlyIf
+// predicate with one derived from the task name (which encodes publication and
+// repository names). testkit registers its buggy onlyIf inside the `:plugin` project's
+// afterEvaluate; projectsEvaluated fires after all afterEvaluate callbacks, so our
+// setOnlyIf runs last and wins.
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType<PublishToMavenRepository>().configureEach {
+            val match = Regex("^publish(.+)PublicationTo(.+)Repository$").matchEntire(name) ?: return@configureEach
+            val publicationName = match.groupValues[1].replaceFirstChar(Char::lowercaseChar)
+            val repositoryName = match.groupValues[2].replaceFirstChar(Char::lowercaseChar)
+            val isIntegrationRepo = repositoryName.startsWith("testkitIntegrationFor")
+            val isIntegrationPublication = publicationName == "testkitIntegration"
+            val isPluginMarker = publicationName.endsWith("PluginMarkerMaven")
+            setOnlyIf("testkit integration publication routing") {
+                when {
+                    isIntegrationPublication -> isIntegrationRepo
+                    isIntegrationRepo -> isPluginMarker
+                    else -> true
+                }
+            }
+        }
+    }
 }
 
 group = "com.toasttab.expediter"

@@ -29,13 +29,15 @@ import com.toasttab.expediter.provider.PlatformTypeProvider
 import com.toasttab.expediter.provider.PlatformTypeProviderChain
 import com.toasttab.expediter.scanner.ClasspathScanner
 import com.toasttab.expediter.sniffer.AnimalSnifferParser
+import com.toasttab.expediter.types.ClassfileSource
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.RegularFile
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
@@ -48,13 +50,16 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import protokt.v1.toasttab.expediter.v1.TypeDescriptors
-import java.io.File
 import java.util.zip.GZIPInputStream
+import javax.inject.Inject
 
 @CacheableTask
-abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
-    private val applicationConfigurationArtifacts = mutableListOf<ArtifactCollection>()
-    private val platformConfigurationArtifacts = mutableListOf<ArtifactCollection>()
+abstract class ExpediterTask @Inject constructor(objects: ObjectFactory) : DefaultTask(), TaskWithProjectOutputs {
+    @get:Internal
+    internal val applicationSources: ListProperty<ClassfileSource> = objects.listProperty(ClassfileSource::class.java)
+
+    @get:Internal
+    internal val platformSources: ListProperty<ClassfileSource> = objects.listProperty(ClassfileSource::class.java)
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
@@ -69,34 +74,28 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
-    @Suppress("UNUSED")
-    val applicationArtifacts get() = applicationConfigurationArtifacts.asFileCollection()
+    abstract val applicationArtifacts: ConfigurableFileCollection
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
-    @Suppress("UNUSED")
-    val platformArtifacts get() = platformConfigurationArtifacts.asFileCollection()
-
-    private fun Collection<ArtifactCollection>.asFileCollection() = if (isEmpty()) {
-        project.objects.fileCollection()
-    } else {
-        map { it.artifactFiles }.reduce(FileCollection::plus)
-    }
+    abstract val platformArtifacts: ConfigurableFileCollection
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     abstract val files: ConfigurableFileCollection
 
     fun artifactCollection(artifactCollection: ArtifactCollection) {
-        applicationConfigurationArtifacts.add(artifactCollection)
+        applicationArtifacts.from(artifactCollection.artifactFiles)
+        applicationSources.addAll(artifactCollection.toClassfileSources())
     }
 
     fun platformArtifactCollection(artifactCollection: ArtifactCollection) {
-        platformConfigurationArtifacts.add(artifactCollection)
+        platformArtifacts.from(artifactCollection.artifactFiles)
+        platformSources.addAll(artifactCollection.toClassfileSources())
     }
 
-    @OutputFile
-    lateinit var report: File
+    @get:OutputFile
+    abstract val report: RegularFileProperty
 
     @Input
     lateinit var ignore: Ignore
@@ -123,6 +122,9 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
     @Input
     var roots: RootType = RootType.ALL
 
+    @get:Input
+    abstract val projectName: Property<String>
+
     @TaskAction
     fun execute() {
         val providers = mutableListOf<PlatformTypeProvider>()
@@ -131,10 +133,13 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
             providers.add(JvmTypeProvider.forTarget(it))
         }
 
-        if (platformConfigurationArtifacts.isNotEmpty()) {
+        val platformSourcesList = platformSources.get().toSet()
+        val applicationSourcesList = applicationSources.get().toSet()
+
+        if (platformSourcesList.isNotEmpty()) {
             providers.add(
                 InMemoryPlatformTypeProvider(
-                    ClasspathScanner(platformConfigurationArtifacts.sources()).scan { i, _ -> TypeParsers.typeDescriptor(i) }
+                    ClasspathScanner(platformSourcesList).scan { i, _ -> TypeParsers.typeDescriptor(i) }
                 )
             )
         }
@@ -151,7 +156,7 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
             }
         }
 
-        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformConfigurationArtifacts.isEmpty()) {
+        if (jvmVersion == null && animalSnifferSignatures.isEmpty && typeDescriptors.isEmpty && platformSourcesList.isEmpty()) {
             logger.warn("No platform APIs specified, falling back to the platform classloader of the current JVM.")
 
             providers.add(PlatformClassloaderTypeProvider)
@@ -163,7 +168,7 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
             }
         }.toSet()
 
-        val typeSources = applicationConfigurationArtifacts.sources() + files.sources() + projectOutputDirs.sources() + projectOutputFiles.sources()
+        val typeSources = applicationSourcesList + files.sources() + projectOutputDirs.sources() + projectOutputFiles.sources()
 
         logger.info("type sources = {}", typeSources)
 
@@ -175,7 +180,7 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
         ).findIssues().sortedWith(IssueOrder.CALLER)
 
         val issueReport = IssueReport(
-            project.name,
+            projectName.get(),
             issues
         )
 
@@ -183,12 +188,14 @@ abstract class ExpediterTask : DefaultTask(), TaskWithProjectOutputs {
             logger.warn("{}", issue)
         }
 
-        report.outputStream().buffered().use {
+        val reportFile = report.get().asFile
+
+        reportFile.outputStream().buffered().use {
             issueReport.toJson(it)
         }
 
         if (failOnIssues && issueReport.issues.isNotEmpty()) {
-            throw GradleException("Found compatibility issues, see $report")
+            throw GradleException("Found compatibility issues, see $reportFile")
         }
     }
 }
