@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.21"
+kotlin = "2.4.10"
 serialization = "1.11.0"
 asm = "9.10"
 clikt = "5.1.0"
@@ -16,7 +16,7 @@ gummy-bears = "0.14.0"
 # test
 junit = "5.13.4"
 strikt = "0.34.1"
-testkit-plugin = "0.1.2"
+testkit-plugin = "0.3.0"
 timber = "5.0.1"
 
 [libraries]
