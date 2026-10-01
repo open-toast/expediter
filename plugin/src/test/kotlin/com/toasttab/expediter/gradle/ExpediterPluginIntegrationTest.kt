@@ -35,15 +35,15 @@ import kotlin.io.path.readText
 // The Kotlin Gradle plugin only supports a bounded range of Gradle versions, so each
 // Gradle version under test is paired with a compatible Kotlin version via the
 // KOTLIN_VERSION replacement token (see the testkitTests block in build.gradle.kts).
-// Kotlin 2.2.x supports Gradle up to 8.14; Gradle 9.x requires Kotlin >= 2.3, and the
-// latest Kotlin (2.4.x, the project default) supports Gradle up to 9.5.
+// Kotlin 2.2.x supports Gradle up to 8.14; Gradle 9.x requires Kotlin >= 2.3 and is
+// tested with the latest Kotlin (2.4.x, the project default).
 private const val KOTLIN_FOR_GRADLE_8 = "2.2.21"
 
 @TestKit(
     versions = [
         GradleVersion("8.6", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
         GradleVersion("8.14.1", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
-        GradleVersion("9.5.0")
+        GradleVersion("9.8.0")
     ]
 )
 class ExpediterPluginIntegrationTest {
@@ -306,7 +306,7 @@ class ExpediterPluginIntegrationTest {
         versions = [
             GradleVersion("8.7", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
             GradleVersion("8.14.1", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
-            GradleVersion("9.5.0")
+            GradleVersion("9.8.0")
         ]
     )
     fun `android lib agp8`(project: TestProject) {
@@ -339,7 +339,7 @@ class ExpediterPluginIntegrationTest {
             GradleVersion("8.5", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
             GradleVersion("8.13", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
             GradleVersion("8.14.1", properties = [Property("KOTLIN_VERSION", KOTLIN_FOR_GRADLE_8)]),
-            GradleVersion("9.3.0")
+            GradleVersion("9.8.0")
         ]
     )
     fun `multiple outputs`(project: TestProject) {
