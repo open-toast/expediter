@@ -15,6 +15,7 @@
 
 package com.toasttab.expediter.test.caller;
 
+import com.toasttab.expediter.test.EnumValueChange;
 import com.toasttab.expediter.test.FieldAccessChange;
 import com.toasttab.expediter.test.MethodAccessChange;
 
@@ -27,5 +28,9 @@ public class MissingMemberCaller {
 
     void accessFieldWithChangedType() {
         new FieldAccessChange().typeChangedField = "";
+    }
+
+    EnumValueChange accessRemovedEnumValue() {
+        return EnumValueChange.REMOVED;
     }
 }
