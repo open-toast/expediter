@@ -115,6 +115,16 @@ class ExpediterIntegrationTest {
                 )
             ),
 
+            Issue.MissingMember(
+                "com/toasttab/expediter/test/caller/MissingMemberCaller",
+                MemberAccess.FieldAccess(
+                    "com/toasttab/expediter/test/EnumValueChange",
+                    null,
+                    MemberSymbolicReference("REMOVED", "Lcom/toasttab/expediter/test/EnumValueChange;"),
+                    FieldAccessType.STATIC
+                )
+            ),
+
             Issue.AccessInstanceMemberStatically(
                 "com/toasttab/expediter/test/caller/StaticMismatchCaller",
                 MemberAccess.FieldAccess(
